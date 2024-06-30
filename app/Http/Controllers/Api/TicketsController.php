@@ -27,66 +27,63 @@ class TicketsController extends Controller
 
 
     public function store(Request $request)
-    {  
-        $userId = Auth::id();
+{
+    $userId = Auth::id();
 
-        $request->validate([
-            'events_id' => 'required|exists:events,event_id',
-            'name_user' => 'required|string|max:255',
-            'birth_date_user' => 'required|date',
-            'email_user' => 'required|email|max:255',
-            'gender_user' => 'required|in:Male,Female',
-            'price' => 'required|numeric',
-            'ticket_status' => 'nullable|integer',
-            'payment_status' => 'required|integer',
-            'qr_code_ticket' => 'nullable|string'
-        ]);
+    $request->validate([
+        'events_id' => 'required|exists:events,event_id',
+        'name_user' => 'required|string|max:255',
+        'birth_date_user' => 'required|date',
+        'email_user' => 'required|email|max:255',
+        'gender_user' => 'required|in:Male,Female',
+        'price' => 'required|numeric',
+        'ticket_status' => 'nullable|integer',
+        'payment_status' => 'required|integer',
+        'qr_code_ticket' => 'nullable|string'
+    ]);
 
-        // Generate order_id
-        $order_id = uniqid();
+    // Generate order_id
+    $order_id = uniqid();
 
-        $event = Events::find($request->events_id);
-        if (!$event) {
-            return response()->json(['message' => 'Event not found'], 404);
-        }
-
-        $price = $event->price;
-
-        // Create ticket with order_id
-        $ticket = Tickets::create([
-            'users_id' => $userId,
-            'events_id' => $request->events_id,
-            'name_user' => $request->name_user,
-            'birth_date_user' => $request->birth_date_user,
-            'email_user' => $request->email_user,
-            'gender_user' => $request->gender_user,
-            'price' => $price,
-            'ticket_status' => 0,
-            'payment_status' => $request->payment_status,
-            'order_id' => $order_id,
-        ]);
-
-        // Create payment URL
-        $midtrans = new CreatePaymentUrlService($ticket);
-        $paymentUrl = $midtrans->getPaymentUrl($ticket->load('user'));
-
-        // Update the ticket with payment URL (if needed)
-        $ticket->update([
-            'payment_url' => $paymentUrl,
-        ]);
-
-        // // Check if payment_status is 2, generate QR code
-        // if ($ticket->payment_status == 2) {
-        //     $this->generateQrCode($ticket);
-        // }
-
-        if (!$ticket) {
-            Log::error('Failed to create ticket', ['data' => $request->all()]);
-            return response()->json(['message' => 'Failed to create ticket'], 500);
-        }
-
-        return response()->json(['message' => 'success', 'data' => $ticket], 201);
+    $event = Events::find($request->events_id);
+    if (!$event) {
+        return response()->json(['message' => 'Event not found'], 404);
     }
+
+    $price = $event->price;
+
+    // Create ticket with a placeholder for payment_url
+    $ticket = Tickets::create([
+        'users_id' => $userId,
+        'events_id' => $request->events_id,
+        'name_user' => $request->name_user,
+        'birth_date_user' => $request->birth_date_user,
+        'email_user' => $request->email_user,
+        'gender_user' => $request->gender_user,
+        'price' => $price,
+        'ticket_status' => 0,
+        'payment_status' => $request->payment_status,
+        'order_id' => $order_id,
+        'payment_url' => '', // Placeholder value
+    ]);
+
+    // Check if ticket creation failed
+    if (!$ticket) {
+        Log::error('Failed to create ticket', ['data' => $request->all()]);
+        return response()->json(['message' => 'Failed to create ticket'], 500);
+    }
+
+    // Create payment URL
+    $midtrans = new CreatePaymentUrlService($ticket);
+    $paymentUrl = $midtrans->getPaymentUrl($ticket->load('user'));
+
+    // Update the ticket with the actual payment URL
+    $ticket->update([
+        'payment_url' => $paymentUrl,
+    ]);
+
+    return response()->json(['message' => 'success', 'data' => $ticket], 201);
+}
 
     public function show($id)
     {
