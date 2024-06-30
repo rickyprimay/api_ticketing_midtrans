@@ -18,6 +18,11 @@ Route::middleware(['CorsMiddleware'])->group(function () {
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     });
 
+    Route::prefix('event')->group(function () {
+        Route::get('/', [EventsController::class, 'index']);
+        Route::get('/{id}', [EventsController::class, 'show']);
+    });
+
     // Midtrans Callback
     Route::post('/midtrans/notification/handling', [CallbackController::class, 'callback']);
     Route::get('/tickets/{order_id}/redeem', [CallbackController::class, 'redeem']);
@@ -33,10 +38,7 @@ Route::middleware(['CorsMiddleware'])->group(function () {
             Route::put('/{id}', [TicketsController::class, 'update']);
             Route::delete('/{id}', [TicketsController::class, 'destroy']);
         });
-        Route::prefix('event')->group(function () {
-            Route::get('/', [EventsController::class, 'index']);
-            Route::get('/{id}', [EventsController::class, 'show']);
-        });
+        
     });
 
     Route::group(['middleware' => ['auth:api', 'checkUserRole:1']], function () {
