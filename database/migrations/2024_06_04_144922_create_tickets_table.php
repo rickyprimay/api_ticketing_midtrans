@@ -17,13 +17,13 @@ return new class extends Migration
             $table->string('name_user');
             $table->date('birth_date_user');
             $table->string('email_user');
-            $table->string('qr_code_ticket');
+            $table->string('qr_code_ticket')->nullable();
             $table->string('payment_url');
+            $table->string('order_id');
             $table->enum('gender_user', ['Male', 'Female']);
             $table->decimal('price', 10, 2);
             $table->tinyInteger('ticket_status')->default(0);
             $table->tinyInteger('payment_status')->default(0);
-            $table->tinyInteger('payment_status')->default(1);
             $table->timestamps();
         }); 
     }

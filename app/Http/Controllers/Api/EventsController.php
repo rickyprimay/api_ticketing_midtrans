@@ -28,7 +28,7 @@ class EventsController extends Controller
             $filename = time() . '.' . $file->getClientOriginalExtension();
             $path = $file->storeAs('public/event_pictures', $filename);
 
-            $eventData['event_picture'] = $path;
+            $eventData['event_picture'] = $filename;
         }
 
         $event = Events::create($eventData);

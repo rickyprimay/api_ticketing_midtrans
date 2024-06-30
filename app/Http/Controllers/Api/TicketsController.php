@@ -39,6 +39,7 @@ class TicketsController extends Controller
             'price' => 'required|numeric',
             'ticket_status' => 'nullable|integer',
             'payment_status' => 'required|integer',
+            'qr_code_ticket' => 'nullable|string'
         ]);
 
         // Generate order_id
