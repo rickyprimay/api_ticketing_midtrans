@@ -46,7 +46,10 @@ class EventsController extends Controller
         if (!$event) {
             return redirect()->route('events.index')->with('error', 'Event not found');
         }
-        return view('events.show', ['event' => $event]);
+
+        $talents = $event->talents; 
+
+        return view('events.show', ['event' => $event, 'talents' => $talents]);
     }
 
     public function edit($id)
