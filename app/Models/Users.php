@@ -60,4 +60,16 @@ class Users extends Authenticatable implements JWTSubject, MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    /**
+     * Generate OTP with 6 digits.
+     *
+     * @return int
+     */
+    public static function generateOTP()
+    {
+        // Generate random 6-digit OTP
+        $otp = mt_rand(100000, 999999);
+
+        return $otp;
+    }
 }

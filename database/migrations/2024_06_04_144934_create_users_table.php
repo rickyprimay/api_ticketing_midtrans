@@ -19,6 +19,8 @@ return new class extends Migration
             $table->enum('gender', ['Male', 'Female'])->nullable();
             $table->string('phone_number')->nullable();
             $table->tinyInteger('role')->default(0);
+            $table->integer('otp')->nullable();
+            $table->boolean('is_verified')->default(false);
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();
         });

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingController::class, 'index'])->name('index');
 Route::get('/event', [LandingController::class, 'index_events'])->name('index_events');
-
+Route::get('kirim-email','App\Http\Controllers\MailController@index');
 
 Route::group(['middleware' => 'role:0'], function () {
     Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');

@@ -13,6 +13,7 @@ use Xendit\Invoice\InvoiceApi;
 use Xendit\Invoice\InvoiceItem;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
 
 class OrdersController extends Controller
 {
@@ -103,7 +104,7 @@ class OrdersController extends Controller
                 if ($request->status == 'PAID') {
                     $order->status = 'Success';
                     $order->save();
-                    $this->generateTicketUsers($order, $order->name_buyer, $order->event_id);
+                    $this->generateTicketUsers($order, $order->name_buyer, $order->event_id, $order->email_buyer);
                 } else {
                     $order->status = 'Failed';
                     $order->save();
@@ -116,7 +117,7 @@ class OrdersController extends Controller
         }
     }
 
-    protected function generateTicketUsers(Order $order, $users_name, $event_id)
+    protected function generateTicketUsers(Order $order, $users_name, $event_id, $email_buyer)
     {
         $qty = $order->qty;
 
@@ -124,14 +125,15 @@ class OrdersController extends Controller
             $ticketUser = new TicketUsers();
             $ticketUser->users_name = $users_name;
             $ticketUser->events_id = $event_id;
+            $ticketUser->users_email = $email_buyer;
 
-            $this->generateQrCode($ticketUser, $i); 
+            $this->generateQrCode($ticketUser, $i, $email_buyer);
 
             $ticketUser->save();
         }
     }
 
-    protected function generateQrCode(TicketUsers $ticketUser, $index)
+    protected function generateQrCode(TicketUsers $ticketUser, $index, $email_buyer)
     {
         $qrCodePath = 'ticket_qr/ticket_' . md5($ticketUser->id . '_' . $index) . '.png';
         $url = url('/api/tickets/' . $ticketUser->id . '/redeem');
@@ -141,5 +143,21 @@ class OrdersController extends Controller
 
         $ticketUser->qr_code_ticket = $qrCodePath;
         $ticketUser->save();
+
+        $this->sendEmailWithAttachment($ticketUser, $email_buyer);
+    }
+
+    protected function sendEmailWithAttachment(TicketUsers $ticketUser, $email_buyer)
+    {
+        $userEmail = $email_buyer;
+        $qrCodePath = storage_path('app/public/' . $ticketUser->qr_code_ticket);
+
+        $details = [
+            'title' => 'Mail from ticketify.id',
+            'body' => 'Berikut Kode QR ticket anda',
+            'qrCodePath' => $qrCodePath,
+        ];
+
+        Mail::to($email_buyer)->send(new \App\Mail\TicketQrMail($details, $qrCodePath));
     }
 }
