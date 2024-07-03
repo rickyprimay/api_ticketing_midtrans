@@ -13,11 +13,10 @@ return new class extends Migration
     {
         Schema::create('ticket_users', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('users_id');
+            $table->string('users_name');
             $table->unsignedBigInteger('events_id');
             $table->string('qr_code_ticket')->nullable();
             $table->tinyInteger('ticket_status')->default(0);
-            $table->tinyInteger('payment_status')->default(0);
             $table->timestamps();
         });
     }

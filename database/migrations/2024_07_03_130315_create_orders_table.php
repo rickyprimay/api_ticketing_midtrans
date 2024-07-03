@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id('order_id')->primary();
+            $table->bigInteger('event_id');
             $table->string('external_id');
             $table->string('name_buyer');
             $table->string('email_buyer');

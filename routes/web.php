@@ -9,9 +9,16 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingController::class, 'index'])->name('index');
 Route::get('/event', [LandingController::class, 'index_events'])->name('index_events');
-Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
-Route::get('/order/{event_id}/{price}', [OrdersController::class, 'order'])->name('order');
-Route::post('/create-invoice', [OrdersController::class, 'createInvoice'])->name('create-invoice');
+
+
+Route::group(['middleware' => 'role:0'], function () {
+    Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
+    Route::get('/order/{event_id}/{price}', [OrdersController::class, 'order'])->name('order');
+    Route::post('/create-invoice', [OrdersController::class, 'createInvoice'])->name('create-invoice');
+});
+
+
+Route::post('/notification', [OrdersController::class, 'notificationCallback'])->name('notification');
 
 Route::group(['prefix' => 'auth', 'as' => 'auth.'], function () {
     Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register.form');

@@ -18,34 +18,28 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        // Validasi input
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'email' => 'required|email|unique:users', // Pastikan nama tabel users benar
+            'email' => 'required|email|unique:users', 
             'password' => 'required|min:8',
         ]);
 
-        // Jika validasi gagal
         if ($validator->fails()) {
             Alert::error('Gagal', 'Registrasi gagal, silakan cek kembali data yang Anda masukkan.');
             return back()->withErrors($validator)->withInput();
         }
 
-        // Buat UUID untuk user_id
         $users_id = (string) Str::uuid();
 
-        // Buat pengguna baru
-        $user = new Users(); // Gunakan model User
+        $user = new Users(); 
         $user->users_id = $users_id;
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
         $user->save();
 
-        // Login pengguna
         Auth::login($user);
 
-        // Tampilkan alert dan redirect
         Alert::success('Hore!', 'Register berhasil');
         return redirect()->route('index');
     }

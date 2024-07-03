@@ -7,5 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TicketUsers extends Model
 {
+    protected $primaryKey = 'id';
     use HasFactory;
+    protected $quarded = [];
 }

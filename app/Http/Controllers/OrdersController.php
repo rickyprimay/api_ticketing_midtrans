@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\TicketUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Xendit\Configuration;
@@ -10,29 +11,37 @@ use Xendit\Invoice\CreateInvoiceRequest;
 use Illuminate\Support\Str;
 use Xendit\Invoice\InvoiceApi;
 use Xendit\Invoice\InvoiceItem;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\Storage;
 
 class OrdersController extends Controller
 {
+    protected $users_name;
+
     public function __construct()
     {
         Configuration::setXenditKey(env('XENDIT_SECRET_KEY'));
     }
+
     public function order($event_id, $price)
     {
-        return view('users.page.order', ['price' => $price]);
+        $orders = Order::latest()->get();
+        $user = Auth::user();
+        return view('users.page.order', compact('event_id', 'price', 'orders'));
     }
+
     public function createInvoice(Request $request)
     {
-
+        $this->users_name = Auth::user()->name;
         try {
-            
             $qty = $request->input('qty');
             $price = $request->input('price');
             $totalAmount = $qty * $price;
-            
+
             $no_transaction = 'Inv-' . (string) Str::uuid();
-            $order = new Order;
+            $order = new Order();
             $order->no_transaction = $no_transaction;
+            $order->event_id = $request->input('event_id');
             $order->external_id = $no_transaction;
             $order->name_buyer = Auth::user()->name;
             $order->email_buyer = Auth::user()->email;
@@ -43,25 +52,94 @@ class OrdersController extends Controller
             $items = new InvoiceItem([
                 'name' => Auth::user()->name,
                 'price' => $price,
-                'quantity' => $request->input('qty')
+                'quantity' => $request->input('qty'),
             ]);
 
             $createInvoice = new CreateInvoiceRequest([
                 'external_id' => $no_transaction,
                 'amount' => $totalAmount,
                 'invoice_duration' => 172800,
-                'items' => [$items]
+                'items' => [$items],
             ]);
-            
+
             $apiInstance = new InvoiceApi();
             $generateInvoice = $apiInstance->createInvoice($createInvoice);
             $order->invoice_url = $generateInvoice['invoice_url'];
             $order->save();
 
             return dd($order);
-
         } catch (\Throwable $th) {
             throw $th;
         }
+    }
+
+    public function notificationCallback(Request $request)
+    {
+        $getToken = $request->headers->get('x-callback-token');
+        $callbackToken = env('XENDIT_CALLBACK_TOKEN');
+
+        try {
+            if (!$callbackToken) {
+                return response()->json(
+                    [
+                        'status' => 'error',
+                        'message' => 'callback token not exist',
+                    ],
+                    404,
+                );
+            }
+
+            $response = response()->json(
+                [
+                    'status' => 'success',
+                    'message' => 'callback sent',
+                ],
+                200,
+            );
+
+            $order = Order::where('external_id', $request->external_id)->first();
+
+            if ($order) {
+                if ($request->status == 'PAID') {
+                    $order->status = 'Success';
+                    $order->save();
+                    $this->generateTicketUsers($order, $order->name_buyer, $order->event_id);
+                } else {
+                    $order->status = 'Failed';
+                    $order->save();
+                }
+            }
+
+            return $response;
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    protected function generateTicketUsers(Order $order, $users_name, $event_id)
+    {
+        $qty = $order->qty;
+
+        for ($i = 0; $i < $qty; $i++) {
+            $ticketUser = new TicketUsers();
+            $ticketUser->users_name = $users_name;
+            $ticketUser->events_id = $event_id;
+
+            $this->generateQrCode($ticketUser, $i); 
+
+            $ticketUser->save();
+        }
+    }
+
+    protected function generateQrCode(TicketUsers $ticketUser, $index)
+    {
+        $qrCodePath = 'ticket_qr/ticket_' . md5($ticketUser->id . '_' . $index) . '.png';
+        $url = url('/api/tickets/' . $ticketUser->id . '/redeem');
+        $qrCode = QrCode::format('png')->size(312)->merge(public_path('assets/logo/border-black.png'), 0.47, true)->errorCorrection('Q')->generate($url);
+
+        Storage::disk('public')->put($qrCodePath, $qrCode);
+
+        $ticketUser->qr_code_ticket = $qrCodePath;
+        $ticketUser->save();
     }
 }

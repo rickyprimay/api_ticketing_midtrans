@@ -17,6 +17,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
         'checkUserRole' => \App\Http\Middleware\CheckUserRole::class,
         'CorsMiddleware' => \App\Http\Middleware\CorsMiddleware::class,
+        'role' => \App\Http\Middleware\CheckRole::class,
+        ]);
+        $middleware->validateCsrfTokens(except:[
+            '/notification'
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

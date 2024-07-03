@@ -18,6 +18,7 @@ class Users extends Authenticatable implements JWTSubject, MustVerifyEmail
     protected $primaryKey = 'users_id';
     
     protected $fillable = [
+        'users_id',
         'name',
         'email',
         'password',
@@ -30,7 +31,6 @@ class Users extends Authenticatable implements JWTSubject, MustVerifyEmail
 
     protected $hidden = [
         'password',
-        'remember_token',
     ];
 
     public function tickets()
