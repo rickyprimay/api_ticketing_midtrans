@@ -20,8 +20,9 @@ return new class extends Migration
             $table->string('item_name')->default('ticket');
             $table->integer('qty');
             $table->integer('price');
-            $table->bigInteger('grand_total');
+            $table->bigInteger('total_amount');
             $table->string('status')->default('pending');
+            $table->string('invoice_url');
             $table->timestamps();
         });
     }

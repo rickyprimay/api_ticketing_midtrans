@@ -12,12 +12,9 @@ return new class extends Migration
     public function up() {
         Schema::create('tickets', function (Blueprint $table) {
             $table->id('ticket_id')->primary();
-            $table->unsignedBigInteger('users_id');
             $table->unsignedBigInteger('events_id');
+            $table->string('ticket_type');
             $table->integer('price');
-            $table->string('qr_code_ticket')->nullable();
-            $table->tinyInteger('ticket_status')->default(0);
-            $table->tinyInteger('payment_status')->default(0);
             $table->timestamps();
         }); 
     }

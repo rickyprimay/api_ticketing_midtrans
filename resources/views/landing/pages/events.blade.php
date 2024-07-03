@@ -1,4 +1,4 @@
-@extends('auth.layouts.app')
+@extends('landing.layouts.app')
 
 @section('content')
 <h1 class="text-3xl font-bold underline text-white bg-blue-500">

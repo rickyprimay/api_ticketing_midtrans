@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             UsersSeeder::class,
             EventSeeder::class,
             TalentSeeder::class,
+            TicketSeeder::class,
         ]);
     }
 }

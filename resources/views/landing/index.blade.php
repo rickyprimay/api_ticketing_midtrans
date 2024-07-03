@@ -2,7 +2,26 @@
 
 @section('content')
     @if (auth()->check())
-        <p>Welcome, {{ auth()->user()->name }}</p>
+        @php
+            $role = auth()->user()->role; // Ambil role dari user yang sedang login
+            $roleName = '';
+            switch ($role) {
+                case 0:
+                    $roleName = 'user';
+                    break;
+                case 1:
+                    $roleName = 'committee';
+                    break;
+                case 2:
+                    $roleName = 'admin';
+                    break;
+                default:
+                    $roleName = 'guest';
+                    break;
+            }
+        @endphp
+
+        <p>Welcome, {{ auth()->user()->name }} kamu adalah {{ $roleName }}</p>
         <form id="logout-form" action="{{ route('auth.logout') }}" method="POST" class="inline">
             @csrf
             <button type="submit" class="btn bg-red-400">Logout</button>
@@ -15,6 +34,7 @@
                     <th class="px-4 py-2">Event Name</th>
                     <th class="px-4 py-2">Description</th>
                     <th class="px-4 py-2">Price</th>
+                    <th class="px-4 py-2">Event Picture</th>
                     <th class="px-4 py-2">Location</th>
                     <th class="px-4 py-2">Date</th>
                     <th class="px-4 py-2">Pesan</th>
@@ -26,9 +46,14 @@
                         <td class="border px-4 py-2">{{ $event->event_name }}</td>
                         <td class="border px-4 py-2">{{ $event->event_description }}</td>
                         <td class="border px-4 py-2">{{ $event->price }}</td>
+                        <td class="border px-4 py-2">
+                            <img src="{{ asset('storage/' . $event->event_picture) }}" alt="{{ $event->event_name }}" class="w-16 h-16">
+                        </td>
                         <td class="border px-4 py-2">{{ $event->event_location }}</td>
                         <td class="border px-4 py-2">{{ $event->event_date }}</td>
-                        <td class="border px-4 py-2"><a href="" class="btn bg-red-400">Pesan</a></td>
+                        <td class="border px-4 py-2">
+                            <a href="{{ route('tickets.index', ['event_id' => $event->event_id]) }}" class="btn bg-red-400">Pilih Tiket</a>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

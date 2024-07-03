@@ -9,7 +9,6 @@ class Tickets extends Model
     protected $primaryKey = 'ticket_id';
     
     protected $fillable = [
-        'ticket_type',
         'users_id',
         'events_id',
         'price',

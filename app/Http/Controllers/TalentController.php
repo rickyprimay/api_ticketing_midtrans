@@ -6,7 +6,7 @@ use App\Models\Talents;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-class TalentsController extends Controller
+class TalentController extends Controller
 {
     public function index()
     {
