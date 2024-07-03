@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up() {
         Schema::create('users', function (Blueprint $table) {
-            $table->id('users_id')->primary();
+            $table->uuid('users_id')->primary();
             $table->string('name');
             $table->date('birth_date')->nullable();
             $table->string('email')->unique();
@@ -19,6 +19,7 @@ return new class extends Migration
             $table->enum('gender', ['Male', 'Female'])->nullable();
             $table->string('phone_number')->nullable();
             $table->tinyInteger('role')->default(0);
+            $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();
         });
     }

@@ -14,7 +14,7 @@ return new class extends Migration
             $table->id('event_id')->primary();
             $table->string('event_name');
             $table->text('event_description');
-            $table->decimal('price', 10, 2);
+            $table->integer('price');
             $table->string('event_location');
             $table->string('event_picture')->nullable();
             $table->date('event_date');

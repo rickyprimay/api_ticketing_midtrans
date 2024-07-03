@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Model;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Users extends Authenticatable implements JWTSubject
+class Users extends Authenticatable implements JWTSubject, MustVerifyEmail
 
 {
     use HasFactory, Notifiable;
@@ -23,6 +25,7 @@ class Users extends Authenticatable implements JWTSubject
         'phone_number',
         'gender',
         'role',
+        'is_verified'
     ];
 
     protected $hidden = [
@@ -54,4 +57,7 @@ class Users extends Authenticatable implements JWTSubject
     {
         return [];
     }
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
 }

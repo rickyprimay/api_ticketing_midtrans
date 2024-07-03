@@ -22,6 +22,13 @@ Route::middleware(['CorsMiddleware'])->group(function () {
         Route::get('/', [EventsController::class, 'index']);
         Route::get('/{id}', [EventsController::class, 'show']);
     });
+    Route::prefix('events')->group(function () {
+        Route::get('/', [EventsController::class, 'index']);
+        Route::post('/', [EventsController::class, 'store']);
+        Route::get('/{id}', [EventsController::class, 'show']);
+        Route::put('/{id}', [EventsController::class, 'update']);
+        Route::delete('/{id}', [EventsController::class, 'destroy']);
+    });
 
     // Midtrans Callback
     Route::post('/midtrans/notification/handling', [CallbackController::class, 'callback']);
@@ -43,13 +50,7 @@ Route::middleware(['CorsMiddleware'])->group(function () {
 
     Route::group(['middleware' => ['auth:api', 'checkUserRole:1']], function () {
         // Event Routes
-        Route::prefix('events')->group(function () {
-            Route::get('/', [EventsController::class, 'index']);
-            Route::post('/', [EventsController::class, 'store']);
-            Route::get('/{id}', [EventsController::class, 'show']);
-            Route::put('/{id}', [EventsController::class, 'update']);
-            Route::delete('/{id}', [EventsController::class, 'destroy']);
-        });
+        
 
         // Talent Routes
         Route::prefix('talents')->group(function () {

@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Str;
+use Illuminate\Auth\Events\Registered;
+
 
 class AuthController extends Controller
 {
@@ -17,32 +20,38 @@ class AuthController extends Controller
             'email'     => 'required|email|unique:users',
             'password'  => 'required|min:8',
         ]);
-
+        
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
 
-        $users = Users::create([
-            'name'      => $request->name,
-            'email'     => $request->email,
-            'password'  => bcrypt($request->password)
-        ]);
+        // Generate UUID
+        $users_id = (string) Str::uuid();
 
-        if($users) {
-            $token = JWTAuth::fromUser($users);
+        // Create new user with UUID assigned
+        $user = new Users();
+        $user->users_id = $users_id;
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password);
+        // Save the user
+        if ($user->save()) {
+            // Generate JWT token
+            $token = JWTAuth::fromUser($user);
 
             return response()->json([
                 'success' => true,
                 'status_code' => 201,
-                'user'    => $users,
+                'user'    => $user,
                 'token'   => $token,
                 'token_type' => 'bearer',
-            ], 201);           
+            ], 201);
         }
 
         return response()->json([
             'success' => false,
             'status_code' => 409,
+            'message' => 'Failed to create account',
         ], 409);
     }
     public function login(Request $request)
