@@ -81,7 +81,7 @@
   
   @include('landing.components.footer') 
 
-
+  @include('sweetalert::alert')
   <script>
     
 

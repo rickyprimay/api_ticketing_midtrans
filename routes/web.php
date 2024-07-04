@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserEditorController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\EventsController;
@@ -32,6 +33,8 @@ Route::get('/events/search', [LandingController::class, 'search'])->name('events
 
 Route::group(['middleware' => 'role:0'], function () {
     Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
+    Route::get('/edit-profile', [UserEditorController::class, 'index'])->name('edit.index');
+    Route::put('/profile/update', [UserEditorController::class, 'update'])->name('profile.update');
     Route::get('/event/{event_id}', [EventsController::class, 'show'])->name('event_details');
     Route::get('/order/{event_id}/{price}', [OrdersController::class, 'order'])->name('order');
     Route::post('/create-invoice', [OrdersController::class, 'createInvoice'])->name('create-invoice');
