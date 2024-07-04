@@ -18,8 +18,14 @@ Route::group(['prefix' => 'auth', 'as' => 'auth.'], function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
+Route::get('/test-email', function () {
+    return view('emails.otpMail');
+});
+
 Route::get('/', [LandingController::class, 'index'])->name('index');
-Route::get('/event', [LandingController::class, 'index_events'])->name('index_events');
+Route::get('/event', [EventsController::class, 'index'])->name('event');
+Route::get('/event/{event_id}', [EventsController::class, 'show'])->name('event_details');
+
 
 Route::group(['middleware' => 'role:0'], function () {
     Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');

@@ -30,9 +30,11 @@ class AuthController extends Controller
             Alert::error('Gagal', 'Registrasi gagal, silakan cek kembali data yang Anda masukkan.');
             return back()->withErrors($validator)->withInput();
         }
+        
+        $name = $request->name;
 
         $user = new Users();
-        $user->name = $request->name;
+        $user->name = $name;
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
         $user->save();
@@ -45,7 +47,8 @@ class AuthController extends Controller
         $details = [
             'title' => 'Mail from ticketify.id',
             'body' => 'Berikut Kode OTP untuk verifikasi email anda',
-            'otp' => $otp
+            'otp' => $otp,
+            'name' => $name,
         ];
         
         Mail::to($user->email)->send(new \App\Mail\VerificationCodeMail($details));
@@ -146,6 +149,20 @@ class AuthController extends Controller
         }
 
         $credentials = $request->only('email', 'password');
+
+        $user = Users::where('email', $credentials['email'])->first();
+
+        if (!$user) {
+            Alert::error('Gagal', 'Email atau password salah.');
+            return back()->withErrors([
+                'email' => 'Email atau password salah.',
+            ])->withInput();
+        }
+
+        if (!$user->is_verified) {
+            session(['email' => $user->email]); 
+            return redirect()->route('auth.verify.form')->with('email', $user->email);
+        }
 
         if (Auth::attempt($credentials)) {
             Alert::success('Hore!', 'Login berhasil');

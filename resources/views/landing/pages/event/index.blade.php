@@ -14,6 +14,7 @@
         <th class="px-4 py-2">Location</th>
         <th class="px-4 py-2">Date</th>
         <th class="px-4 py-2">Event picture</th>
+        <th class="px-4 py-2">details</th>
       </tr>
     </thead>
     <tbody>
@@ -27,10 +28,12 @@
         <td class="border px-4 py-2"><span class="text-blue-500">{{ $event->event_date }}</span></td>
         <td class="border px-4 py-2">
           @if ($event->event_picture)
-            <img src="{{ asset('storage/event_pictures/' . $event->event_picture) }}" alt="Event Picture" style="max-width: 100px;">
+          <img src="{{ asset('storage/event_pictures/' . $event->event_picture) }}" alt="Event Picture" style="max-width: 100px;">
           @else
-            <span class="text-blue-500">No Picture Available</span>
+          <span class="text-blue-500">No Picture Available</span>
           @endif
+          <td class="border px-4 py-2">
+            <a href="{{ route('event_details', ['event_id' => $event->event_id]) }}" class="text-blue-500">Detail</a>
         </td>
       </tr>
       @endforeach

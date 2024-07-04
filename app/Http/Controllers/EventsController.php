@@ -11,7 +11,7 @@ class EventsController extends Controller
     public function index()
     {
         $events = Events::all();
-        return view('events.index', ['events' => $events]);
+        return view('landing.pages.event.index', ['events' => $events]);
     }
 
     public function create()
@@ -49,7 +49,7 @@ class EventsController extends Controller
 
         $talents = $event->talents; 
 
-        return view('events.show', ['event' => $event, 'talents' => $talents]);
+        return view('landing.pages.event.page.details', ['event' => $event, 'talents' => $talents]);
     }
 
     public function edit($id)
