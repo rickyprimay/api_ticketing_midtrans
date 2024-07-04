@@ -3,22 +3,19 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Model;
-use Tymon\JWTAuth\Contracts\JWTSubject;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Support\Str;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Support\Str;
 
 class Users extends Authenticatable implements JWTSubject, MustVerifyEmail
-
 {
     use HasFactory, Notifiable;
     
     protected $primaryKey = 'users_id';
-    
+
     protected $fillable = [
-        'users_id',
         'name',
         'email',
         'password',
@@ -26,12 +23,33 @@ class Users extends Authenticatable implements JWTSubject, MustVerifyEmail
         'phone_number',
         'gender',
         'role',
-        'is_verified'
+        'is_verified',
+        'otp',
+        'otp_sent_at',
     ];
 
     protected $hidden = [
         'password',
     ];
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'otp_sent_at' => 'datetime',
+    ];
+
+    public $timestamps = false;
+
+    public static function boot()
+    {
+        parent::boot();
+
+        // Generate UUID when creating a new user
+        static::creating(function ($model) {
+            if (empty($model->users_uuid)) {
+                $model->users_uuid = (string) Str::uuid();
+            }
+        });
+    }
 
     public function tickets()
     {
@@ -57,9 +75,7 @@ class Users extends Authenticatable implements JWTSubject, MustVerifyEmail
     {
         return [];
     }
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+
     /**
      * Generate OTP with 6 digits.
      *
@@ -67,9 +83,6 @@ class Users extends Authenticatable implements JWTSubject, MustVerifyEmail
      */
     public static function generateOTP()
     {
-        // Generate random 6-digit OTP
-        $otp = mt_rand(100000, 999999);
-
-        return $otp;
+        return mt_rand(100000, 999999);
     }
 }

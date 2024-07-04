@@ -11,7 +11,8 @@ return new class extends Migration
      */
     public function up() {
         Schema::create('users', function (Blueprint $table) {
-            $table->uuid('users_id')->primary();
+            $table->id('users_id')->primary();
+            $table->uuid('users_uuid')->unique();
             $table->string('name');
             $table->date('birth_date')->nullable();
             $table->string('email')->unique();
@@ -22,7 +23,7 @@ return new class extends Migration
             $table->integer('otp')->nullable();
             $table->boolean('is_verified')->default(false);
             $table->timestamp('email_verified_at')->nullable();
-            $table->timestamps();
+            $table->timestamp('otp_sent_at')->nullable();
         });
     }
 

@@ -7,9 +7,19 @@ use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\TicketController;
 use Illuminate\Support\Facades\Route;
 
+Route::group(['prefix' => 'auth', 'as' => 'auth.'], function () {
+    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register.form');
+    Route::post('/register', [AuthController::class, 'register'])->name('register');
+    Route::get('/verify', [AuthController::class, 'showVerifyForm'])->name('verify.form');
+    Route::post('/verify', [AuthController::class, 'verifyOTP'])->name('verify');
+    Route::post('/resend-otp', [AuthController::class, 'resendOTP'])->name('resend.otp');
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login.form');
+    Route::post('/login', [AuthController::class, 'login'])->name('login');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+});
+
 Route::get('/', [LandingController::class, 'index'])->name('index');
 Route::get('/event', [LandingController::class, 'index_events'])->name('index_events');
-Route::get('kirim-email','App\Http\Controllers\MailController@index');
 
 Route::group(['middleware' => 'role:0'], function () {
     Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
@@ -20,13 +30,6 @@ Route::group(['middleware' => 'role:0'], function () {
 
 Route::post('/notification', [OrdersController::class, 'notificationCallback'])->name('notification');
 
-Route::group(['prefix' => 'auth', 'as' => 'auth.'], function () {
-    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register.form');
-    Route::post('/register', [AuthController::class, 'register'])->name('register');
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login.form');
-    Route::post('/login', [AuthController::class, 'login'])->name('login');
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-});
 Route::get('/events', [EventsController::class, 'index'])->name('events.index');
 Route::get('/tickets/buy/{id}', [TicketController::class, 'buy'])->name('tickets.buy');
 

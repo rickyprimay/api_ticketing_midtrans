@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class TicketQrMail extends Mailable
+class VerificationCodeMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -18,7 +18,7 @@ class TicketQrMail extends Mailable
      *
      * @return void
      */
-    public function __construct($details, $qrCodePath)
+    public function __construct($details)
     {
         $this->details = $details;
     }
@@ -31,6 +31,6 @@ class TicketQrMail extends Mailable
     public function build()
     {
         return $this->subject('Mail from ticketify.id')
-                    ->view('emails.TicketQrMail');
+                    ->view('emails.otpMail');
     }
 }

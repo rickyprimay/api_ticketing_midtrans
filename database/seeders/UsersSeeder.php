@@ -15,7 +15,6 @@ class UsersSeeder extends Seeder
     public function run()
     {
         Users::factory()->create([
-            'users_id' => (string) Str::uuid(),
             'name' => 'Ricky Primayuda Putra',
             'birth_date' => '2004-05-22',
             'email' => 'rickyprima30@gmail.com',
@@ -27,7 +26,6 @@ class UsersSeeder extends Seeder
 
         // User with role 1 (committee)
         Users::factory()->create([
-            'users_id' => (string) Str::uuid(),
             'name' => 'Committee User',
             'birth_date' => '1990-01-01',
             'email' => 'committee@example.com',
@@ -39,7 +37,6 @@ class UsersSeeder extends Seeder
 
         // User with role 2 (admin)
         Users::factory()->create([
-            'users_id' => (string) Str::uuid(),
             'name' => 'Admin User',
             'birth_date' => '1985-01-01',
             'email' => 'admin@example.com',
