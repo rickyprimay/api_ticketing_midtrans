@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Events;
 use App\Models\Order;
+use App\Models\Talents;
+use App\Models\Tickets;
 use App\Models\TicketUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,9 +29,14 @@ class OrdersController extends Controller
 
     public function order($event_id, $price)
     {
+        $event = Events::find($event_id);
         $orders = Order::latest()->get();
         $user = Auth::user();
-        return view('users.page.order', compact('event_id', 'price', 'orders'));
+
+        $tickets = Tickets::where('events_id', $event_id)->get();
+        $talents = Talents::where('event_id', $event_id)->get();
+
+        return view('landing.pages.event.page.order', compact('event', 'tickets', 'talents', 'event_id', 'price', 'orders'));
     }
 
     public function createInvoice(Request $request)
@@ -68,7 +76,7 @@ class OrdersController extends Controller
             $order->invoice_url = $generateInvoice['invoice_url'];
             $order->save();
 
-            return dd($order);
+            return redirect($generateInvoice['invoice_url']);
         } catch (\Throwable $th) {
             throw $th;
         }

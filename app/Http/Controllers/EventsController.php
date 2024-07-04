@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Events;
+use App\Models\Talents;
+use App\Models\Tickets;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -41,16 +43,19 @@ class EventsController extends Controller
     }
 
     public function show($id)
-    {
-        $event = Events::find($id);
-        if (!$event) {
-            return redirect()->route('events.index')->with('error', 'Event not found');
-        }
+{
+    $event = Events::find($id);
 
-        $talents = $event->talents; 
-
-        return view('landing.pages.event.page.details', ['event' => $event, 'talents' => $talents]);
+    if (!$event) {
+        return redirect()->route('events.index')->with('error', 'Event not found');
     }
+
+    $tickets = Tickets::where('events_id', $id)->get();
+    $talents = Talents::where('event_id', $id)->get();
+
+    return view('landing.pages.event.page.details', compact('event', 'tickets', 'talents'));
+}
+
 
     public function edit($id)
     {

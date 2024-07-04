@@ -24,11 +24,11 @@ Route::get('/test-email', function () {
 
 Route::get('/', [LandingController::class, 'index'])->name('index');
 Route::get('/event', [EventsController::class, 'index'])->name('event');
-Route::get('/event/{event_id}', [EventsController::class, 'show'])->name('event_details');
 
 
 Route::group(['middleware' => 'role:0'], function () {
     Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
+    Route::get('/event/{event_id}', [EventsController::class, 'show'])->name('event_details');
     Route::get('/order/{event_id}/{price}', [OrdersController::class, 'order'])->name('order');
     Route::post('/create-invoice', [OrdersController::class, 'createInvoice'])->name('create-invoice');
 });
