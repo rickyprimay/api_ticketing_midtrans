@@ -21,6 +21,7 @@ class UsersSeeder extends Seeder
             'password' => Hash::make('rickyprima30@gmail.com'),
             'gender' => 'Male',
             'phone_number' => '123456789',
+            'is_verified' => true,
             'role' => 0,
         ]);
 
@@ -32,6 +33,7 @@ class UsersSeeder extends Seeder
             'password' => Hash::make('committee@example.com'),
             'gender' => 'Female',
             'phone_number' => '987654321',
+            'is_verified' => true,
             'role' => 1,
         ]);
 
@@ -43,6 +45,7 @@ class UsersSeeder extends Seeder
             'password' => Hash::make('admin@example.com'),
             'gender' => 'Male',
             'phone_number' => '1122334455',
+            'is_verified' => true,
             'role' => 2,
         ]);
     }
