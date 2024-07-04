@@ -17,7 +17,7 @@
             <td style="padding: 20px;">
                 <header style="text-align: center;">
                     <a href="#">
-                        <img src="{{ asset('assets/logo/logo.png') }}" alt="Logo" style="width: 200px; height: auto;">
+                        <img src="https://ticketify.id/assets/logo/logo.png" alt="Logo" style="width: 200px; height: auto;">
                     </a>
                     
                 </header>

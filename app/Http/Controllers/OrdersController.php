@@ -87,7 +87,7 @@ class OrdersController extends Controller
             $order->invoice_url = $generateInvoice['invoice_url'];
             $order->save();
 
-            return redirect($generateInvoice['invoice_url']);
+            return redirect(route('history'));
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -150,11 +150,11 @@ class OrdersController extends Controller
             $ticketUser->save();
 
             // Generate QR Code setelah menyimpan untuk mendapatkan ID
-            $this->generateQrCode($ticketUser, $i, $email_buyer);
+            $this->generateQrCode($ticketUser, $i, $email_buyer, $users_name);
         }
     }
 
-    protected function generateQrCode(TicketUsers $ticketUser, $index, $email_buyer)
+    protected function generateQrCode(TicketUsers $ticketUser, $index, $email_buyer, $users_name)
     {
         $ticketUserId = $ticketUser->id;
 
@@ -167,10 +167,10 @@ class OrdersController extends Controller
         $ticketUser->qr_code_ticket = $qrCodePath;
         $ticketUser->save();
 
-        $this->sendEmailWithAttachment($ticketUser, $email_buyer);
+        $this->sendEmailWithAttachment($ticketUser, $email_buyer, $users_name);
     }
 
-    protected function sendEmailWithAttachment(TicketUsers $ticketUser, $email_buyer)
+    protected function sendEmailWithAttachment(TicketUsers $ticketUser, $email_buyer, $users_name)
     {
         $userEmail = $email_buyer;
         $qrCodePath = storage_path('app/public/' . $ticketUser->qr_code_ticket);
@@ -179,6 +179,7 @@ class OrdersController extends Controller
             'title' => 'Mail from ticketify.id',
             'body' => 'Berikut Kode QR ticket anda',
             'qrCodePath' => $qrCodePath,
+            'name' => $users_name,
         ];
 
         Mail::to($email_buyer)->send(new \App\Mail\TicketQrMail($details, $qrCodePath));
