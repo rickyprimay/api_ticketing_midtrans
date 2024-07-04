@@ -37,6 +37,10 @@
                                     <p>{{ $order->qty }}</p>
                                 </div>
                                 <div class="text-black mb-2 md:mb-0">
+                                    <p class="font-bold">Status</p>
+                                    <p>{{ $order->status }}</p>
+                                </div>
+                                <div class="text-black mb-2 md:mb-0">
                                     <p class="font-bold">Category</p>
                                     <ul>
                                         @foreach ($order->event->tickets as $ticket)
