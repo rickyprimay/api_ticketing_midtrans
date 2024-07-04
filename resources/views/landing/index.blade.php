@@ -70,7 +70,8 @@
 
         <div class="flex justify-between px-0 md:px-16 mb-4">
             <form action="{{ route('events.search') }}" method="GET" class="flex">
-                <input type="text" name="search" placeholder="Cari events..." class="bg-white border-2 border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                <input type="text" name="search" placeholder="Cari events..."
+                    class="bg-white border-2 border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-300">
                 <button type="submit" class="bg-black text-white p-2 ml-2 rounded">Search</button>
             </form>
         </div>
@@ -79,46 +80,38 @@
         @if ($events->isEmpty())
             <h1 class="text-3xl text-center font-bold text-gray-900">Oops! Event yang Anda cari tidak ditemukan.</h1>
         @else
-        <div id="to_ticket" class="grid grid-cols-1 md:grid-cols-2 gap-2 place-items-center">
-            @foreach ($events as $event)
-                <a href="{{ route('event_details', ['event_id' => $event->event_id]) }}"
-                    class="my-4 max-w-lg bg-white border-2 border-black rounded-lg shadow hover:shadow-lg border-solid flex flex-col overflow-hidden">
-                    <div class="aspect-w-2 aspect-h-3 md:aspect-w-3 md:aspect-h-4">
-                        <img class="object-cover object-center w-full h-full"
-                            src="{{ asset('storage/event_pictures/' . $event->event_picture) }}" alt="Event Image" />
-                    </div>
-                    <div class="p-5 flex-grow">
-                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-black">{{ $event->event_name }}</h5>
-                        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{ $event->event_location }}</p>
-                        <div class="flex justify-between px-0  mb-4">
-                            <p
-                                class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-orange-600 rounded-lg hover:bg-orange-600 focus:ring-4 focus:outline-none focus:ring-blue-300">
-                                {{ $event->event_date }}</p>
-                            <p class="text-2xl font-bold">Rp.{{ number_format($event->price, 0, ',', '.') }}</p>
+            <div id="to_ticket" class="grid grid-cols-1 md:grid-cols-2 gap-2 place-items-center">
+                @foreach ($events as $event)
+                    <a href="{{ route('event_details', ['event_id' => $event->event_id]) }}">
+                        <div class="card bg-white">
+                            <div class="imgDisplay">
+                                <div class="relative pb-[56.25%] bg-gray-200">
+                                    <img src="{{ asset('storage/event_pictures/' . $event->event_picture) }}" alt="Event"
+                                        class="absolute h-full w-full object-cover" />
+                                </div>
+                                <div class="y-date-boxInfo bg-orange-500">
+                                    <div class="y-date-month text-white">
+                                        {{ \Carbon\Carbon::parse($event->event_date)->format('M') }}
+                                    </div>
+                                    <div class="y-date-day text-orange-500">
+                                        {{ \Carbon\Carbon::parse($event->event_date)->format('d') }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="y-card-title">
+                                <p class="boxTitle">{{ $event->event_name }} - {{ $event->event_location }}</p>
+                                <p class="boxAddress">{{ $event->event_location }}</p>
+                                <hr class="y-separator" />
+                                <p class="boxInfo">Start From <span
+                                        class="boxPrice">Rp&nbsp;{{ number_format($event->price, 0, ',', '.') }}</span></p>
+                            </div>
                         </div>
-                    </div>
-                </a>
-            @endforeach
-            <a href="ticketdetailpage.html">
-                <div class="card bg-white">
-                  <div class="imgDisplay">
-                    <div class="relative pb-[56.25%] bg-gray-200">
-                      <img src="image/carousels1.svg" alt="Event" class="absolute h-full w-full object-cover" />
-                    </div>
-                    <div class="y-date-boxInfo bg-orange-500">
-                      <div class="y-date-month text-white">Aug</div>
-                      <div class="y-date-day text-white">02</div>
-                    </div>
-                  </div>
-                  <div class="y-card-title">
-                    <p class="boxTitle">Nama Event - Kota Semarang</p>
-                    <p class="boxAddress">Sam Poo Kong | Semarang</p>
-                    <hr class="y-separator" />
-                    <p class="boxInfo">Start From <span class="boxPrice">Rp&nbsp;109.000</span></p>
-                  </div>
-                </div>
-              </a>
-        </div>
+                    </a>
+                @endforeach
+
+
+
+            </div>
         @endif
 
 

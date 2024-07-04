@@ -19,6 +19,61 @@
           grid-template-columns: repeat(4, minmax(0, 1fr));
         }
       }
+      .card {
+  position: relative;
+  width: 300px;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+.imgDisplay {
+  position: relative;
+}
+.y-date-boxInfo {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: white;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  text-align: center;
+}
+.y-date-month {
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: #ff6b6b;
+}
+.y-date-day {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+.y-card-title {
+  padding: 1rem;
+}
+.boxTitle {
+  font-size: 1.125rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+.boxAddress {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+}
+.y-separator {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 0.5rem 0;
+}
+.boxInfo {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+.boxPrice {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #f97316;
+}
   </style>
   @include('landing.components.navbar') 
   
