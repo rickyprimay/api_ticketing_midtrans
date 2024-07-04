@@ -135,16 +135,20 @@ class OrdersController extends Controller
             $ticketUser->events_id = $event_id;
             $ticketUser->users_email = $email_buyer;
 
-            $this->generateQrCode($ticketUser, $i, $email_buyer);
-
+            // Simpan ticketUser untuk mendapatkan ID
             $ticketUser->save();
+
+            // Generate QR Code setelah menyimpan untuk mendapatkan ID
+            $this->generateQrCode($ticketUser, $i, $email_buyer);
         }
     }
 
     protected function generateQrCode(TicketUsers $ticketUser, $index, $email_buyer)
     {
-        $qrCodePath = 'ticket_qr/ticket_' . md5($ticketUser->id . '_' . $index) . '.png';
-        $url = url('/api/tickets/' . $ticketUser->id . '/redeem');
+        $ticketUserId = $ticketUser->id;
+
+        $qrCodePath = 'ticket_qr/ticket_' . md5($ticketUserId . '_' . $index) . '.png';
+        $url = url('/tickets/' . $ticketUserId . '/redeem');
         $qrCode = QrCode::format('png')->size(312)->merge(public_path('assets/logo/border-black.png'), 0.47, true)->errorCorrection('Q')->generate($url);
 
         Storage::disk('public')->put($qrCodePath, $qrCode);

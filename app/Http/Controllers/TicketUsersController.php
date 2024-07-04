@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TicketUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TicketUsersController extends Controller
 {
@@ -12,7 +13,16 @@ class TicketUsersController extends Controller
      */
     public function index()
     {
-        //
+        $user = Auth::user();
+        $tickets_user = TicketUsers::with('event')
+            ->where('users_email', $user->email)
+            ->get();
+
+        if ($tickets_user->isEmpty()) {
+            return view('landing.pages.ticket.index')->with('message', 'Oops kamu tidak memiliki tiket');
+        }
+
+        return view('landing.pages.ticket.index', compact('tickets_user'));
     }
 
     /**

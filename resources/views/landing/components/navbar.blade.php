@@ -1,6 +1,6 @@
 <nav class="bg-white dark:bg-[#454545] w-full z-20 top-0 start-0 border-b border-[#454545] dark:border-[#454545]">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <a href="https://ticketify.id/" class="flex items-center space-x-3 rtl:space-x-reverse">
+        <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
             <img src="{{ asset('assets/logo/logo.svg') }}" class="h-10" alt="Flowbite Logo" />
         </a>
         <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
@@ -67,7 +67,7 @@
             <ul
                 class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-[#454545] md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-[#454545] dark:bg-[#454545] md:dark:bg-[#454545] dark:border-gray-700 mx-auto">
                 <li>
-                    <a href="ticketspage.html"
+                    <a href="{{ route('tickets.index') }}"
                         class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Ticket</a>
                 </li>
                 <li>

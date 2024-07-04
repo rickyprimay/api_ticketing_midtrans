@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TicketUsersController;
 use App\Http\Controllers\UserEditorController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LandingController;
@@ -32,7 +33,7 @@ Route::get('/tickets/buy/{id}', [TicketController::class, 'buy'])->name('tickets
 Route::get('/events/search', [LandingController::class, 'search'])->name('events.search');
 
 Route::group(['middleware' => 'role:0'], function () {
-    Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
+    Route::get('/tickets', [TicketUsersController::class, 'index'])->name('tickets.index');
     Route::get('/edit-profile', [UserEditorController::class, 'index'])->name('edit.index');
     Route::put('/profile/update', [UserEditorController::class, 'update'])->name('profile.update');
     Route::get('/event/{event_id}', [EventsController::class, 'show'])->name('event_details');
