@@ -15,7 +15,10 @@
         <tr>
             <td style="padding: 20px;">
                 <header style="text-align: center;">
-                    <a href="#"><img src="{{ asset('{{ asset('assets/logo/logo.png') }}') }}" alt="Logo" style="width: 200px; height: auto;"></a>
+                    <a href="#">
+                        <img src="{{ asset('assets/logo/logo.png') }}" alt="Logo" style="width: 200px; height: auto;">
+                    </a>
+                    
                 </header>
             </td>
         </tr>
