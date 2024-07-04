@@ -24,7 +24,11 @@ Route::get('/test-email', function () {
 
 Route::get('/', [LandingController::class, 'index'])->name('index');
 Route::get('/event', [EventsController::class, 'index'])->name('event');
+Route::post('/notification', [OrdersController::class, 'notificationCallback'])->name('notification');
 
+Route::get('/events', [EventsController::class, 'index'])->name('events.index');
+Route::get('/tickets/buy/{id}', [TicketController::class, 'buy'])->name('tickets.buy');
+Route::get('/events/search', [LandingController::class, 'search'])->name('events.search');
 
 Route::group(['middleware' => 'role:0'], function () {
     Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
@@ -33,20 +37,3 @@ Route::group(['middleware' => 'role:0'], function () {
     Route::post('/create-invoice', [OrdersController::class, 'createInvoice'])->name('create-invoice');
 });
 
-
-Route::post('/notification', [OrdersController::class, 'notificationCallback'])->name('notification');
-
-Route::get('/events', [EventsController::class, 'index'])->name('events.index');
-Route::get('/tickets/buy/{id}', [TicketController::class, 'buy'])->name('tickets.buy');
-
-Route::group(['middleware' => ['auth:web', 'checkUserRole:0']], function () {
-
-});
-
-Route::group(['middleware' => ['auth:web', 'checkUserRole:1']], function () {
-
-});
-
-Route::group(['middleware' => ['auth:web', 'checkUserRole:2']], function () {
-
-});

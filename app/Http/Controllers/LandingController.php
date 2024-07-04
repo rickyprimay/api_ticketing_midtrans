@@ -17,5 +17,11 @@ class LandingController extends Controller
         $events = Events::all();
         return view('landing.pages.events', ['events' => $events]);
     }
+    public function search(Request $request)
+    {
+        $search = $request->input('search');
+        $events = Events::where('event_name', 'like', '%' . $search . '%')->get();
 
+        return view('landing.index', ['events' => $events]);
+    }
 }

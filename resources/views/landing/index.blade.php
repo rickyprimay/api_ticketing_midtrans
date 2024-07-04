@@ -69,13 +69,16 @@
         <!-- Filter and Search Buttons -->
 
         <div class="flex justify-between px-0 md:px-16 mb-4">
-            <form action="" method="GET" class="flex">
+            <form action="{{ route('events.search') }}" method="GET" class="flex">
                 <input type="text" name="search" placeholder="Cari events..." class="bg-white border-2 border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-300">
                 <button type="submit" class="bg-black text-white p-2 ml-2 rounded">Search</button>
             </form>
         </div>
 
         <!-- Card Grid -->
+        @if ($events->isEmpty())
+            <h1 class="text-3xl text-center font-bold text-gray-900">Oops! Event yang Anda cari tidak ditemukan.</h1>
+        @else
         <div id="to_ticket" class="grid grid-cols-1 md:grid-cols-2 gap-2 place-items-center">
             @foreach ($events as $event)
                 <a href="{{ route('event_details', ['event_id' => $event->event_id]) }}"
@@ -97,6 +100,7 @@
                 </a>
             @endforeach
         </div>
+        @endif
 
 
     </div>
