@@ -25,6 +25,10 @@
                 <div class="mt-4 text-sm text-red-600 dark:text-red-400">Silakan kembali ke halaman sebelumnya untuk memulai proses verifikasi.</div>
                 @else
                 <div id="resendSection" class="mt-4 text-sm text-gray-600 dark:text-gray-400">
+                    Kode OTP sudah dikirimkan ke Email : {{(session('email'))}}
+                </div>
+
+                <div id="resendSection" class="mt-4 text-sm text-gray-600 dark:text-gray-400">
                     Kode tidak masuk? <a id="resendLink" href="#" onclick="event.preventDefault(); resendOTP();">Kirim Ulang</a>
                 </div>
                 

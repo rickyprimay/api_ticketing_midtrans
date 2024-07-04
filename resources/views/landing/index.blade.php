@@ -99,6 +99,25 @@
                     </div>
                 </a>
             @endforeach
+            <a href="ticketdetailpage.html">
+                <div class="card bg-white">
+                  <div class="imgDisplay">
+                    <div class="relative pb-[56.25%] bg-gray-200">
+                      <img src="image/carousels1.svg" alt="Event" class="absolute h-full w-full object-cover" />
+                    </div>
+                    <div class="y-date-boxInfo bg-orange-500">
+                      <div class="y-date-month text-white">Aug</div>
+                      <div class="y-date-day text-white">02</div>
+                    </div>
+                  </div>
+                  <div class="y-card-title">
+                    <p class="boxTitle">Nama Event - Kota Semarang</p>
+                    <p class="boxAddress">Sam Poo Kong | Semarang</p>
+                    <hr class="y-separator" />
+                    <p class="boxInfo">Start From <span class="boxPrice">Rp&nbsp;109.000</span></p>
+                  </div>
+                </div>
+              </a>
         </div>
         @endif
 

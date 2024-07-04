@@ -5,7 +5,7 @@
     <div class="bg-[#454545] dark:bg-[#454545] flex justify-center items-center h-screen">
         <div class="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2">
             <div class="flex flex-col items-center mb-8">
-                <img src="image/logowhite.svg" alt="Logo" />
+                <img src="{{ asset('assets/img/logo/logo.svg') }}" alt="Logo" />
                 <h1 class="text-2xl font-semibold text-white">Welcome!</h1>
             </div>
             <form action="{{ route('auth.login') }}" method="POST">
@@ -20,13 +20,6 @@
                         <input id="password" name="password" type="password" class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" autocomplete="off" />
                     </div>
                 </div>
-                <div class="mb-4 flex items-center flex-col sm:flex-row sm:justify-between">
-                    <div class="mb-2 sm:mb-0 flex items-center">
-                        <input type="checkbox" id="remember" name="remember" class="text-blue-500" />
-                        <label for="remember" class="text-orange-200 ml-2">Remember Me</label>
-                    </div>
-                    <a href="#" class="text-orange-200 hover:underline">Forgot Password?</a>
-                </div>
                 <button type="submit" class="bg-orange-200 text-black font-semibold rounded-md py-2 px-4 w-full">Login</button>
             </form>
             <div class="mt-6 text-white text-center flex justify-center">
@@ -35,7 +28,7 @@
             </div>
         </div>
         <div class="w-1/2 h-screen hidden lg:block">
-            <img src="image/ck-bg.svg" alt="Placeholder Image" class="object-cover w-full h-full" />
+            <img src="{{ asset('assets/img/logo/ck-bg.svg') }}" alt="Placeholder Image" class="object-cover w-full h-full" />
         </div>
     </div>
 </section>
