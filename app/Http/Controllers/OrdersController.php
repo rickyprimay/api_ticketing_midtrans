@@ -26,6 +26,17 @@ class OrdersController extends Controller
     {
         Configuration::setXenditKey(env('XENDIT_SECRET_KEY'));
     }
+    public function index()
+    {
+        $email = Auth::user()->email;
+
+        $orders = Order::with(['event', 'event.tickets']) // Load events and their tickets
+            ->where('email_buyer', $email)
+            ->latest()
+            ->get();
+
+        return view('landing.pages.history.index', compact('orders'));
+    }
 
     public function order($event_id, $price)
     {

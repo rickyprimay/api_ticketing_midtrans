@@ -39,5 +39,6 @@ Route::group(['middleware' => 'role:0'], function () {
     Route::get('/event/{event_id}', [EventsController::class, 'show'])->name('event_details');
     Route::get('/order/{event_id}/{price}', [OrdersController::class, 'order'])->name('order');
     Route::post('/create-invoice', [OrdersController::class, 'createInvoice'])->name('create-invoice');
+    Route::get('/transactions', [OrdersController::class, 'index'])->name('history');
 });
 

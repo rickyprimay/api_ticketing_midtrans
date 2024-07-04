@@ -11,4 +11,8 @@ class Order extends Model
 
     use HasFactory;
     protected $quarded = [];
+    public function event()
+    {
+        return $this->belongsTo(Events::class, 'event_id');
+    }
 }
