@@ -42,8 +42,9 @@ Route::group(['middleware' => 'role:0'], function () {
     Route::post('/create-invoice', [OrdersController::class, 'createInvoice'])->name('create-invoice');
     Route::get('/transactions', [OrdersController::class, 'index'])->name('history');
 });
+
+Route::get('/comitee', [CommiteController::class, 'index'])->name('comitee.index');
 Route::group(['middleware' => 'role:1'], function () {
-    Route::get('/comitee', [CommiteController::class, 'index'])->name('comitee.index');
 });
 Route::group(['middleware' => 'role:2'], function () {
     
