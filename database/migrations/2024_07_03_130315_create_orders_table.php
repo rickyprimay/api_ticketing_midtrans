@@ -24,6 +24,11 @@ return new class extends Migration
             $table->bigInteger('total_amount');
             $table->string('status')->default('pending');
             $table->string('invoice_url');
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->string('phone_number');
+            $table->date('birth_date');
+            $table->enum('gender', ['Male', 'Female'])->nullable();
             $table->timestamps();
         });
     }

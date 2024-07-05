@@ -30,7 +30,7 @@ class OrdersController extends Controller
     {
         $email = Auth::user()->email;
 
-        $orders = Order::with(['event', 'event.tickets']) // Load events and their tickets
+        $orders = Order::with(['event', 'event.tickets'])
             ->where('email_buyer', $email)
             ->latest()
             ->get();
@@ -54,6 +54,11 @@ class OrdersController extends Controller
     {
         $this->users_name = Auth::user()->name;
         try {
+            $first_name = $request->input('first_name');
+            $last_name = $request->input('last_name');
+            $phone_number = $request->input('phone_number');
+            $gender = $request->input('gender');
+            $birth_date = $request->input('birth_date');
             $qty = $request->input('qty');
             $price = $request->input('price');
             $totalAmount = $qty * $price;
@@ -63,11 +68,16 @@ class OrdersController extends Controller
             $order->no_transaction = $no_transaction;
             $order->event_id = $request->input('event_id');
             $order->external_id = $no_transaction;
-            $order->name_buyer = Auth::user()->name;
-            $order->email_buyer = Auth::user()->email;
+            $order->name_buyer = $request->input('name');
+            $order->email_buyer = $request->input('email');
             $order->qty = $qty;
             $order->price = $price;
             $order->total_amount = $totalAmount;
+            $order->first_name = $first_name;
+            $order->last_name = $last_name;
+            $order->phone_number = $phone_number;
+            $order->birth_date = $birth_date;
+            $order->gender = $gender;
 
             $items = new InvoiceItem([
                 'name' => Auth::user()->name,
@@ -109,34 +119,49 @@ class OrdersController extends Controller
                 );
             }
 
-            $response = response()->json(
-                [
-                    'status' => 'success',
-                    'message' => 'callback sent',
-                ],
-                200,
-            );
-
             $order = Order::where('external_id', $request->external_id)->first();
 
             if ($order) {
                 if ($request->status == 'PAID') {
                     $order->status = 'Success';
                     $order->save();
-                    $this->generateTicketUsers($order, $order->name_buyer, $order->event_id, $order->email_buyer);
+                    $this->generateTicketUsers($order, $order->name_buyer, $order->event_id, $order->email_buyer, $order->first_name, $order->last_name, $order->phone_number, $order->birth_date, $order->gender);
+
+                    // Set session untuk redirect setelah callback berhasil
+                    session(['payment_status' => 'success']);
                 } else {
                     $order->status = 'Failed';
                     $order->save();
+
+                    // Set session untuk redirect setelah callback gagal
+                    session(['payment_status' => 'failed']);
                 }
             }
 
-            return $response;
+            return response()->json(
+                [
+                    'status' => 'success',
+                    'message' => 'callback sent',
+                ],
+                200,
+            );
         } catch (\Throwable $th) {
             throw $th;
         }
     }
 
-    protected function generateTicketUsers(Order $order, $users_name, $event_id, $email_buyer)
+    public function redirectAfterPayment()
+    {
+        $paymentStatus = session('payment_status');
+
+        if ($paymentStatus == 'success') {
+            return redirect()->route('history')->with('message', 'Pembayaran berhasil!');
+        } else {
+            return redirect()->route('history')->with('message', 'Pembayaran gagal!');
+        }
+    }
+
+    protected function generateTicketUsers(Order $order, $users_name, $event_id, $email_buyer, $first_name, $last_name, $phone_number, $birth_date, $gender)
     {
         $qty = $order->qty;
 
@@ -145,11 +170,14 @@ class OrdersController extends Controller
             $ticketUser->users_name = $users_name;
             $ticketUser->events_id = $event_id;
             $ticketUser->users_email = $email_buyer;
+            $ticketUser->first_name = $first_name;
+            $ticketUser->last_name = $last_name;
+            $ticketUser->phone_number = $phone_number;
+            $ticketUser->birth_date = $birth_date;
+            $ticketUser->gender = $gender;
 
-            // Simpan ticketUser untuk mendapatkan ID
             $ticketUser->save();
 
-            // Generate QR Code setelah menyimpan untuk mendapatkan ID
             $this->generateQrCode($ticketUser, $i, $email_buyer, $users_name);
         }
     }
