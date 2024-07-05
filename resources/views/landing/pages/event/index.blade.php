@@ -28,7 +28,7 @@
         <td class="border px-4 py-2"><span class="text-blue-500">{{ $event->event_date }}</span></td>
         <td class="border px-4 py-2">
           @if ($event->event_picture)
-          <img src="{{ asset('storage/event_pictures/' . $event->event_picture) }}" alt="Event Picture" style="max-width: 100px;">
+          <img src="{{ asset('storage/' . $event->event_picture) }}" alt="Event Picture" style="max-width: 100px;">
           @else
           <span class="text-blue-500">No Picture Available</span>
           @endif

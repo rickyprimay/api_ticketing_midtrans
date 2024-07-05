@@ -51,7 +51,12 @@ Route::group(['middleware' => 'role:2'], function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
     Route::get('/admin/ticket', [AdminController::class, 'ticket'])->name('admin.ticket');
     Route::get('/admin/event', [AdminController::class, 'event'])->name('admin.event');
+    Route::get('/admin/event/create', [AdminController::class, 'createEvent'])->name('event.create');
+    Route::post('/admin/event/store', [AdminController::class, 'storeEvent'])->name('admin.event.store');
+    Route::put('/admin/event/{id}', [AdminController::class, 'update'])->name('admin.event.update');
+    Route::delete('/admin/event/{id}', [AdminController::class, 'destroy'])->name('admin.event.destroy');
 });
+
 Route::group(['middleware' => 'role:3'], function () {
     
 });

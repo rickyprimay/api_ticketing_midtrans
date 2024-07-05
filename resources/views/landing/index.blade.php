@@ -82,7 +82,7 @@
                     <div class="card bg-white">
                         <div class="imgDisplay">
                             <div class="relative pb-[56.25%] bg-gray-200">
-                                <img src="{{ asset('storage/event_pictures/' . $event->event_picture) }}" alt="Event"
+                                <img src="{{ asset('storage/' . $event->event_picture) }}" alt="Event"
                                     class="absolute h-full w-full object-contain" />
                             </div>
                             <div class="y-date-boxInfo bg-orange-500">

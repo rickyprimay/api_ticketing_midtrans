@@ -17,6 +17,8 @@ class Events extends Model
         'price',
         'event_date',
         'event_status',
+        'event_start',
+        'event_ended'
     ];
 
     public function tickets()

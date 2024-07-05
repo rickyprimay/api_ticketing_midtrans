@@ -5,7 +5,7 @@
     <div class="container mx-auto px-4 py-8">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div class="flex justify-center pt-3">
-                <img src="{{ asset('storage/event_pictures/' . $event->event_picture) }}"
+                <img src="{{ asset('storage/' . $event->event_picture) }}"
                     class="w-[800px] h-[400px] object-cover" alt="Event Image" />
             </div>
             <div class="bg-white p-6 rounded-lg border-2 border-black">
