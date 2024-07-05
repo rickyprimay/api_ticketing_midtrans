@@ -11,20 +11,21 @@
             <div class="bg-white p-6 rounded-lg border-2 border-black">
                 <h2 class="text-2xl font-bold mb-4">{{ $event->event_name }}</h2>
                 <div class="text-gray-700 mb-4">
-                    <p>{{ \Carbon\Carbon::parse($event->event_date)->translatedFormat('j F Y') }} {{ $event->event_time }}</p>
+                    <p>{{ \Carbon\Carbon::parse($event->event_start)->translatedFormat('j F Y') }}-{{ \Carbon\Carbon::parse($event->event_ended)->translatedFormat('j F Y') }}</p>
                     <p>{{ $event->event_location }}</p>
                 </div>
                 <h3 class="text-xl font-semibold mt-8 mb-2">Ticket Categories</h3>
                 <div class="space-y-2">
                     @foreach ($tickets as $ticket)
-                        <div class="flex justify-between items-center p-2 border border-gray-300 rounded">
-                            <span>{{ $ticket->ticket_type }}</span>
-                            <span>Rp {{ number_format($ticket->price, 0, ',', '.') }}</span>
+                        <div class="flex items-center p-2 border border-gray-300 rounded">
+                            <div class="flex-1 truncate pr-4">{{ $ticket->ticket_type }}</div>
+                            <div class="w-32 text-right">Rp {{ number_format($ticket->price, 0, ',', '.') }}</div>
                             <button onclick="window.location.href='{{ route('order', ['event_id' => $event->event_id, 'price' => $ticket->price]) }}'"
-                                class="bg-[#454545] text-white px-4 py-2 rounded">Pesan</button>                            
+                                class="ml-4 bg-[#454545] text-white px-4 py-2 rounded">Pesan</button>                            
                         </div>
                     @endforeach
                 </div>
+                
             </div>
         </div>
     </div>

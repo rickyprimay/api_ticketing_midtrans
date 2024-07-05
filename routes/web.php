@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommiteController;
 use App\Http\Controllers\TicketUsersController;
 use App\Http\Controllers\UserEditorController;
 use App\Http\Controllers\AuthController;
@@ -31,6 +32,7 @@ Route::post('/notification', [OrdersController::class, 'notificationCallback'])-
 Route::get('/events', [EventsController::class, 'index'])->name('events.index');
 Route::get('/tickets/buy/{id}', [TicketController::class, 'buy'])->name('tickets.buy');
 Route::get('/events/search', [LandingController::class, 'search'])->name('events.search');
+Route::get('/comitee', [CommiteController::class, 'index'])->name('comitee.index');
 
 Route::group(['middleware' => 'role:0'], function () {
     Route::get('/tickets', [TicketUsersController::class, 'index'])->name('tickets.index');
@@ -42,7 +44,6 @@ Route::group(['middleware' => 'role:0'], function () {
     Route::get('/transactions', [OrdersController::class, 'index'])->name('history');
 });
 Route::group(['middleware' => 'role:1'], function () {
-    
 });
 Route::group(['middleware' => 'role:2'], function () {
     
