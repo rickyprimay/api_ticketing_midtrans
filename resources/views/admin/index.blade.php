@@ -6,11 +6,11 @@
 @section('content')
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
     <div class="bg-orange-500 text-white p-4 rounded-lg">
-      <div class="text-2xl font-bold">2478</div>
+      <div class="text-2xl font-bold">{{$totalTickets}}</div>
       <div class="text-lg">Ticket Anda</div>
     </div>
     <div class="bg-green-500 text-white p-4 rounded-lg">
-      <div class="text-2xl font-bold">983</div>
+      <div class="text-2xl font-bold">{{$totalEventsa}}</div>
       <div class="text-lg">Event Anda</div>
     </div>
     <div class="bg-purple-500 text-white p-4 rounded-lg">

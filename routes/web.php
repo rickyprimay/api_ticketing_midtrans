@@ -27,7 +27,6 @@ Route::get('/test-email', function () {
 });
 
 Route::get('/', [LandingController::class, 'index'])->name('index');
-Route::get('/event', [EventsController::class, 'index'])->name('event');
 Route::post('/notification', [OrdersController::class, 'notificationCallback'])->name('notification');
 
 Route::get('/events', [EventsController::class, 'index'])->name('events.index');
@@ -50,6 +49,9 @@ Route::group(['middleware' => 'role:1'], function () {
 Route::group(['middleware' => 'role:2'], function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
     Route::get('/admin/ticket', [AdminController::class, 'ticket'])->name('admin.ticket');
+    Route::post('/admin/ticket/store', [AdminController::class, 'storeTicket'])->name('admin.ticket.store');
+    Route::put('/admin/ticket/update/{id}', [AdminController::class, 'updateTicket'])->name('admin.ticket.update');
+    Route::delete('/admin/ticket/destroy/{id}', [AdminController::class, 'destroyTicket'])->name('admin.ticket.destroy');
     Route::get('/admin/event', [AdminController::class, 'event'])->name('admin.event');
     Route::get('/admin/event/create', [AdminController::class, 'createEvent'])->name('event.create');
     Route::post('/admin/event/store', [AdminController::class, 'storeEvent'])->name('admin.event.store');

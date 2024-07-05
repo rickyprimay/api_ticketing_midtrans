@@ -10,6 +10,7 @@
             </div>
             <div class="bg-white p-6 rounded-lg border-2 border-black">
                 <h2 class="text-2xl font-bold mb-4">{{ $event->event_name }}</h2>
+                <h2 class="text-2xl font-bold mb-4">{{ $event->event_status }}</h2>
                 <div class="text-gray-700 mb-4">
                     <p>{{ \Carbon\Carbon::parse($event->event_start)->translatedFormat('j F Y') }}-{{ \Carbon\Carbon::parse($event->event_ended)->translatedFormat('j F Y') }}</p>
                     <p>{{ $event->event_location }}</p>

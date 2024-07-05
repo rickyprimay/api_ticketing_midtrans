@@ -18,6 +18,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class OrdersController extends Controller
 {
@@ -40,16 +41,22 @@ class OrdersController extends Controller
     }
 
     public function order($event_id, $price)
-    {
-        $event = Events::find($event_id);
-        $orders = Order::latest()->get();
-        $user = Auth::user();
+{
+    $event = Events::find($event_id);
 
-        $tickets = Tickets::where('events_id', $event_id)->get();
-        $talents = Talents::where('event_id', $event_id)->get();
-
-        return view('landing.pages.event.page.order', compact('event', 'tickets', 'talents', 'event_id', 'price', 'orders'));
+    if (!$event || $event->event_status != 1) {
+        Alert::error('Gagal', 'Event sudah selesai/tidak tersedia');
+        return redirect()->route('index')->with('error', 'Event not found or not available');
     }
+
+    $orders = Order::latest()->get();
+    $user = Auth::user();
+
+    $tickets = Tickets::where('events_id', $event_id)->get();
+    $talents = Talents::where('event_id', $event_id)->get();
+
+    return view('landing.pages.event.page.order', compact('event', 'tickets', 'talents', 'event_id', 'price', 'orders'));
+}
 
     public function createInvoice(Request $request)
     {
@@ -71,7 +78,7 @@ class OrdersController extends Controller
             $order->event_id = $request->input('event_id');
             $order->external_id = $no_transaction;
             $order->name_buyer = $request->input('name');
-            $order->email_buyer = $request->input('email');
+            $order->email_buyer = Auth::user()->email;
             $order->qty = $qty;
             $order->price = $price;
             $order->total_amount = $totalAmount;

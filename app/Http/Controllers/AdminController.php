@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Events;
 use App\Models\Tickets;
+use Illuminate\Console\Scheduling\Event;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
@@ -13,14 +14,71 @@ use Illuminate\Support\Facades\Storage;
 class AdminController extends Controller
 {
     public function index()
-    {
-        return view('admin.index');
+    {   
+        $events = Events::where('users_id', Auth::id())->pluck('event_id');
+
+        $event = Events::all();
+
+        $tickets = Tickets::whereIn('events_id', $events)->get();
+
+        $eventsa = Events::where('users_id', Auth::id())->get();
+        $totalTickets = $tickets->count();
+        $totalEventsa = $eventsa->count();
+
+        return view('admin.index', compact('totalTickets', 'totalEventsa'));
     }
 
     public function ticket()
     {
-        $tickets = Tickets::all();
-        return view('admin.page.ticket.index', compact('tickets'));
+        $events = Events::where('users_id', Auth::id())->pluck('event_id');
+
+        $event = Events::all();
+
+        $tickets = Tickets::whereIn('events_id', $events)->get();
+
+        return view('admin.page.ticket', compact('tickets', 'event'));
+    }
+    public function storeTicket(Request $request)
+    {
+        $request->validate([
+            'ticket_type' => 'required|string',
+            'event_id' => 'required|integer',
+            'price' => 'required|numeric',
+        ]);
+
+        Tickets::create([
+            'ticket_type' => $request->ticket_type,
+            'events_id' => $request->event_id,
+            'price' => $request->price,
+        ]);
+
+        return redirect()->back()->with('success', 'Ticket created successfully.');
+    }
+
+    public function updateTicket(Request $request, $id)
+    {
+        $request->validate([
+            'ticket_type' => 'required|string',
+            'event_id' => 'required|integer',
+            'price' => 'required|numeric',
+        ]);
+
+        $ticket = Tickets::findOrFail($id);
+        $ticket->update([
+            'ticket_type' => $request->ticket_type,
+            'events_id' => $request->event_id, // Sesuaikan dengan 'events_id'
+            'price' => $request->price,
+        ]);
+
+        return redirect()->back()->with('success', 'Ticket updated successfully.');
+    }
+
+    public function destroyTicket($id)
+    {
+        $ticket = Tickets::findOrFail($id);
+        $ticket->delete();
+
+        return redirect()->back()->with('success', 'Ticket deleted successfully.');
     }
 
     public function event()

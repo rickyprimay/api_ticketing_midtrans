@@ -32,11 +32,13 @@
           </a>
         </li>
         <li>
-          <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
-            <span class="flex-1 ms-3 whitespace-nowrap">
-              <button type="button" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">LOG OUT</button>
-            </span>
-          </a>
+            <form action="{{ route('auth.logout') }}" method="POST" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                @csrf
+                <button type="submit" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
+                    LOG OUT
+                </button>
+            </form>
+            
         </li>
       </ul>
     </div>
