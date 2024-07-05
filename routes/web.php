@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CommiteController;
 use App\Http\Controllers\TicketUsersController;
 use App\Http\Controllers\UserEditorController;
@@ -43,11 +44,13 @@ Route::group(['middleware' => 'role:0'], function () {
     Route::get('/transactions', [OrdersController::class, 'index'])->name('history');
 });
 
-Route::get('/comitee', [CommiteController::class, 'index'])->name('comitee.index');
 Route::group(['middleware' => 'role:1'], function () {
+    Route::get('/comitee', [CommiteController::class, 'index'])->name('comitee.index');
 });
 Route::group(['middleware' => 'role:2'], function () {
-    
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+    Route::get('/admin/ticket', [AdminController::class, 'ticket'])->name('admin.ticket');
+    Route::get('/admin/event', [AdminController::class, 'event'])->name('admin.event');
 });
 Route::group(['middleware' => 'role:3'], function () {
     

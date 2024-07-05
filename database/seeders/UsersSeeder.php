@@ -41,8 +41,8 @@ class UsersSeeder extends Seeder
         Users::factory()->create([
             'name' => 'Admin User',
             'birth_date' => '1985-01-01',
-            'email' => 'admin@example.com',
-            'password' => Hash::make('admin@example.com'),
+            'email' => 'ticketifyid@gmail.com',
+            'password' => Hash::make('ticketifyid@gmail.com'),
             'gender' => 'Male',
             'phone_number' => '1122334455',
             'is_verified' => true,

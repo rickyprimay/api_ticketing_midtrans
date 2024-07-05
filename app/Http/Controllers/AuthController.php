@@ -168,6 +168,9 @@ class AuthController extends Controller
             else if(Auth::user()->role==1){
                 return redirect()->route('comitee.index');
             }
+            else if(Auth::user()->role==1){
+                return redirect()->route('admin.index');
+            }
             return redirect()->route('index');
         }
 

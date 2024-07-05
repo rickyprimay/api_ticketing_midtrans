@@ -17,6 +17,7 @@ class EventSeeder extends Seeder
             [
                 'event_name' => 'Festival Arak-Arakan Cheng Ho 2024',
                 'event_description' => 'nunggu persetujuan EO',
+                'users_id' => 2,
                 'price' => 25000,
                 'event_location' => 'Sam Poo Kong, Semarang, Jawa Tengah',
                 'event_picture' => 'dummy.jpg',
