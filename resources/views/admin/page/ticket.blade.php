@@ -9,11 +9,10 @@
       <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 table-border">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
-            <th scope="col" class="px-6 py-3">Nama event</th>
-            <th scope="col" class="px-6 py-3">Lokasi event</th>
-            <th scope="col" class="px-6 py-3">Image</th>
-            <th scope="col" class="px-6 py-3">Harga</th>
-            <th scope="col" class="px-6 py-3">Action</th>
+            <th scope="col" class="px-6 py-3">No.</th>
+            <th scope="col" class="px-6 py-3">Ticket Type</th>
+            <th scope="col" class="px-6 py-3">Ticket Dari event</th>
+            <th scope="col" class="px-6 py-3">Harga Ticket</th>
           </tr>
         </thead>
         <tbody>

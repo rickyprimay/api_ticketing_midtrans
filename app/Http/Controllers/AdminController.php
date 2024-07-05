@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Events;
+use App\Models\Tickets;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
@@ -15,12 +16,13 @@ class AdminController extends Controller
     {
         return view('admin.index');
     }
-    
+
     public function ticket()
     {
-        return view('admin.page.ticket');
+        $tickets = Tickets::all();
+        return view('admin.page.ticket.index', compact('tickets'));
     }
-    
+
     public function event()
     {
         $events = Events::where('users_id', Auth::id())->get();
@@ -28,8 +30,7 @@ class AdminController extends Controller
     }
 
     public function update(Request $request, $id)
-{
-    try {
+    {
         $validatedData = $request->validate([
             'event_name' => 'required|string|max:255',
             'event_description' => 'required|string',
@@ -41,27 +42,18 @@ class AdminController extends Controller
             'event_status' => 'required|in:2,3',
         ]);
 
-
-        // dd($validatedData['event_ended']);   
-        // Temukan dan perbarui data event
         $event = Events::findOrFail($id);
         $event->update($validatedData);
 
-        // dd($event);
-
-
         Alert::success('Berhasil', 'Event telah terupdate.');
         return redirect()->route('admin.event')->with('success', 'Event updated successfully.');
-    } catch (\Throwable $th) {
-        dd($th);
     }
-}
 
     public function destroy($id)
     {
         $event = Events::findOrFail($id);
         $event->delete();
-        
+
         Alert::success('Berhasil', 'Event telah terhapus');
         return redirect()->route('admin.event')->with('success', 'Event deleted successfully.');
     }
@@ -86,9 +78,7 @@ class AdminController extends Controller
 
         if ($validator->fails()) {
             Alert::error('Gagal', 'Validasi gagal.');
-            return redirect()->back()
-                        ->withErrors($validator)
-                        ->withInput();
+            return redirect()->back()->withErrors($validator)->withInput();
         }
         try {
             $event = new Events();
@@ -106,7 +96,7 @@ class AdminController extends Controller
                 $image = $request->file('event_picture');
                 $imageName = time() . '_' . $image->getClientOriginalName();
                 $path = $image->store('event_pictures', 'public');
-            
+
                 $event->event_picture = $path;
             }
 
@@ -116,7 +106,10 @@ class AdminController extends Controller
             return redirect()->route('admin.event')->with('success', 'Event created successfully.');
         } catch (\Exception $e) {
             Alert::error('Gagal', 'Event gagal dibuat. ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Failed to create event. ' . $e->getMessage())->withInput();
+            return redirect()
+                ->back()
+                ->with('error', 'Failed to create event. ' . $e->getMessage())
+                ->withInput();
         }
     }
 }

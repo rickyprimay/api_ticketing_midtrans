@@ -9,9 +9,10 @@ class LandingController extends Controller
 {
     public function index()
     {
-        $events = Events::all();
+        $events = Events::where('event_status', 1)->get();
         return view('landing.index', ['events' => $events]);
     }
+
     public function index_events()
     {
         $events = Events::all();

@@ -22,6 +22,13 @@ class CheckRole
         }
 
         
-        return redirect()->route('unauthorized');
+        switch ($user->role) {
+            case 1:
+                return redirect()->route('comitee.index');
+            case 2:
+                return redirect()->route('admin.index');
+            default:
+                return redirect()->route('unauthorized'); 
+        }
     }
 }
