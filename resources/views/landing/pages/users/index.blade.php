@@ -20,10 +20,13 @@
                 </div>
 
                 <div class="mt-2">
-                    <label for="birth_date" class="block text-gray-700">Birth Date</label>
-                    <div class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer focus:outline-none">
-                        <input id="birth_date" name="birth_date" type="text" class="border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5" placeholder="mm-dd-yyyy" value="{{ old('birth_date', $user->birth_date ? \Carbon\Carbon::parse($user->birth_date)->format('m-d-Y') : '') }}" />
-                    </div>
+                    <label for="datepicker-format" class="block text-gray-700">Birth Date</label>
+                        <div
+                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer focus:outline-none">
+                            <input name="birth_date" id="datepicker-format" datepicker datepicker-format="mm-dd-yyyy" type="text"
+                                class="border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5" value="{{ old('birth_date', $user->birth_date ? \Carbon\Carbon::parse($user->birth_date)->format('m-d-Y') : '') }}"
+                                placeholder="mm-dd-yyyy" />
+                        </div>
                 </div>
 
                 <div class="mb-4">

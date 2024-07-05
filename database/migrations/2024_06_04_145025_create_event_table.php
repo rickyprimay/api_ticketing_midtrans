@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('event_location');
             $table->string('event_picture')->nullable();
             $table->date('event_date');
+            $table->date('event_start');
+            $table->date('event_ended');
             $table->tinyInteger('event_status')->default(0);
             $table->timestamps();
         });

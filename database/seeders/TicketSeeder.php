@@ -15,15 +15,29 @@ class TicketSeeder extends Seeder
         DB::table('tickets')->insert([
             [
                 'events_id' => 1,
-                'ticket_type' => 'Umum',
-                'price' => 100000,
+                'ticket_type' => 'Day 1',
+                'price' => 35000,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'events_id' => 1,
-                'ticket_type' => 'Pelajar',
-                'price' => 500000,
+                'ticket_type' => 'Day 2',
+                'price' => 35000,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'events_id' => 1,
+                'ticket_type' => 'Day 3',
+                'price' => 25000,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'events_id' => 1,
+                'ticket_type' => 'Bundling Day 1 & 2',
+                'price' => 65000,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

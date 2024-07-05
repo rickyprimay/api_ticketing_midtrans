@@ -29,6 +29,7 @@
                     <h2 style="color: #333333; font-size: 20px;">Hi , {{ $details['name'] }}</h2>
                     <p style="color: #666666; font-size: 16px; margin-top: 10px;">This is your QrCode Tikcket</p>
                     <img src="{{ $message->embed($details['qrCodePath']) }}" alt="QR Code">
+                    <h3 style="color: #333333; font-size: 20px;">Kode : {{ $details['uniqueCode'] }}</h3>
                     <p style="color: #666666; font-size: 16px; margin-top: 20px;">Thanks,<br>Ticketify Team</p>
                 </main>
             </td>

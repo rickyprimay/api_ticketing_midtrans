@@ -17,6 +17,7 @@ use Xendit\Invoice\InvoiceItem;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
+use Carbon\Carbon;
 
 class OrdersController extends Controller
 {
@@ -58,7 +59,8 @@ class OrdersController extends Controller
             $last_name = $request->input('last_name');
             $phone_number = $request->input('phone_number');
             $gender = $request->input('gender');
-            $birth_date = $request->input('birth_date');
+            $birth_date = Carbon::createFromFormat('d-m-Y', $request->input('birth_date'))->format('Y-m-d');
+
             $qty = $request->input('qty');
             $price = $request->input('price');
             $totalAmount = $qty * $price;
@@ -127,14 +129,10 @@ class OrdersController extends Controller
                     $order->save();
                     $this->generateTicketUsers($order, $order->name_buyer, $order->event_id, $order->email_buyer, $order->first_name, $order->last_name, $order->phone_number, $order->birth_date, $order->gender);
 
-                    // Set session untuk redirect setelah callback berhasil
-                    session(['payment_status' => 'success']);
                 } else {
                     $order->status = 'Failed';
                     $order->save();
 
-                    // Set session untuk redirect setelah callback gagal
-                    session(['payment_status' => 'failed']);
                 }
             }
 
@@ -150,16 +148,6 @@ class OrdersController extends Controller
         }
     }
 
-    public function redirectAfterPayment()
-    {
-        $paymentStatus = session('payment_status');
-
-        if ($paymentStatus == 'success') {
-            return redirect()->route('history')->with('message', 'Pembayaran berhasil!');
-        } else {
-            return redirect()->route('history')->with('message', 'Pembayaran gagal!');
-        }
-    }
 
     protected function generateTicketUsers(Order $order, $users_name, $event_id, $email_buyer, $first_name, $last_name, $phone_number, $birth_date, $gender)
     {
@@ -168,6 +156,7 @@ class OrdersController extends Controller
         for ($i = 0; $i < $qty; $i++) {
             $ticketUser = new TicketUsers();
             $ticketUser->users_name = $users_name;
+            $ticketUser->unique_code = rand();
             $ticketUser->events_id = $event_id;
             $ticketUser->users_email = $email_buyer;
             $ticketUser->first_name = $first_name;
@@ -184,17 +173,38 @@ class OrdersController extends Controller
 
     protected function generateQrCode(TicketUsers $ticketUser, $index, $email_buyer, $users_name)
     {
-        $ticketUserId = $ticketUser->id;
 
-        $qrCodePath = 'ticket_qr/ticket_' . md5($ticketUserId . '_' . $index) . '.png';
-        $url = url('/tickets/' . $ticketUserId . '/redeem');
-        $qrCode = QrCode::format('png')->size(312)->merge(public_path('assets/logo/border-black.png'), 0.47, true)->errorCorrection('Q')->generate($url);
+        $event = Events::find($ticketUser->events_id);
+        $eventName = $event ? $event->event_name : 'Unknown Event';
 
+        $qrData = [
+            'ticket_id' => $ticketUser->id,
+            'unique_code' => $ticketUser->unique_code,
+            'users_name' => $ticketUser->users_name,
+            'first_name' => $ticketUser->first_name,
+            'last_name' => $ticketUser->last_name,
+            'users_email' => $ticketUser->users_email,
+            'phone_number' => $ticketUser->phone_number,
+            'birth_date' => $ticketUser->birth_date,
+            'gender' => $ticketUser->gender,
+            'event_yang_diikuti' => $eventName,
+        ];
+
+        // Encode data ke JSON
+        $qrCodeContent = json_encode($qrData);
+
+        // Generate QR code dengan konten JSON
+        $qrCodePath = 'ticket_qr/ticket_' . md5($ticketUser->id . '_' . $index) . '.png';
+        $qrCode = QrCode::format('png')->size(312)->merge(public_path('assets/logo/border-black.png'), 0.47, true)->errorCorrection('Q')->generate($qrCodeContent);
+
+        // Simpan QR code ke storage
         Storage::disk('public')->put($qrCodePath, $qrCode);
 
+        // Update path QR code di ticketUser
         $ticketUser->qr_code_ticket = $qrCodePath;
         $ticketUser->save();
 
+        // Kirim email dengan lampiran QR code
         $this->sendEmailWithAttachment($ticketUser, $email_buyer, $users_name);
     }
 
@@ -208,6 +218,7 @@ class OrdersController extends Controller
             'body' => 'Berikut Kode QR ticket anda',
             'qrCodePath' => $qrCodePath,
             'name' => $users_name,
+            'uniqueCode' => $ticketUser->unique_code
         ];
 
         Mail::to($email_buyer)->send(new \App\Mail\TicketQrMail($details, $qrCodePath));

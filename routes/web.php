@@ -41,4 +41,13 @@ Route::group(['middleware' => 'role:0'], function () {
     Route::post('/create-invoice', [OrdersController::class, 'createInvoice'])->name('create-invoice');
     Route::get('/transactions', [OrdersController::class, 'index'])->name('history');
 });
+Route::group(['middleware' => 'role:1'], function () {
+    
+});
+Route::group(['middleware' => 'role:2'], function () {
+    
+});
+Route::group(['middleware' => 'role:3'], function () {
+    
+});
 
