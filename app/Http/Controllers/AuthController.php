@@ -162,6 +162,12 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             Alert::success('Hore!', 'Login berhasil');
+            if(Auth::user()->role==0){
+                return redirect()->route('index');
+            }
+            else if(Auth::user()->role==1){
+                return redirect()->route('comitee.index');
+            }
             return redirect()->route('index');
         }
 
