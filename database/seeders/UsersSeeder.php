@@ -25,21 +25,19 @@ class UsersSeeder extends Seeder
             'role' => 0,
         ]);
 
-        // User with role 1 (committee)
         Users::factory()->create([
             'name' => 'Committee User',
             'birth_date' => '1990-01-01',
-            'email' => 'committee@example.com',
-            'password' => Hash::make('committee@example.com'),
+            'email' => 'panitia@gmail.com',
+            'password' => Hash::make('panitia@gmail.com'),
             'gender' => 'Female',
             'phone_number' => '987654321',
             'is_verified' => true,
             'role' => 1,
         ]);
 
-        // User with role 2 (admin)
         Users::factory()->create([
-            'name' => 'Admin User',
+            'name' => 'Cipta Kharisma',
             'birth_date' => '1985-01-01',
             'email' => 'ticketifyid@gmail.com',
             'password' => Hash::make('ticketifyid@gmail.com'),
@@ -47,6 +45,16 @@ class UsersSeeder extends Seeder
             'phone_number' => '1122334455',
             'is_verified' => true,
             'role' => 2,
+        ]);
+        Users::factory()->create([
+            'name' => 'Superadmin',
+            'birth_date' => '1985-01-01',
+            'email' => 'noreply@ticketify.id',
+            'password' => Hash::make('noreply@ticketify.id'),
+            'gender' => 'Male',
+            'phone_number' => '1122334455',
+            'is_verified' => true,
+            'role' => 3,
         ]);
     }
 }

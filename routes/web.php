@@ -8,6 +8,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\EventsController;
 use App\Http\Controllers\OrdersController;
+use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\TicketController;
 use Illuminate\Support\Facades\Route;
 
@@ -67,6 +68,6 @@ Route::group(['middleware' => 'role:2'], function () {
 });
 
 Route::group(['middleware' => 'role:3'], function () {
-    
+    Route::get('/superadmin', [SuperAdminController::class, 'index'])->name('superadmin.index');
 });
 
