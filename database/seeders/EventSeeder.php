@@ -16,7 +16,7 @@ class EventSeeder extends Seeder
             [
                 'event_name' => 'Festival Arak-Arakan Cheng Ho 2024',
                 'event_description' => 'Festival arak-arakan Cheng Ho 2024 merupakan arak-arakan Budaya dari Klenteng Tay Kak Sie di Gang Lombok Pecinan menuju ke Sam Poo Kong yang diikuti oleh ribuan orang dari berbagai kota. Hari kedatangan Sam Poo Tay Djien (Laksamana Cheng Ho) ini diperingati setahun sekali dengan kirab membawa Patung Dewa. Festival Laksamana Cheng Ho ini dimeriahkan pula dengan panggung kesenian yang menampilkan perpaduan seni budaya Tionghoa dan Jawa serta berbagai hiburan musik sebagai perayaan bersama masyakarat.',
-                'users_id' => 2,
+                'users_id' => 3,
                 'price' => 25000,
                 'event_location' => 'Sam Poo Kong, Semarang, Jawa Tengah',
                 'event_picture' => 'event_pictures/dummy.jpg',
@@ -30,7 +30,7 @@ class EventSeeder extends Seeder
             [
                 'event_name' => 'Hitech',
                 'event_description' => 'PAMERAN BUOS GANDOS',
-                'users_id' => 2, 
+                'users_id' => 3, 
                 'price' => 100000,
                 'event_location' => 'Hotel',
                 'event_picture' => 'event_pictures/carousels1.svg',
