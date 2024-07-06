@@ -17,12 +17,12 @@
           </a>
         </li>
         <li>
-          <a href="{{ route('admin.event') }}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+          <a href="{{ route('superadmin.committee') }}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
             <span class="flex-1 ms-3 whitespace-nowrap">Panitia</span>
           </a>
         </li>
         <li>
-          <a href="{{route('admin.talent')}}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+          <a href="{{route('superadmin.admin')}}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
             <span class="flex-1 ms-3 whitespace-nowrap">Admin</span>
           </a>
         </li>
