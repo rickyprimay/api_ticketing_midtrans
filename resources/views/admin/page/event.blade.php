@@ -8,6 +8,9 @@
         <svg class="w-4 h-4 me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 4v16m-8-8h16"></path></svg>
         Buat Event
     </a>
+    @if($events->isEmpty())
+        <h1 class="text-center text-xl mt-8">Oops, tidak ada data pembeli Anda.</h1>
+    @else
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-8 border border-black">
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 table-border">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50">
@@ -153,6 +156,7 @@
         </div>
         @endforeach
     </div>
+    @endif
 </div>
 
 <!-- Include your modal toggle script -->

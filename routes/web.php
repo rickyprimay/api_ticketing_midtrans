@@ -58,6 +58,7 @@ Route::group(['middleware' => 'role:2'], function () {
     Route::put('/admin/event/{id}', [AdminController::class, 'update'])->name('admin.event.update');
     Route::delete('/admin/event/{id}', [AdminController::class, 'destroy'])->name('admin.event.destroy');
     Route::get('/admin/buyer', [AdminController::class, 'buyer'])->name('admin.buyer');
+    Route::get('/admin/export', [AdminController::class, 'exportExcel'])->name('admin.export');
 });
 
 Route::group(['middleware' => 'role:3'], function () {

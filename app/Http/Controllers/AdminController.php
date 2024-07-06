@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Events;
+use App\Models\Order;
 use App\Models\Tickets;
 use Illuminate\Console\Scheduling\Event;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\OrdersExport;
 
 class AdminController extends Controller
 {
@@ -170,7 +173,51 @@ class AdminController extends Controller
                 ->withInput();
         }
     }
-    public function buyer(){
-        return view('admin.page.buyer');
+    public function buyer(Request $request)
+{
+    $query = Order::query();
+
+    if ($request->has('start_date') && $request->start_date) {
+        $query->whereDate('created_at', '>=', $request->start_date);
     }
+
+    if ($request->has('end_date') && $request->end_date) {
+        $query->whereDate('created_at', '<=', $request->end_date);
+    }
+
+    $events = Events::where('users_id', Auth::id())->pluck('event_id');
+
+    $query->whereIn('event_id', $events);
+
+    $orders = $query->get();
+
+    return view('admin.page.buyer', compact('orders'));
+}
+
+public function exportExcel(Request $request)
+{
+    $query = Order::query();
+
+    // Filter berdasarkan rentang tanggal created_at jika dimasukkan oleh pengguna
+    if ($request->has('start_date') && $request->start_date) {
+        $query->whereDate('created_at', '>=', $request->start_date);
+    }
+
+    if ($request->has('end_date') && $request->end_date) {
+        $query->whereDate('created_at', '<=', $request->end_date);
+    }
+
+    // Ambil semua event yang dimiliki oleh pengguna yang sedang diotentikasi
+    $events = Events::where('users_id', Auth::id())->pluck('event_id');
+
+    // Filter order berdasarkan event yang dimiliki oleh pengguna
+    $query->whereIn('event_id', $events);
+
+    // Eksekusi query dan ambil data order
+    $orders = $query->get();
+
+    // Export data ke Excel menggunakan Laravel Excel
+    return Excel::download(new OrdersExport($orders), 'orders.xlsx');
+}
+
 }

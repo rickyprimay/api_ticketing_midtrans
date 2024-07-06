@@ -25,8 +25,8 @@
         @if ($orders->isEmpty())
             <h1 class="text-center text-xl mt-8">Oops, tidak ada data pembeli Anda.</h1>
         @else
-        <div class="mt-4 mb-4">
-            <a href="" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Export to Excel</a>
+        <div class="mt-4 mb-8">
+            <a href="{{ route('admin.export') }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Export to Excel</a>
         </div>
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg border border-black">
                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 table-border">
@@ -45,7 +45,6 @@
                             <th scope="col" class="px-6 py-3">Harga</th>
                             <th scope="col" class="px-6 py-3">Total Harga</th>
                             <th scope="col" class="px-6 py-3">Status</th>
-                            <th scope="col" class="px-6 py-3">ID</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -64,7 +63,6 @@
                                 <td class="px-6 py-4">{{ $order->price }}</td>
                                 <td class="px-6 py-4">{{ $order->total_amount }}</td>
                                 <td class="px-6 py-4">{{ $order->status }}</td>
-                                <td class="px-6 py-4">{{ $order->order_id }}</td>
                             </tr>
                         @endforeach
                     </tbody>

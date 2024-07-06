@@ -66,7 +66,7 @@ class OrdersController extends Controller
             $last_name = $request->input('last_name');
             $phone_number = $request->input('phone_number');
             $gender = $request->input('gender');
-            $birth_date = Carbon::createFromFormat('d-m-Y', $request->input('birth_date'))->format('Y-m-d');
+            $birth_date = Carbon::createFromFormat('Y-m-d', $request->input('birth_date'))->format('Y-m-d');
 
             $qty = $request->input('qty');
             $price = $request->input('price');
@@ -185,15 +185,10 @@ class OrdersController extends Controller
         $eventName = $event ? $event->event_name : 'Unknown Event';
 
         $qrData = [
-            'ticket_id' => $ticketUser->id,
             'unique_code' => $ticketUser->unique_code,
             'users_name' => $ticketUser->users_name,
-            'first_name' => $ticketUser->first_name,
-            'last_name' => $ticketUser->last_name,
             'users_email' => $ticketUser->users_email,
             'phone_number' => $ticketUser->phone_number,
-            'birth_date' => $ticketUser->birth_date,
-            'gender' => $ticketUser->gender,
             'event_yang_diikuti' => $eventName,
         ];
 

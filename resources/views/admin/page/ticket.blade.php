@@ -22,7 +22,6 @@
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
                         <th scope="col" class="px-6 py-3">No.</th>
-                        <th scope="col" class="px-6 py-3">Id Tiket</th>
                         <th scope="col" class="px-6 py-3">Tipe Tiket</th>
                         <th scope="col" class="px-6 py-3">Event Asal Tiket</th>
                         <th scope="col" class="px-6 py-3">Harga Tiket</th>
@@ -36,7 +35,6 @@
                             <th scope="row"
                                 class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 {{ $index + 1 }}</th>
-                            <td class="px-6 py-4">{{ $ticket->ticket_id }}</td>
                             <td class="px-6 py-4">{{ $ticket->ticket_type }}</td>
                             <td class="px-6 py-4">
                                 {{ $ticket->event->event_name }}

@@ -14,18 +14,18 @@
     <div class="grid grid-cols-1">
       <div class="bg-white p-6 shadow-lg text-center">
         <h1 class="text-2xl font-bold mb-4">Halaman Panitia</h1>
-        <div id="qr-reader" class="qr-reader-custom w-[300px] md:w-[800px]"></div>
+        <div id="qr-reader" class="qr-reader-custom w-[500px]"></div>
         <p id="qr-result" class="mt-4 text-lg font-medium text-gray-700"></p>
       </div>
-      <form class="bg-white">
-        <div class="grid gap-6 mt-10 md:mt-0 mb-6 md:grid-cols-1">
+      <form class="bg-white text-center">
+        <div class="flex gap-6 mt-10 md:mt-0 mb-6 md:grid-cols-1 justify-center items-center">
           <div>
             <label for="first_name" class="block mb-2 text-center text-sm font-medium text-gray-900">QR id</label>
             <input
               type="text"
               id="qr-id"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="John"
+              class="bg-gray-600 border border-gray-900 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 " style="width: 100%"
+              placeholder="unique code tiket"
               required
             />
           </div>
@@ -41,33 +41,36 @@
     </div>
 
     <script>
-      function onScanSuccess(decodedText, decodedResult) {
-        console.log(`Code matched = ${decodedText}`, decodedResult);
-        document.getElementById("qr-result").innerText = `QR Code: ${decodedText}`;
-        html5QrCode.stop();
-      }
-
-      function onScanFailure(error) {
-        console.warn(`Code scan error = ${error}`);
-      }
-
-      let html5QrCode = new Html5Qrcode("qr-reader");
-
-      // Start scanning
-      html5QrCode
-        .start(
-          { facingMode: "environment" }, // Default camera or { facingMode: "environment" }
-          {
-            fps: 10, // Scans per second
-            qrbox: { width: 250, height: 250 }, // QR scanning box size
-          },
-          onScanSuccess,
-          onScanFailure
-        )
-        .catch((err) => {
-          // Start failed, handle it.
-          console.error(`Unable to start scanning, error: ${err}`);
+        function domReady(fn) {
+          if (document.readyState === "complete" || document.readyState === "interactive") {
+            setTimeout(fn, 1);
+          } else {
+            document.addEventListener("DOMContentLoaded", fn);
+          }
+        }
+      
+        domReady(function () {
+          var myqr = document.getElementById("qr-result");
+          var lastResult,
+            countResult = 0;
+      
+          function onScanSuccess(decodeText, decodeResult) {
+            if (decodeText !== lastResult) {
+              ++countResult;
+              lastResult = decodeText;
+      
+              // Parse JSON from QR code content
+              var qrData = JSON.parse(decodeText);
+      
+              // Display unique_code in qr-result element
+              myqr.innerHTML = `Hasil Scan ke-${countResult}: ${qrData.unique_code}`;
+            }
+          }
+      
+          var htmlscanner = new Html5QrcodeScanner("qr-reader", { fps: 10, qrbox: 250 });
+          htmlscanner.render(onScanSuccess);
         });
-    </script>
+      </script>
+      
   </body>
 </html>
