@@ -9,7 +9,7 @@
         Buat Event
     </a>
     @if($events->isEmpty())
-        <h1 class="text-center text-xl mt-8">Oops, tidak ada data pembeli Anda.</h1>
+        <h1 class="text-center text-xl mt-8">Oops, tidak ada data Event Anda.</h1>
     @else
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-8 border border-black">
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 table-border">

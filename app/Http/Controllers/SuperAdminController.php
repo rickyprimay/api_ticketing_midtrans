@@ -30,13 +30,13 @@ class SuperAdminController extends Controller
     {
         $users = Users::where('role', 0)->get();
 
-        return view ('superadmin.page.user', compact('users'));
+        return view('superadmin.page.user', compact('users'));
     }
     public function committee()
     {
         $committees = Users::where('role', 1)->get();
 
-        return view ('superadmin.page.comitee', compact('committees'));
+        return view('superadmin.page.comitee', compact('committees'));
     }
     public function storeCommittee(Request $request)
     {
@@ -106,8 +106,16 @@ class SuperAdminController extends Controller
     }
     public function event()
     {
-        $event = Events::all();
-        return view('superadmin.page.event', com);
+        $events = Events::all();
+        return view('superadmin.page.event', compact('events'));
     }
+    public function verifiedEvent($id)
+    {
+        $event = Events::findOrFail($id);
+        $event->event_status = 1; 
+        $event->save();
 
+        Alert::success('Sukses', 'Anda berhasil memverifikasi event');
+        return redirect()->back();
+    }
 }
