@@ -69,5 +69,6 @@ Route::group(['middleware' => 'role:2'], function () {
 
 Route::group(['middleware' => 'role:3'], function () {
     Route::get('/superadmin', [SuperAdminController::class, 'index'])->name('superadmin.index');
+    Route::get('/superadmin/users', [SuperAdminController::class, 'user'])->name('superadmin.users');
 });
 
