@@ -26,7 +26,7 @@ class UsersSeeder extends Seeder
         ]);
 
         Users::factory()->create([
-            'name' => 'Committee User',
+            'name' => 'Panitia',
             'birth_date' => '1990-01-01',
             'email' => 'panitia@gmail.com',
             'password' => Hash::make('panitia@gmail.com'),

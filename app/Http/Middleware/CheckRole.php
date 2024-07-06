@@ -27,6 +27,8 @@ class CheckRole
                 return redirect()->route('comitee.index');
             case 2:
                 return redirect()->route('admin.index');
+            case 3:
+                return redirect()->route('superadmin.index');
             default:
                 return redirect()->route('unauthorized'); 
         }

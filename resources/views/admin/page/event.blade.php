@@ -57,7 +57,7 @@
                         </td>
                         <td class="px-6 py-4">
                             <button data-modal-target="edit-modal-{{ $event->event_id }}" data-modal-toggle="edit-modal-{{ $event->event_id }}" type="button" class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">Edit</button>
-                            <button data-modal-target="delete-modal-{{ $event->event_id }}" data-modal-toggle="delete-modal-{{ $event->event_id }}" type="button" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">Delete</button>
+                            {{-- <button data-modal-target="delete-modal-{{ $event->event_id }}" data-modal-toggle="delete-modal-{{ $event->event_id }}" type="button" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">Delete</button> --}}
                         </td>
                     </tr>
                 @endforeach

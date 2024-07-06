@@ -171,6 +171,9 @@ class AuthController extends Controller
             else if(Auth::user()->role==2){
                 return redirect()->route('admin.index');
             }
+            else if(Auth::user()->role==3){
+                return redirect()->route('superadmin.index');
+            }
             return redirect()->route('index');
         }
 

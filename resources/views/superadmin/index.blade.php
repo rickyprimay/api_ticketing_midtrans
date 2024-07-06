@@ -4,7 +4,7 @@
 @section('title', 'Super Admin Dashboard')
 
 @section('content')
-<div class="sm:ml-64 mt-24 px-8 md:px-6">
+<div class=" mt-24 px-8 md:px-6">
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
       <div class="bg-orange-500 text-white p-4 rounded-lg">
         <div class="text-2xl font-bold">2478</div>
