@@ -60,6 +60,10 @@ Route::group(['middleware' => 'role:2'], function () {
     Route::delete('/admin/event/{id}', [AdminController::class, 'destroy'])->name('admin.event.destroy');
     Route::get('/admin/buyer', [AdminController::class, 'buyer'])->name('admin.buyer');
     Route::get('/admin/export', [AdminController::class, 'exportExcel'])->name('admin.export');
+    Route::get('/admin/talent', [AdminController::class, 'talent'])->name('admin.talent');
+    Route::post('/admin/talent/store', [AdminController::class, 'storeTalent'])->name('admin.talent.store');
+    Route::delete('/admin/talent/{id}', [AdminController::class, 'destroyTalent'])->name('admin.talent.destroy');
+    Route::put('/admin/talent/update/{id}', [AdminController::class, 'updateTalent'])->name('admin.talent.update');
 });
 
 Route::group(['middleware' => 'role:3'], function () {

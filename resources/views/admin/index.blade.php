@@ -13,13 +13,13 @@
       <div class="text-2xl font-bold">{{$totalEventsa}}</div>
       <div class="text-lg">Event Anda</div>
     </div>
-    <div class="bg-purple-500 text-white p-4 rounded-lg">
-      <div class="text-2xl font-bold">1256</div>
-      <div class="text-lg">Panitia Anda</div>
-    </div>
     <div class="bg-blue-500 text-white p-4 rounded-lg">
-      <div class="text-2xl font-bold">652</div>
+      <div class="text-2xl font-bold">{{$totalOrders}}</div>
       <div class="text-lg">Pembeli Anda</div>
+    </div>
+    <div class="bg-purple-500 text-white p-4 rounded-lg">
+      <div class="text-2xl font-bold">{{$totalTalents}}</div>
+      <div class="text-lg">Talent Anda</div>
     </div>
   </div>
 @endsection

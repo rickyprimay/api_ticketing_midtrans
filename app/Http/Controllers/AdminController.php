@@ -13,22 +13,27 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\OrdersExport;
+use App\Models\Talents;
 
 class AdminController extends Controller
 {
     public function index()
-    {   
+    {
         $events = Events::where('users_id', Auth::id())->pluck('event_id');
 
         $event = Events::all();
 
         $tickets = Tickets::whereIn('events_id', $events)->get();
+        $orders = Order::whereIn('event_id', $events)->get();
+        $talents = Talents::whereIn('event_id', $events)->get();
 
         $eventsa = Events::where('users_id', Auth::id())->get();
         $totalTickets = $tickets->count();
         $totalEventsa = $eventsa->count();
+        $totalOrders = $orders->count();
+        $totalTalents = $talents->count();
 
-        return view('admin.index', compact('totalTickets', 'totalEventsa'));
+        return view('admin.index', compact('totalTickets', 'totalEventsa', 'totalOrders', 'totalTalents'));
     }
 
     public function ticket()
@@ -55,7 +60,8 @@ class AdminController extends Controller
             'price' => $request->price,
         ]);
 
-        return redirect()->back()->with('success', 'Ticket created successfully.');
+        Alert::success('Sukses', 'Tiket berhasil dibuat.')->persistent(true);
+        return redirect()->back();
     }
 
     public function updateTicket(Request $request, $id)
@@ -69,11 +75,12 @@ class AdminController extends Controller
         $ticket = Tickets::findOrFail($id);
         $ticket->update([
             'ticket_type' => $request->ticket_type,
-            'events_id' => $request->event_id, // Sesuaikan dengan 'events_id'
+            'events_id' => $request->event_id,
             'price' => $request->price,
         ]);
 
-        return redirect()->back()->with('success', 'Ticket updated successfully.');
+        Alert::success('Sukses', 'Tiket berhasil diperbarui.')->persistent(true);
+        return redirect()->back();
     }
 
     public function destroyTicket($id)
@@ -81,7 +88,8 @@ class AdminController extends Controller
         $ticket = Tickets::findOrFail($id);
         $ticket->delete();
 
-        return redirect()->back()->with('success', 'Ticket deleted successfully.');
+        Alert::success('Sukses', 'Tiket berhasil dihapus.')->persistent(true);
+        return redirect()->back();
     }
 
     public function event()
@@ -174,50 +182,94 @@ class AdminController extends Controller
         }
     }
     public function buyer(Request $request)
-{
-    $query = Order::query();
+    {
+        $query = Order::query();
 
-    if ($request->has('start_date') && $request->start_date) {
-        $query->whereDate('created_at', '>=', $request->start_date);
+        if ($request->has('start_date') && $request->start_date) {
+            $query->whereDate('created_at', '>=', $request->start_date);
+        }
+
+        if ($request->has('end_date') && $request->end_date) {
+            $query->whereDate('created_at', '<=', $request->end_date);
+        }
+
+        $events = Events::where('users_id', Auth::id())->pluck('event_id');
+
+        $query->whereIn('event_id', $events);
+
+        $orders = $query->get();
+
+        return view('admin.page.buyer', compact('orders'));
     }
 
-    if ($request->has('end_date') && $request->end_date) {
-        $query->whereDate('created_at', '<=', $request->end_date);
+    public function exportExcel(Request $request)
+    {
+        $query = Order::query();
+
+        if ($request->has('start_date') && $request->start_date) {
+            $query->whereDate('created_at', '>=', $request->start_date);
+        }
+
+        if ($request->has('end_date') && $request->end_date) {
+            $query->whereDate('created_at', '<=', $request->end_date);
+        }
+
+        $events = Events::where('users_id', Auth::id())->pluck('event_id');
+
+        $query->whereIn('event_id', $events);
+
+        $orders = $query->get();
+
+        return Excel::download(new OrdersExport($orders), 'orders.xlsx');
     }
+    public function talent()
+    {
+        $events = Events::where('users_id', Auth::id())->pluck('event_id');
 
-    $events = Events::where('users_id', Auth::id())->pluck('event_id');
+        $event = Events::all();
 
-    $query->whereIn('event_id', $events);
+        $event = Events::all();
 
-    $orders = $query->get();
-
-    return view('admin.page.buyer', compact('orders'));
-}
-
-public function exportExcel(Request $request)
-{
-    $query = Order::query();
-
-    // Filter berdasarkan rentang tanggal created_at jika dimasukkan oleh pengguna
-    if ($request->has('start_date') && $request->start_date) {
-        $query->whereDate('created_at', '>=', $request->start_date);
+        $talents = Talents::whereIn('event_id', $events)->get();
+        return view('admin.page.talent', compact('talents', 'event'));
     }
+    public function storeTalent(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string',
+            'event_id' => 'required|integer'
+        ]);
 
-    if ($request->has('end_date') && $request->end_date) {
-        $query->whereDate('created_at', '<=', $request->end_date);
+        Talents::create([
+            'name' => $request->name,
+            'event_id' => $request->event_id,
+        ]);
+
+        Alert::success('Sukses', 'Talent berhasil ditambahkan.')->persistent(true);
+        return redirect()->back();
     }
+    public function updateTalent(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string',
+            'event_id' => 'required|integer'
+        ]);
 
-    // Ambil semua event yang dimiliki oleh pengguna yang sedang diotentikasi
-    $events = Events::where('users_id', Auth::id())->pluck('event_id');
+        $talent = Talents::findOrFail($id);
+        $talent->update([
+            'name' => $request->name,
+            'event_id' => $request->event_id,
+        ]);
 
-    // Filter order berdasarkan event yang dimiliki oleh pengguna
-    $query->whereIn('event_id', $events);
+        Alert::success('Sukses', 'Talent berhasil diperbarui.')->persistent(true);
+        return redirect()->back();
+    }
+    public function destroyTalent($id)
+    {
+        $talent = Talents::findOrFail($id);
+        $talent->delete();
 
-    // Eksekusi query dan ambil data order
-    $orders = $query->get();
-
-    // Export data ke Excel menggunakan Laravel Excel
-    return Excel::download(new OrdersExport($orders), 'orders.xlsx');
-}
-
+        Alert::success('Sukses', 'Talent berhasil dihapus.')->persistent(true);
+        return redirect()->back();
+    }
 }

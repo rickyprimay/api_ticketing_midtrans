@@ -92,9 +92,16 @@
                                     <label for="event_id"
                                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Event Asal
                                         Ticket</label>
-                                    <input type="text" name="event_id" id="event_id"
+                                        <select name="event_id" id="event_id"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                        placeholder="" required="">
+                                        required="">
+                                        <option value="" selected>Pilih Event</option>
+                                        @foreach ($event as $eventsa)
+                                        <option value="{{ $eventsa->event_id }}"
+                                            {{ $ticket->events_id == $eventsa->event_id ? : '' }}>
+                                            {{ $eventsa->event_name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="col-span-2 sm:col-span-1">
                                     <label for="price"
@@ -125,67 +132,46 @@
     </div>
     <!-- Edit modal -->
 @foreach ($tickets as $ticket)
-<div id="edit-modal-{{ $ticket->ticket_id }}" tabindex="-1" aria-hidden="true"
-    class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+<div id="edit-modal-{{ $ticket->ticket_id }}" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-md max-h-full">
-        <!-- Modal content -->
-        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-            <!-- Modal header -->
-            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                    Edit Tiket
+        <div class="relative bg-white rounded-lg shadow">
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+                <h3 class="text-lg font-semibold text-gray-900">
+                    Edit Event
                 </h3>
-                <button type="button"
-                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                    data-modal-toggle="edit-modal-{{ $ticket->ticket_id }}">
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                        viewBox="0 0 14 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-toggle="edit-modal-{{ $ticket->ticket_id }}">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                     </svg>
                     <span class="sr-only">Close modal</span>
                 </button>
             </div>
-            <!-- Modal body -->
-            <form action="{{route('admin.ticket.update', ['id' => $ticket->ticket_id]) }}" method="POST"
-                class="p-4 md:p-5">
+            <form action="{{ route('admin.ticket.update', $ticket->ticket_id) }}" method="POST" class="p-4 md:p-5">
                 @csrf
                 @method('PUT')
-                <div class="grid gap-4 mb-4 grid-cols-2">
-                    <div class="col-span-2">
-                        <label for="ticket_type"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tipe
-                            Tiket</label>
-                        <input type="text" name="ticket_type" id="ticket_type"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="Tipe tiket" value="{{ $ticket->ticket_type }}" required="">
+                <div class="grid grid-cols-1 gap-4">
+                    <div>
+                        <label for="ticket_type" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">Tipe Tiket</label>
+                        <input type="text" name="ticket_type" id="ticket_type" value="{{ $ticket->ticket_type }}" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-primary-600 dark:bg-gray-700 dark:text-white dark:border-gray-500 dark:focus:border-primary-500" required>
                     </div>
-                    <div class="col-span-2 sm:col-span-1">
-                        <label for="event_id"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Event Asal
-                            Ticket</label>
-                            <select name="event_id" id="event_id"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            required="">
-                            <option value="">Pilih Event</option>
+                    <div>
+                        <label for="event_id" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">Event Asal Tiket</label>
+                        <select name="event_id" id="event_id" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-primary-600 dark:bg-gray-700 dark:text-white dark:border-gray-500 dark:focus:border-primary-500" required>
                             @foreach ($event as $eventsa)
-                            <option value="{{ $eventsa->event_id }}"
-                                {{ $ticket->events_id == $eventsa->event_id ? 'selected' : '' }}>
-                                {{ $eventsa->event_name }}</option>
+                                <option value="{{ $eventsa->event_id }}" {{ $ticket->event_id == $eventsa->event_id ? 'selected' : '' }}>
+                                    {{ $eventsa->event_name }}
+                                </option>
                             @endforeach
                         </select>
+                        
                     </div>
-                    <div class="col-span-2 sm:col-span-1">
-                        <label for="price"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Harga
-                            Tiket</label>
-                        <input type="text" name="price" id="price"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="Harga tiket" value="{{ $ticket->price }}" required="">
+                    <div>
+                        <label for="price" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">Harga Tiket</label>
+                        <input type="text" name="price" id="price" value="{{ $ticket->price }}" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-primary-600 dark:bg-gray-700 dark:text-white dark:border-gray-500 dark:focus:border-primary-500" required>
                     </div>
                 </div>
-                <!-- Modal footer -->
-                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Edit</button
+                
+                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Edit</button>
             </form>
         </div>
     </div>
@@ -239,14 +225,10 @@
 </div>
 
     <script>
-        const modals = document.querySelectorAll('[data-modal-toggle]');
-
-modals.forEach(button => {
-    button.addEventListener('click', () => {
-        const modalId = button.getAttribute('data-modal-toggle');
-        const modal = document.getElementById(modalId);
-        modal.classList.toggle('hidden');
-        modal.classList.toggle('flex');
+document.querySelectorAll('[data-modal-toggle]').forEach(function (modalToggle) {
+    modalToggle.addEventListener('click', function () {
+        const targetModal = document.getElementById(modalToggle.getAttribute('data-modal-target'));
+        targetModal.classList.toggle('hidden');
     });
 });
         const eventFilterInput = document.getElementById('eventFilter');
