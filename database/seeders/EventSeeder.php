@@ -19,7 +19,7 @@ class EventSeeder extends Seeder
                 'users_id' => 2,
                 'price' => 25000,
                 'event_location' => 'Sam Poo Kong, Semarang, Jawa Tengah',
-                'event_picture' => 'event_pcitures/dummy.jpg',
+                'event_picture' => 'event_pictures/dummy.jpg',
                 'event_date' => '2024-08-02',
                 'event_start' => '2024-08-02',
                 'event_ended' => '2024-08-03',
