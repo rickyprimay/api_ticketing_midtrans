@@ -184,16 +184,15 @@ class OrdersController extends Controller
         $event = Events::find($ticketUser->events_id);
         $eventName = $event ? $event->event_name : 'Unknown Event';
 
-        $qrData = [
-            'unique_code' => $ticketUser->unique_code,
-            'users_name' => $ticketUser->users_name,
-            'users_email' => $ticketUser->users_email,
-            'phone_number' => $ticketUser->phone_number,
-            'event_yang_diikuti' => $eventName,
-        ];
+        // $qrData = [
+        //     'unique_code' => $ticketUser->unique_code,
+        //     'users_name' => $ticketUser->users_name,
+        //     'users_email' => $ticketUser->users_email,
+        //     'phone_number' => $ticketUser->phone_number,
+        //     'event_yang_diikuti' => $eventName,
+        // ];
 
-        // Encode data ke JSON
-        $qrCodeContent = json_encode($qrData);
+        $qrCodeContent = $ticketUser->unique_code;
 
         // Generate QR code dengan konten JSON
         $qrCodePath = 'ticket_qr/ticket_' . md5($ticketUser->id . '_' . $index) . '.png';
@@ -225,4 +224,23 @@ class OrdersController extends Controller
 
         Mail::to($email_buyer)->send(new \App\Mail\TicketQrMail($details, $qrCodePath));
     }
+    public function redeemQR(Request $request)
+{
+    $request->validate([
+        'qr_id' => 'required|string',
+        'ticket_status' => 'required|integer',
+    ]);
+
+    $ticketUser = TicketUsers::where('unique_code', $request->qr_id)->first();
+
+    if ($ticketUser->ticket_status == 1) {
+        return response()->json(['message' => 'Ticket has already been redeemed'], 400);
+    }
+
+    $ticketUser->ticket_status = 1;
+    $ticketUser->save();
+
+    return response()->json(['message' => 'Ticket redeemed successfully'], 200);
+}
+
 }
