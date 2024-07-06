@@ -74,5 +74,6 @@ Route::group(['middleware' => 'role:3'], function () {
     Route::post('/superadmin/committee/store', [SuperAdminController::class, 'storeCommittee'])->name('superadmin.committee.store');
     Route::delete('/superadmin/committee/{id}', [SuperAdminController::class, 'destroyCommittee'])->name('superadmin.committee.destroy');
     Route::get('/superadmin/admin', [SuperAdminController::class, 'admin'])->name('superadmin.admin');
+    Route::post('/superadmin/admin/store', [SuperAdminController::class, 'storeAdmin'])->name('superadmin.admin.store');
 });
 

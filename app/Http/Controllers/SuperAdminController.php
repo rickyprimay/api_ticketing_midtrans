@@ -74,8 +74,40 @@ class SuperAdminController extends Controller
     }
     public function admin()
     {
-        $user = Users::where('role', 2)->get();
+        $admins = Users::where('role', 2)->get();
 
-        return view('superadmin.page.admin', compact('user'));
+        return view('superadmin.page.admin', compact('admins'));
     }
+    public function storeAdmin(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:8',
+        ]);
+
+        if ($validator->fails()) {
+            Alert::error('Gagal', 'Pembuatan Admin gagal, silahkan cek kembali data yang Anda masukkan.');
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $name = $request->name;
+
+        $user = new Users();
+        $user->name = $name;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password);
+        $user->role = 2;
+        $user->is_verified = true;
+        $user->save();
+
+        Alert::success('Sukses', 'Data Admin berhasil ditambahkan');
+        return redirect()->back();
+    }
+    public function event()
+    {
+        $event = Events::all();
+        return view('superadmin.page.event', com);
+    }
+
 }
