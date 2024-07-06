@@ -1,39 +1,75 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Create Event')
+@section('title', 'Pembeli')
 
 @section('content')
-<div class="">
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-24 border border-black">
-      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 table-border">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-          <tr>
-            <th scope="col" class="px-6 py-3">Nama pembeli</th>
-            <th scope="col" class="px-6 py-3">Gender</th>
-            <th scope="col" class="px-6 py-3">Alamat</th>
-            <th scope="col" class="px-6 py-3">id</th>
-            <th scope="col" class="px-6 py-3">tiket yang dibeli</th>
-            <th scope="col" class="px-6 py-3">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">riki panitia selamanya</th>
-            <td class="px-6 py-4">plastik indomart</td>
-            <td class="px-6 py-4">purwodadi ga lolos liga 1</td>
-            <td class="px-6 py-4">pirang pirang</td>
-            <td class="px-6 py-4">pirang pirang 2</td>
-            <td class="px-6 py-4">
-              <a href="#" class="text-blue-600 hover:underline"
-                ><button type="button" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">Edit</button></a
-              >
-              <a href="#" class="text-blue-600 hover:underline">
-                <button type="button" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">Delete</button>
-              </a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="container mx-auto mt-24">
+        <form method="GET" action="{{ route('admin.buyer') }}" class="mb-4">
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <label for="start_date" class="block text-sm font-medium text-gray-700 dark:text-gray-400">Mulai Tanggal</label>
+                    <input type="date" id="start_date" name="start_date" class="form-input mt-1 block w-full" value="{{ request('start_date') }}">
+                </div>
+                <div class="relative">
+                    <label for="end_date" class="block text-sm font-medium text-gray-700 dark:text-gray-400">Sampai Tanggal</label>
+                    <input type="date" id="end_date" name="end_date" class="form-input mt-1 block w-full" value="{{ request('end_date') }}">
+                </div>
+                <div class="relative">
+                    <button type="submit" class="mt-6 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Filter
+                    </button>
+                </div>
+            </div>
+        </form>
+        
+        @if ($orders->isEmpty())
+            <h1 class="text-center text-xl mt-8">Oops, tidak ada data pembeli Anda.</h1>
+        @else
+        <div class="mt-4 mb-4">
+            <a href="" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Export to Excel</a>
+        </div>
+            <div class="relative overflow-x-auto shadow-md sm:rounded-lg border border-black">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 table-border">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">NO</th>
+                            <th scope="col" class="px-6 py-3">Tiket acara yang Dibeli</th>
+                            <th scope="col" class="px-6 py-3">Pemesanan pada</th>
+                            <th scope="col" class="px-6 py-3">No Transaksi</th>
+                            <th scope="col" class="px-6 py-3">Nama Pembeli</th>
+                            <th scope="col" class="px-6 py-3">Email Pembeli</th>
+                            <th scope="col" class="px-6 py-3">Gender</th>
+                            <th scope="col" class="px-6 py-3">No HP</th>
+                            <th scope="col" class="px-6 py-3">Tanggal Lahir</th>
+                            <th scope="col" class="px-6 py-3">Jumlah Pembelian</th>
+                            <th scope="col" class="px-6 py-3">Harga</th>
+                            <th scope="col" class="px-6 py-3">Total Harga</th>
+                            <th scope="col" class="px-6 py-3">Status</th>
+                            <th scope="col" class="px-6 py-3">ID</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($orders as $index => $order)
+                            <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                                <td class="px-6 py-4">{{ $index + 1 }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $order->event->event_name }}</td>
+                                <td class="px-6 py-4">{{ \Carbon\Carbon::parse($order->created_at)->translatedFormat('l, d F Y') }}</td>
+                                <td class="px-6 py-4">{{ $order->no_transaction }}</td>
+                                <td class="px-6 py-4">{{ $order->first_name }} {{ $order->last_name }}</td>
+                                <td class="px-6 py-4">{{ $order->email_buyer }}</td>
+                                <td class="px-6 py-4">{{ $order->gender }}</td>
+                                <td class="px-6 py-4">{{ $order->phone_number }}</td>
+                                <td class="px-6 py-4">{{ $order->birth_date }}</td>
+                                <td class="px-6 py-4">{{ $order->qty }}</td>
+                                <td class="px-6 py-4">{{ $order->price }}</td>
+                                <td class="px-6 py-4">{{ $order->total_amount }}</td>
+                                <td class="px-6 py-4">{{ $order->status }}</td>
+                                <td class="px-6 py-4">{{ $order->order_id }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
     </div>
-  </div>
 @endsection
