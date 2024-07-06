@@ -57,6 +57,7 @@ Route::group(['middleware' => 'role:2'], function () {
     Route::post('/admin/event/store', [AdminController::class, 'storeEvent'])->name('admin.event.store');
     Route::put('/admin/event/{id}', [AdminController::class, 'update'])->name('admin.event.update');
     Route::delete('/admin/event/{id}', [AdminController::class, 'destroy'])->name('admin.event.destroy');
+    Route::get('/admin/buyer', [AdminController::class, 'buyer'])->name('admin.buyer');
 });
 
 Route::group(['middleware' => 'role:3'], function () {

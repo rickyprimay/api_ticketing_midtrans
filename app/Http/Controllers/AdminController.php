@@ -170,4 +170,7 @@ class AdminController extends Controller
                 ->withInput();
         }
     }
+    public function buyer(){
+        return view('admin.page.buyer');
+    }
 }

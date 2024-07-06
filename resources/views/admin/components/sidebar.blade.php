@@ -27,7 +27,7 @@
           </a>
         </li>
         <li>
-          <a href="pembeli.html" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+          <a href="{{route('admin.buyer')}}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
             <span class="flex-1 ms-3 whitespace-nowrap">Pembeli Anda</span>
           </a>
         </li>
