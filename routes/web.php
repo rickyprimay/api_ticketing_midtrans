@@ -28,9 +28,9 @@ Route::get('/test-email', function () {
 });
 
 Route::get('/', [LandingController::class, 'index'])->name('index');
+Route::get('/events/load-more', [LandingController::class, 'loadMore'])->name('events.load.more');
 Route::post('/notification', [OrdersController::class, 'notificationCallback'])->name('notification');
 
-Route::get('/events', [EventsController::class, 'index'])->name('events.index');
 Route::get('/tickets/buy/{id}', [TicketController::class, 'buy'])->name('tickets.buy');
 Route::get('/events/search', [LandingController::class, 'search'])->name('events.search');
 

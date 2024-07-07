@@ -17,10 +17,23 @@
                             autocomplete="off" placeholder="Enter your username" required>
                     </div>
                     <div class="mb-4">
+                        
                         <label for="email" class="text-white mb-1 flex flex-start">Email</label>
                         <input type="email" id="email" name="email"
                             class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
                             autocomplete="off" placeholder="example@gmail.com" required>
+                        @if ($errors->has('email'))
+                            <span class="text-red-500 text-sm">{{ $errors->first('email') }}</span>
+                        @endif
+                        <div class="flex items-center p-4 mb-4 mt-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300" role="alert">
+                            <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                              <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                            </svg>
+                            <span class="sr-only">Info</span>
+                            <div>
+                              <span class="font-medium">Peringatan!</span> Pastikan email sesuai dengan email anda.
+                            </div>
+                          </div>
                     </div>
                     <div class="mb-4">
                         <label for="password" class="text-white mb-1 flex flex-start">Password</label>
@@ -28,6 +41,9 @@
                             <input id="password" name="password"
                                 class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
                                 autocomplete="off" placeholder="••••••••" type="password" required>
+                            @if ($errors->has('password'))
+                                <span class="text-red-500 text-sm">{{ $errors->first('password') }}</span>
+                            @endif
                         </div>
                     </div>
 

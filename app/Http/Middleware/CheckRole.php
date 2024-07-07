@@ -15,13 +15,17 @@ class CheckRole
         }
 
         $user = Auth::user();
+
+        if (!$user->is_verified) {
+            return redirect()->route('verify.form');
+        }
+
         foreach ($roles as $role) {
             if ($user->role == $role) {
                 return $next($request);
             }
         }
 
-        
         switch ($user->role) {
             case 1:
                 return redirect()->route('comitee.index');

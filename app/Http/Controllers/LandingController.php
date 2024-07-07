@@ -8,10 +8,19 @@ use App\Models\Events;
 class LandingController extends Controller
 {
     public function index()
-    {
-        $events = Events::where('event_status', 1)->get();
-        return view('landing.index', ['events' => $events]);
+{
+    $events = Events::where('event_status', 1)->paginate(4);
+    return view('landing.index', ['events' => $events]);
+}
+
+public function loadMore(Request $request)
+{
+    if ($request->ajax()) {
+        $events = Events::where('event_status', 1)->paginate(4, ['*'], 'page', $request->page);
+        return view('landing.components.events', ['events' => $events])->render();
     }
+}
+
 
     public function index_events()
     {

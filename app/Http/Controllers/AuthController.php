@@ -54,50 +54,57 @@ class AuthController extends Controller
         Mail::to($user->email)->send(new \App\Mail\VerificationCodeMail($details));
         
         session(['email' => $user->email]);
+        Auth::login($user);
         
         return redirect()->route('auth.verify.form')->with('email', $user->email);
     }
 
     public function showVerifyForm(Request $request)
     {
+        // if (!session('email')) {
+        //     return redirect()->route('auth.register')->with('error', 'Silakan kembali ke halaman sebelumnya untuk memulai proses verifikasi.');
+        // }
         return view('auth.page.verify');
     }
 
     public function resendOTP(Request $request)
-    {
-        $user = Users::where('email', $request->email)->first();
+{
+    $email = Auth::user()->email;
+    $user = Users::where('email', $email)->first();
 
-        if (!$user) {
-            Alert::error('Gagal', 'User tidak ditemukan.');
-            return back();
-        }
-
-        $lastSent = $user->otp_sent_at ? Carbon::parse($user->otp_sent_at) : null;
-        $now = Carbon::now();
-
-        if ($lastSent && $lastSent->diffInSeconds($now) < 60) {
-            $waitTime = 60 - $lastSent->diffInSeconds($now);
-            $waitTime = intval($waitTime);
-            Alert::error('Gagal', 'Anda harus menunggu ' . $waitTime . ' detik sebelum mengirim ulang OTP.');
-            return back();
-        }
-
-        $otp = Users::generateOTP();
-        $user->otp = $otp;
-        $user->otp_sent_at = $now;
-        $user->save();
-
-        $details = [
-            'title' => 'Mail from ticketify.id',
-            'body' => 'Berikut Kode OTP untuk verifikasi email anda',
-            'otp' => $otp
-        ];
-
-        Mail::to($user->email)->send(new \App\Mail\VerificationCodeMail($details));
-
-        Alert::success('Berhasil', 'Kode OTP baru telah dikirim.');
+    if (!$user) {
+        Alert::error('Gagal', 'User tidak ditemukan.');
         return back();
     }
+
+    $lastSent = $user->otp_sent_at ? Carbon::parse($user->otp_sent_at) : null;
+    $now = Carbon::now();
+
+    if ($lastSent && $lastSent->diffInSeconds($now) < 60) {
+        $waitTime = 60 - $lastSent->diffInSeconds($now);
+        $waitTime = intval($waitTime);
+        Alert::error('Gagal', 'Anda harus menunggu ' . $waitTime . ' detik sebelum mengirim ulang OTP.');
+        return back();
+    }
+
+    $otp = Users::generateOTP();
+    $user->otp = $otp;
+    $user->otp_sent_at = $now;
+    $user->save();
+
+    $details = [
+        'title' => 'Mail from ticketify.id',
+        'body' => 'Berikut Kode OTP untuk verifikasi email anda',
+        'otp' => $otp,
+        'name' => $user->name,  
+    ];
+
+    Mail::to($user->email)->send(new \App\Mail\VerificationCodeMail($details));
+
+    Alert::success('Berhasil', 'Kode OTP baru telah dikirim.');
+    return back();
+}
+
 
     public function verifyOTP(Request $request)
     {
