@@ -22,7 +22,7 @@ class EventSeeder extends Seeder
                 'event_picture' => 'event_pictures/juioakdowakod09012.jpg',
                 'event_date' => '2024-08-02',
                 'event_start' => '2024-08-02',
-                'event_ended' => '2024-08-03',
+                'event_ended' => '2024-08-04',
                 'event_status' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
