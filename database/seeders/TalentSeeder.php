@@ -62,14 +62,6 @@ class TalentSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            [
-                'name' => 'Sasto wijoyo Nugroho',
-                'talent_image' => 'nugroho.jpeg',
-                'talent_description' => 'pinter bgt',
-                'event_id' => 2,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]
         ]);
     }
 }
