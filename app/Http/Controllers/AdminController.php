@@ -211,12 +211,10 @@ public function buyerDetail(Request $request, $event_id)
     
     $query->where('event_id', $event_id);
 
-    // Join tickets table to fetch ticket_type
-    $query->join('tickets', 'orders.event_id', '=', 'tickets.events_id');
+    // $query->join('tickets', 'orders.event_id', '=', 'tickets.events_id');
 
     $orders = $query->get();
 
-    // Calculate total revenue
     $totalRevenue = $orders->where('status', 'Success')->sum('total_amount');
 
     return view('admin.page.buyerDetail', compact('orders', 'totalRevenue'));
