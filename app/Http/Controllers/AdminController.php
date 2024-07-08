@@ -40,11 +40,11 @@ class AdminController extends Controller
     {
         $events = Events::where('users_id', Auth::id())->pluck('event_id');
 
-        $event = Events::all();
+        $event = Events::whereIn('event_id', $events)->get();
 
         $tickets = Tickets::whereIn('events_id', $events)->get();
 
-        return view('admin.page.ticket', compact('tickets', 'event'));
+        return view('admin.page.ticket', compact('tickets', 'event', 'events'));
     }
     public function storeTicket(Request $request)
     {

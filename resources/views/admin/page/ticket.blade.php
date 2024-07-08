@@ -4,6 +4,11 @@
 
 @section('content')
     <div class="">
+        @if($event->isEmpty())
+        <div class="text-center text-xl mt-8">
+            <p>Anda harus menambahkan event dulu.</p>
+        </div>
+        @else
         <button data-modal-target="create-modal" data-modal-toggle="create-modal"
             class="bg-green-500 text-white py-2 px-4 rounded-lg mb-4 inline-flex items-center">
             <svg class="w-4 h-4 me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -12,6 +17,7 @@
             </svg>
             Buat Ticket
         </button>
+        @endif
         <div class="flex justify-start mb-4">
             <input type="text" id="eventFilter" placeholder="Filter berdasarkan Nama Event"
                 class="border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-200 rounded-lg px-4 py-2">
@@ -29,6 +35,11 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @if ($tickets->isEmpty())
+                        <tr>
+                            <td colspan="5" class="text-center text-xl mt-8">Oops, tidak ada data ticket Anda.</td>
+                        </tr>
+                    @else
                     @foreach ($tickets as $index => $ticket)
                         <tr
                             class="{{ $index % 2 == 0 ? 'even:bg-gray-50 even:dark:bg-gray-800' : 'odd:bg-white odd:dark:bg-gray-900' }} border-b dark:border-gray-700">
@@ -52,6 +63,7 @@
 
                         </tr>
                     @endforeach
+                    @endif
                 </tbody>
             </table>
             <!-- Main modal -->
@@ -97,10 +109,8 @@
                                         required="">
                                         <option value="" selected>Pilih Event</option>
                                         @foreach ($event as $eventsa)
-                                        <option value="{{ $eventsa->event_id }}" 
-                                            {{ $tickets->event_id == $eventsa->event_id ? : '' }}>
-                                            {{ $eventsa->event_name }}</option>
-                                        @endforeach
+        <option value="{{ $eventsa->event_id }}">{{ $eventsa->event_name }}</option>
+    @endforeach
                                     </select>
                                 </div>
                                 <div class="col-span-2 sm:col-span-1">
@@ -158,10 +168,8 @@
                         <label for="event_id" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">Event Asal Tiket</label>
                         <select name="event_id" id="event_id" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-primary-600 dark:bg-gray-700 dark:text-white dark:border-gray-500 dark:focus:border-primary-500" required>
                             @foreach ($event as $eventsa)
-                                <option value="{{ $eventsa->event_id }}" {{ $ticket->event_id == $eventsa->event_id ? 'selected' : '' }}>
-                                    {{ $eventsa->event_name }}
-                                </option>
-                            @endforeach
+        <option value="{{ $eventsa->event_id }}">{{ $eventsa->event_name }}</option>
+    @endforeach
                         </select>
                         
                     </div>
