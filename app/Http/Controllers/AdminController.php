@@ -208,10 +208,19 @@ public function buyerDetail(Request $request, $event_id)
     if ($request->has('status') && $request->status) {
         $query->where('status', $request->status);
     }
+
+    // Search by combined keyword (no_transaction, nama, email)
+    if ($request->has('keyword') && $request->keyword) {
+        $query->where(function($q) use ($request) {
+            $keyword = $request->keyword;
+            $q->where('no_transaction', 'like', '%' . $keyword . '%')
+              ->orWhere('first_name', 'like', '%' . $keyword . '%')
+              ->orWhere('last_name', 'like', '%' . $keyword . '%')
+              ->orWhere('email_buyer', 'like', '%' . $keyword . '%');
+        });
+    }
     
     $query->where('event_id', $event_id);
-
-    // $query->join('tickets', 'orders.event_id', '=', 'tickets.events_id');
 
     $orders = $query->get();
 
@@ -219,6 +228,7 @@ public function buyerDetail(Request $request, $event_id)
 
     return view('admin.page.buyerDetail', compact('orders', 'totalRevenue'));
 }
+
 
 
     public function exportExcel(Request $request)

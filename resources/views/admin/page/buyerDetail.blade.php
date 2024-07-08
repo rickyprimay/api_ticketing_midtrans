@@ -24,6 +24,10 @@
                 </select>
             </div>
             <div class="relative">
+                <label for="keyword" class="block text-sm font-medium text-gray-700 dark:text-gray-400">Cari No Transaksi, Nama, atau Email</label>
+                <input type="text" id="keyword" name="keyword" class="form-input mt-1 block w-full" value="{{ request('keyword') }}" placeholder="Masukkan kata kunci">
+            </div>
+            <div class="relative">
                 <button type="submit" class="mt-6 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                     Filter
                 </button>
