@@ -43,8 +43,10 @@ Route::group(['middleware' => 'role:0'], function () {
     Route::get('/tickets', [TicketUsersController::class, 'index'])->name('tickets.index');
     Route::get('/edit-profile', [UserEditorController::class, 'index'])->name('edit.index');
     Route::put('/profile/update', [UserEditorController::class, 'update'])->name('profile.update');
+    // Route::get('/event/{event_id}', [EventsController::class, 'show'])->name('event_details');
+    // Route::get('/order/{event_id}/{price}', [OrdersController::class, 'order'])->name('order');
     Route::get('/event/{event_id}', [EventsController::class, 'show'])->name('event_details');
-    Route::get('/order/{event_id}/{price}', [OrdersController::class, 'order'])->name('order');
+    Route::get('/order/{event_id}/{ticket_id}', [OrdersController::class, 'order'])->name('order');
     Route::post('/create-invoice', [OrdersController::class, 'createInvoice'])->name('create-invoice');
     Route::get('/transactions', [OrdersController::class, 'index'])->name('history');
 });
@@ -65,6 +67,7 @@ Route::group(['middleware' => 'role:2'], function () {
     Route::put('/admin/event/{id}', [AdminController::class, 'update'])->name('admin.event.update');
     Route::delete('/admin/event/{id}', [AdminController::class, 'destroy'])->name('admin.event.destroy');
     Route::get('/admin/buyer', [AdminController::class, 'buyer'])->name('admin.buyer');
+    Route::get('/admin/buyer/{event_id}', [AdminController::class, 'buyerDetail'])->name('admin.buyerDetail');
     Route::get('/admin/export', [AdminController::class, 'exportExcel'])->name('admin.export');
     Route::get('/admin/talent', [AdminController::class, 'talent'])->name('admin.talent');
     Route::post('/admin/talent/store', [AdminController::class, 'storeTalent'])->name('admin.talent.store');

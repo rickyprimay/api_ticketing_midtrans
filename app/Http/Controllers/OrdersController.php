@@ -40,7 +40,7 @@ class OrdersController extends Controller
         return view('landing.pages.history.index', compact('orders'));
     }
 
-    public function order($event_id, $price)
+    public function order($event_id, $ticket_id)
 {
     $event = Events::find($event_id);
 
@@ -48,25 +48,39 @@ class OrdersController extends Controller
         Alert::error('Gagal', 'Event sudah selesai/tidak tersedia');
         return redirect()->route('index')->with('error', 'Event not found or not available');
     }
+    $ticket = Tickets::find($ticket_id);
+    if (!$ticket) {
+        Alert::error('Gagal', 'Ticket tidak tersedia');
+        return redirect()->route('event_details', ['event_id' => $event_id])->with('error', 'Ticket not found');
+    }
 
     $orders = Order::latest()->get();
     $user = Auth::user();
 
-    $tickets = Tickets::where('events_id', $event_id)->get();
     $talents = Talents::where('event_id', $event_id)->get();
 
-    return view('landing.pages.event.page.order', compact('event', 'tickets', 'talents', 'event_id', 'price', 'orders'));
+    return view('landing.pages.event.page.order', compact('event', 'ticket', 'talents', 'event_id', 'orders'));
 }
 
     public function createInvoice(Request $request)
     {
         $this->users_name = Auth::user()->name;
         try {
+            // dd($request);
             $first_name = $request->input('first_name');
             $last_name = $request->input('last_name');
             $phone_number = $request->input('phone_number');
             $gender = $request->input('gender');
             $birth_date = Carbon::createFromFormat('Y-m-d', $request->input('birth_date'))->format('Y-m-d');
+            // if event_type = health
+            $nik = $request->input('nik');
+            $blood_type = $request->input('blood_type');
+            $bib = $request->input('bib');
+            $community = $request->input('community');
+            $size_shirt = $request->input('size_shirt');
+            $urgen_contact = $request->input('urgen_contact');
+            $number_urgen_contact = $request->input('number_urgen_contact');
+            $relation_urgen_contact = $request->input('relation_urgen_contact');
 
             $qty = $request->input('qty');
             $price = $request->input('price');
@@ -84,12 +98,23 @@ class OrdersController extends Controller
             $order->email_buyer = Auth::user()->email;
             $order->qty = $qty;
             $order->price = $price;
+            $order->ticket_type = $request->input('ticket_type');
+            $order->event_name = $request->input('event_name');
             $order->total_amount = $totalAmount;
             $order->first_name = $first_name;
             $order->last_name = $last_name;
             $order->phone_number = $phone_number;
             $order->birth_date = $birth_date;
             $order->gender = $gender;
+            // if event_type = health
+            $order->nik = $nik;
+            $order->blood_type = $blood_type;
+            $order->bib = $bib;
+            $order->community = $community;
+            $order->size_shirt = $size_shirt;
+            $order->urgent_contact = $urgen_contact;
+            $order->number_urgen_contact = $number_urgen_contact;
+            $order->relation_urgen_contact = $relation_urgen_contact;
 
             $items = new InvoiceItem([
                 'name' => Auth::user()->name,

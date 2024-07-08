@@ -134,6 +134,8 @@ class AdminController extends Controller
 
     public function storeEvent(Request $request)
     {
+        // dd($request);
+
         $validator = Validator::make($request->all(), [
             'event_name' => 'required|string|max:255',
             'event_description' => 'required|string',
@@ -142,6 +144,7 @@ class AdminController extends Controller
             'event_date' => 'required|date',
             'event_start' => 'required|date',
             'event_ended' => 'required|date',
+            'event_type' => 'required|in:event,health',
             'event_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -159,6 +162,7 @@ class AdminController extends Controller
             $event->event_date = $request->event_date;
             $event->event_start = $request->event_start;
             $event->event_ended = $request->event_ended;
+            $event->event_type = $request->event_type;
             $event->event_status = 0;
 
             if ($request->hasFile('event_picture')) {
@@ -182,28 +186,42 @@ class AdminController extends Controller
         }
     }
     public function buyer(Request $request)
-    {
-        $query = Order::query();
+{
+    $events = Events::where('users_id', Auth::id())->get();
 
-        if ($request->has('start_date') && $request->start_date) {
-            $query->whereDate('created_at', '>=', $request->start_date);
-        }
+    return view('admin.page.buyer', compact('events'));
+}
 
-        if ($request->has('end_date') && $request->end_date) {
-            $query->whereDate('created_at', '<=', $request->end_date);
-        }
-        if ($request->has('status') && $request->status) {
-            $query->where('status', $request->status);
-        }
 
-        $events = Events::where('users_id', Auth::id())->pluck('event_id');
+public function buyerDetail(Request $request, $event_id)
+{
+    $query = Order::query();
 
-        $query->whereIn('event_id', $events);
-
-        $orders = $query->get();
-
-        return view('admin.page.buyer', compact('orders'));
+    if ($request->has('start_date') && $request->start_date) {
+        $query->whereDate('created_at', '>=', $request->start_date);
     }
+
+    if ($request->has('end_date') && $request->end_date) {
+        $query->whereDate('created_at', '<=', $request->end_date);
+    }
+
+    if ($request->has('status') && $request->status) {
+        $query->where('status', $request->status);
+    }
+    
+    $query->where('event_id', $event_id);
+
+    // Join tickets table to fetch ticket_type
+    $query->join('tickets', 'orders.event_id', '=', 'tickets.events_id');
+
+    $orders = $query->get();
+
+    // Calculate total revenue
+    $totalRevenue = $orders->where('status', 'Success')->sum('total_amount');
+
+    return view('admin.page.buyerDetail', compact('orders', 'totalRevenue'));
+}
+
 
     public function exportExcel(Request $request)
     {

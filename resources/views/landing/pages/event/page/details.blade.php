@@ -21,7 +21,7 @@
                         <div class="flex items-center p-2 border border-gray-300 rounded">
                             <div class="flex-1 truncate pr-4">{{ $ticket->ticket_type }}</div>
                             <div class="w-32 text-right">Rp {{ number_format($ticket->price, 0, ',', '.') }}</div>
-                            <button onclick="window.location.href='{{ route('order', ['event_id' => $event->event_id, 'price' => $ticket->price]) }}'"
+                            <button onclick="window.location.href='{{ route('order', ['event_id' => $event->event_id, 'ticket_id' => $ticket->ticket_id]) }}'"
                                 class="ml-4 bg-[#454545] text-white px-4 py-2 rounded">Pesan</button>                            
                         </div>
                     @endforeach

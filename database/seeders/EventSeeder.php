@@ -24,6 +24,7 @@ class EventSeeder extends Seeder
                 'event_start' => '2024-08-02',
                 'event_ended' => '2024-08-04',
                 'event_status' => 1,
+                'event_type' => 'event',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

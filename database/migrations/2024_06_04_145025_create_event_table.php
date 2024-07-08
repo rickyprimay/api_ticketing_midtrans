@@ -20,6 +20,8 @@ return new class extends Migration
             $table->date('event_date');
             $table->date('event_start');
             $table->date('event_ended');
+            $table->enum('event_type', ['event', 'health']);
+            $table->string('sizing_picture')->nullable();
             $table->tinyInteger('event_status')->default(0);
             $table->timestamps();
         });

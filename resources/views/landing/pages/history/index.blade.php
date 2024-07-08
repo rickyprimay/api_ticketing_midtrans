@@ -43,11 +43,7 @@
                                 <div class="text-black mb-2 md:mb-0">
                                     <p class="font-bold">Category</p>
                                     <ul>
-                                        @foreach ($order->event->tickets as $ticket)
-                                            @if ($ticket->price == $order->price)
-                                                <li>{{ $ticket->ticket_type }}</li>
-                                            @endif
-                                        @endforeach
+                                        <li>{{ $order->ticket_type }}</li>
                                     </ul>
                                 </div>
                                 <div class="text-black mb-2 md:mb-0">
