@@ -11,27 +11,44 @@
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 </head>
 <body class="bg-[#454545] flex items-center justify-center min-h-screen">
-    <div class="grid grid-cols-1 py-16">
-        <div class="bg-white p-6 shadow-lg text-center relative max-w-md w-full md:max-w-2xl">
-            <h1 class="text-2xl font-bold mb-4">Halaman Panitia</h1>
-            <form action="{{ route('auth.logout') }}" method="POST">
-                @csrf
-                <button class="absolute top-0 right-0 m-4 px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium" type="submit">Logout</button>
-            </form>
-            <div id="qr-reader" class="qr-reader-custom w-full h-64 md:w-[500px]"></div>
-            <p id="qr-result" class="mt-4 text-lg font-medium text-gray-700"></p>
-        </div>
-        <form class="bg-white p-6 mt-6 text-center max-w-md w-full md:max-w-2xl" id="manualForm">
+<div class="grid grid-cols-1 py-16">
+    <div class="bg-white p-6 shadow-lg text-center relative max-w-md w-full md:max-w-2xl">
+        <h1 class="text-2xl font-bold mb-4">Halaman Panitia</h1>
+        <form action="{{ route('auth.logout') }}" method="POST">
             @csrf
-            <div class="grid gap-6 mt-10 md:mt-0 mb-6 md:grid-cols-1">
+            <button class="absolute top-0 right-0 m-4 px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium" type="submit">Logout</button>
+        </form>
+        <div id="qr-reader" class="qr-reader-custom w-full h-64 md:w-[500px]"></div>
+        <p id="qr-result" class="mt-4 text-lg font-medium text-gray-700"></p>
+    </div>
+    <div class="bg-white p-6 mt-8    shadow-lg text-center relative max-w-md w-full md:max-w-2xl">
+
+        <form class="bg-white p-6 mt-6 text-center max-w-md w-full h-64 md:w-[500px]" id="manualForm">
+            @csrf
+            <div class="grid gap-6 mt-10 md:mt-0 mb-6 md:grid-cols-1 ">
                 <div>
                     <label for="qr-id" class="block mb-2 text-center text-sm font-medium text-gray-900">Input manual QR id</label>
-                    <input type="text" id="qr-id" name="qr_id" class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Unique code tiket" required />
+                    <input
+                    type="text"
+                    id="qr-id"
+                    name="qr_id"
+                    class="bg-gray-600 border border-gray-900 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
+                    style="width: 100%"
+                    placeholder="Unique code tiket"
+                    required
+                    />
                 </div>
-                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Submit</button>
             </div>
-        </form>
-    </div>
+            
+            <button
+            type="submit"
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
+            Submit
+        </button>
+    </form>
+</div>
+</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
