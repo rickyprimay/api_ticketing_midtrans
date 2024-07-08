@@ -209,10 +209,9 @@ public function buyerDetail(Request $request, $event_id)
         $query->where('status', $request->status);
     }
 
-    // Search by combined keyword (no_transaction, nama, email)
     if ($request->has('keyword') && $request->keyword) {
-        $query->where(function($q) use ($request) {
-            $keyword = $request->keyword;
+        $keyword = $request->keyword;
+        $query->where(function($q) use ($keyword) {
             $q->where('no_transaction', 'like', '%' . $keyword . '%')
               ->orWhere('first_name', 'like', '%' . $keyword . '%')
               ->orWhere('last_name', 'like', '%' . $keyword . '%')
@@ -225,11 +224,12 @@ public function buyerDetail(Request $request, $event_id)
     $orders = $query->get();
 
     $totalRevenue = $orders->where('status', 'Success')->sum(function ($order) {
-        return $order->total_amount - 4500;
+        return $order->total_amount - 4500; 
     });
 
     return view('admin.page.buyerDetail', compact('orders', 'totalRevenue'));
 }
+
 
 
 
