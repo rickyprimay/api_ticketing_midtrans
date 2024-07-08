@@ -98,7 +98,7 @@
                                         <option value="" selected>Pilih Event</option>
                                         @foreach ($event as $eventsa)
                                         <option value="{{ $eventsa->event_id }}"
-                                            {{ $ticket->events_id == $eventsa->event_id ? : '' }}>
+                                            {{ $tickets->events_id == $eventsa->event_id ? : '' }}>
                                             {{ $eventsa->event_name }}</option>
                                         @endforeach
                                     </select>
