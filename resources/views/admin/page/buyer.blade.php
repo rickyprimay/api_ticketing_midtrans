@@ -15,6 +15,15 @@
                     <input type="date" id="end_date" name="end_date" class="form-input mt-1 block w-full" value="{{ request('end_date') }}">
                 </div>
                 <div class="relative">
+                    <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-400">Status</label>
+                    <select id="status" name="status" class="form-select mt-1 block w-full">
+                        <option value="">Semua</option>
+                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                        <option value="completed" {{ request('status') == 'Success' ? 'selected' : '' }}>Success</option>
+                        <option value="canceled" {{ request('status') == 'Failed' ? 'selected' : '' }}>Failed</option>
+                    </select>
+                </div>
+                <div class="relative">
                     <button type="submit" class="mt-6 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                         Filter
                     </button>

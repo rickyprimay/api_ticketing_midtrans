@@ -192,6 +192,9 @@ class AdminController extends Controller
         if ($request->has('end_date') && $request->end_date) {
             $query->whereDate('created_at', '<=', $request->end_date);
         }
+        if ($request->has('status') && $request->status) {
+            $query->where('status', $request->status);
+        }
 
         $events = Events::where('users_id', Auth::id())->pluck('event_id');
 
@@ -213,6 +216,8 @@ class AdminController extends Controller
         if ($request->has('end_date') && $request->end_date) {
             $query->whereDate('created_at', '<=', $request->end_date);
         }
+
+        
 
         $events = Events::where('users_id', Auth::id())->pluck('event_id');
 
