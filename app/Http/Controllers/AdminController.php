@@ -224,7 +224,7 @@ public function buyerDetail(Request $request, $event_id)
 
     $orders = $query->get();
 
-    $totalRevenue = $orders->where('status', 'Success')->sum('total_amount');
+    $totalRevenue = $orders->where('status', 'Success')->sum('total_amount')-4500;
 
     return view('admin.page.buyerDetail', compact('orders', 'totalRevenue'));
 }
