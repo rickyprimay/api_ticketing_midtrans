@@ -89,9 +89,9 @@
                         <label for="datepicker-format" class="block text-gray-700">Birth Date</label>
                         <div
                             class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer focus:outline-none">
-                            <input name="birth_date" id="datepicker-format" datepicker datepicker-format="mm-dd-yyyy" type="text"
+                            <input name="birth_date" id="datepicker-format" datepicker datepicker-format="yyyy-mm-dd" type="text"
                                 class="border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5"
-                                placeholder="mm-dd-yyyy" />
+                                placeholder="yyyy-mm-dd" />
                         </div>
                     </div>
                 </div>

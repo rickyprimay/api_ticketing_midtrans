@@ -13,7 +13,7 @@
             </svg>
             Buat Talent
         </button>
-        @if($events->isEmpty())
+        @if($talents->isEmpty())
         <h1 class="text-center text-xl mt-8">Oops, tidak ada data talent Anda.</h1>
     @else
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-4 border border-black">

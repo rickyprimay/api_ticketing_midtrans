@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AbortController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CommiteController;
 use App\Http\Controllers\TicketUsersController;
@@ -79,3 +80,4 @@ Route::group(['middleware' => 'role:3'], function () {
     Route::put('/superadmin/event/verify/{id}', [SuperAdminController::class, 'verifiedEvent'])->name('superadmin.event.verify');
 });
 
+Route::fallback([AbortController::class, 'index']);

@@ -228,7 +228,6 @@ class AdminController extends Controller
 
         $event = Events::all();
 
-        $event = Events::all();
 
         $talents = Talents::whereIn('event_id', $events)->get();
         return view('admin.page.talent', compact('talents', 'event'));
