@@ -24,6 +24,7 @@ return new class extends Migration
             $table->boolean('is_verified')->default(false);
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('otp_sent_at')->nullable();
+            // $table->string('password_reset_tokens')->nullable();
         });
     }
 

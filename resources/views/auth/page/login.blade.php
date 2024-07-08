@@ -26,6 +26,10 @@
                 <span>Don't have an account?</span>
                 <a href="{{ route('auth.register') }}" class="text-orange-200 ml-2">Sign up</a>
             </div>
+            {{-- <div class="mt-6 text-white text-center flex justify-center">
+                <span>Forgot Password?</span>
+                <a href="{{ route('auth.forgot.password') }}" class="text-orange-200 ml-2">Forgot Password</a>
+            </div> --}}
         </div>
         <div class="w-1/2 h-screen hidden lg:block">
             <img src="{{ asset('assets/img/logo/ck-bg.svg') }}" alt="Placeholder Image" class="object-cover w-full h-full" />

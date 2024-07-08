@@ -22,7 +22,11 @@ Route::group(['prefix' => 'auth', 'as' => 'auth.'], function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login.form');
     Route::post('/login', [AuthController::class, 'login'])->name('login');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('forgot.password');
+    Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot.password');
 });
+Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('auth.reset.password');
+Route::get('/password/reset/{token}', [AuthController::class, 'showResetPasswordForm'])->name('password.reset');
 
 Route::get('/test-email', function () {
     return view('emails.otpMail');

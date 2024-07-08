@@ -10,6 +10,8 @@ use Illuminate\Support\Str;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -197,4 +199,47 @@ class AuthController extends Controller
         Alert::success('Berhasil', 'Anda telah logout.');
         return redirect()->route('auth.login');
     }
+    public function showForgotPasswordForm()
+{
+    return view('auth.page.forgot-password');
+}
+
+public function forgotPassword(Request $request)
+{
+    $request->validate(['email' => 'required|email']);
+
+    $status = Password::sendResetLink($request->only('email'));
+
+    return $status === Password::RESET_LINK_SENT
+                ? redirect()->route('auth.login')->with('status', __($status))
+                : back()->withErrors(['email' => __($status)]);
+}
+
+public function showResetPasswordForm(Request $request, $token)
+{
+    $email = $request->email; 
+    // dd($token);
+    return view('auth.page.reset-password', ['email' => $request->email]);
+}
+
+public function resetPasword(Request $request)
+{
+    $request->validate([
+        'password' => 'required|min:8|confirmed',
+        'email' => 'required|email',
+        'token' => 'required',
+    ]);
+
+    dd($request);
+
+    $user = Users::where('email', $request->email)->first();
+
+    $user->password = bcrypt($request->password);
+        $user->save();
+        Alert::success('Berhasil', 'Password berhasil direset.');
+
+        return redirect()->route('auth.login');
+    
+}
+
 }
