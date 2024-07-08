@@ -17,7 +17,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 place-items-center">
                 @foreach ($tickets_user as $ticket)
                     <!-- card -->
-                    <a href="ticketdetailpage.html"
+                    <a href="#"
                         class="w-[320px] bg-white border-2 border-black rounded-lg shadow border-solid flex flex-col items-center">
                         <h5 class="mt-2 text-2xl font-bold tracking-tight text-black">E-Ticket</h5>
                         <img class="rounded-t-lg w-[300px] mt-4" src="{{ asset('storage/' . $ticket->qr_code_ticket) }}"
