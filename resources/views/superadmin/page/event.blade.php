@@ -56,13 +56,13 @@
                         </td>
                         <td class="px-6 py-4">
                             @if ($event->event_status == 1)
-                                Sudah Terverifikasi
-                            @elseif ($event->event_status == 2)
                                 <form action="{{ route('superadmin.event.verify', $event->event_id) }}" method="POST">
                                     @csrf
                                     @method('PUT')
                                     <button type="submit" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">Verifikasi</button>
                                 </form>
+                            @elseif ($event->event_status == 2)
+                                Sudah Terverifikasi
                             @elseif ($event->event_status == 3)
                                 Dibatalkan
                             @elseif ($event->event_status == 4)
