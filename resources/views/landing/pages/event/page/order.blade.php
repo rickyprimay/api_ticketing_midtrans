@@ -34,7 +34,7 @@
                     </div>
                     <div class="relative z-0 w-full mb-5 group">
                         <h2>Total Harga</h2>
-                        <p id="total-price">Rp. {{ number_format($price, 0, ',', '.') }}</p>
+                        <p id="total-price">Rp. {{ number_format($price, 0, ',', '.') }} + Rp. 4.500 (Internet Fee)</p>
                     </div>
                     <button type="button" id="lanjut-btn" class="bg-[#454545] text-white px-4 py-2 rounded">Lanjut</button>
             </div>

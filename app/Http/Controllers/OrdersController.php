@@ -72,6 +72,9 @@ class OrdersController extends Controller
             $price = $request->input('price');
             $totalAmount = $qty * $price;
 
+            $internetFee = 4500;
+            $totalAmount += $internetFee;
+
             $no_transaction = 'Inv-' . (string) Str::uuid();
             $order = new Order();
             $order->no_transaction = $no_transaction;
