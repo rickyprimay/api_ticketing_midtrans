@@ -6,7 +6,7 @@
 <div class="container mx-auto mt-24">
     <form method="GET" action="{{ route('admin.buyerDetail', ['event_id' => request('event_id')]) }}" class="mb-4">
         <div class="flex items-center space-x-4">
-            <div class="relative">
+            {{-- <div class="relative">
                 <label for="start_date" class="block text-sm font-medium text-gray-700 dark:text-gray-400">Mulai Tanggal</label>
                 <input type="date" id="start_date" name="start_date" class="form-input mt-1 block w-full" value="{{ request('start_date') }}">
             </div>
@@ -22,7 +22,7 @@
                     <option value="completed" {{ request('status') == 'Success' ? 'selected' : '' }}>Success</option>
                     <option value="canceled" {{ request('status') == 'Failed' ? 'selected' : '' }}>Failed</option>
                 </select>
-            </div>
+            </div> --}}
             <div class="relative">
                 <label for="keyword" class="block text-sm font-medium text-gray-700 dark:text-gray-400">Cari No Transaksi, Nama, atau Email</label>
                 <input type="text" id="keyword" name="keyword" class="form-input mt-1 block w-full" value="{{ request('keyword') }}" placeholder="Masukkan kata kunci">
