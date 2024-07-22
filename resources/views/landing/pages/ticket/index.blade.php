@@ -28,6 +28,12 @@
                             <h5 class="mb-2 text-xl font-bold tracking-tight text-black">Tunjukan QR Code ini ke panitia saat hari H</h5>
                             <p class="mb-3 font-normal text-gray-400">
                                 {{ $ticket->event->event_location }}</p>
+                            <p class="mb-3 font-normal text-gray-400">
+                                @foreach ($orders as $order)
+                                @if ($order->email_buyer == $ticket->users_email)
+                                    {{ $order->ticket_type }}
+                                @endif
+                            @endforeach</p>
                             <p class="mb-3 font-normal text-gray-400">{{ $ticket->users_name }}</p>
                             <div class="flex justify-center px-0 md:px-6 mb-4">
                                 <p
