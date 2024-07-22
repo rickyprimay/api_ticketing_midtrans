@@ -29,16 +29,27 @@ class OrdersController extends Controller
         Configuration::setXenditKey(env('XENDIT_SECRET_KEY'));
     }
     public function index()
-    {
+{
+    if (Auth::check()) {
         $email = Auth::user()->email;
 
         $orders = Order::with(['event', 'event.tickets'])
-            ->where('email_buyer', $email)
+            ->where(function ($query) use ($email) {
+                $query->whereNull('email_auth')
+                      ->where('email_buyer', $email)
+                      ->orWhere('email_auth', $email);
+            })
             ->latest()
             ->get();
 
+        // dd($orders);
+
         return view('landing.pages.history.index', compact('orders'));
+    } else {
+        return redirect()->route('login')->with('error', 'Anda harus login untuk melihat riwayat pesanan.');
     }
+}
+
 
     public function order($event_id, $ticket_id)
 {
@@ -64,7 +75,7 @@ class OrdersController extends Controller
 
     public function createInvoice(Request $request)
     {
-        $this->users_name = Auth::user()->name;
+        // $this->users_name = $request->input('name');
         try {
             // dd($request);
             $first_name = $request->input('first_name');
@@ -95,7 +106,7 @@ class OrdersController extends Controller
             $order->event_id = $request->input('event_id');
             $order->external_id = $no_transaction;
             $order->name_buyer = $request->input('name');
-            $order->email_buyer = Auth::user()->email;
+            $order->email_buyer = $request->input('email');
             $order->qty = $qty;
             $order->price = $price;
             $order->ticket_type = $request->input('ticket_type');
@@ -103,6 +114,9 @@ class OrdersController extends Controller
             $order->total_amount = $totalAmount;
             $order->first_name = $first_name;
             $order->last_name = $last_name;
+            if (Auth::check()) {
+                $order->email_auth = Auth::user()->email;
+            }
             $order->phone_number = $phone_number;
             $order->birth_date = $birth_date;
             $order->gender = $gender;
@@ -117,7 +131,7 @@ class OrdersController extends Controller
             $order->relation_urgen_contact = $relation_urgen_contact;
 
             $items = new InvoiceItem([
-                'name' => Auth::user()->name,
+                'name' => $request->input('name'),
                 'price' => $price,
                 'quantity' => $request->input('qty'),
             ]);
@@ -134,7 +148,11 @@ class OrdersController extends Controller
             $order->invoice_url = $generateInvoice['invoice_url'];
             $order->save();
 
-            return redirect(route('history'));
+            if (Auth::check()) {
+                return redirect(route('history'));
+            } else {
+                return redirect($generateInvoice['invoice_url']);
+            }
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -202,11 +220,11 @@ class OrdersController extends Controller
 
             $ticketUser->save();
 
-            $this->generateQrCode($ticketUser, $i, $email_buyer, $users_name);
+            $this->generateQrCode($ticketUser, $i, $email_buyer, $users_name, $order->ticket_type, $order->total_amount);
         }
     }
 
-    protected function generateQrCode(TicketUsers $ticketUser, $index, $email_buyer, $users_name)
+    protected function generateQrCode(TicketUsers $ticketUser, $index, $email_buyer, $users_name, $ticket_type, $total_amount)
     {
 
         $event = Events::find($ticketUser->events_id);
@@ -234,10 +252,10 @@ class OrdersController extends Controller
         $ticketUser->save();
 
         // Kirim email dengan lampiran QR code
-        $this->sendEmailWithAttachment($ticketUser, $email_buyer, $users_name);
+        $this->sendEmailWithAttachment($ticketUser, $email_buyer, $users_name, $ticket_type, $total_amount);
     }
 
-    protected function sendEmailWithAttachment(TicketUsers $ticketUser, $email_buyer, $users_name)
+    protected function sendEmailWithAttachment(TicketUsers $ticketUser, $email_buyer, $users_name, $ticket_type, $total_amount)
     {
         $userEmail = $email_buyer;
         $qrCodePath = storage_path('app/public/' . $ticketUser->qr_code_ticket);
@@ -247,6 +265,8 @@ class OrdersController extends Controller
             'body' => 'Berikut Kode QR ticket anda',
             'qrCodePath' => $qrCodePath,
             'name' => $users_name,
+            'tipe_ticket' => $ticket_type,
+            'total_payment' => $total_amount,
             'uniqueCode' => $ticketUser->unique_code
         ];
 

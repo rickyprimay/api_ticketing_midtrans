@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use App\Models\TicketUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,15 +15,33 @@ class TicketUsersController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $tickets_user = TicketUsers::with('event')
-            ->where('users_email', $user->email)
-            ->get();
+
+        if (Order::where('email_auth', $user->email)->exists()) {
+            $emailBuyer = Order::where('email_auth', $user->email)->value('email_auth');
+            $orders = Order::where('email_auth', $user->email)->get();
+            // print("disini-");
+            // echo($emailBuyer);
+        } else {
+            $emailBuyer = Order::where('email_buyer', $user->email)->value('email_buyer');
+            $orders = Order::where('email_buyer', $user->email)->get();
+            // echo("kedua");
+        }
+
+        // dd($emailBuyer);
+
+        if (!$emailBuyer) {
+            return view('landing.pages.ticket.index')->with('message', 'Oops kamu tidak memiliki tiket');
+        }
+
+        $tickets_user = TicketUsers::with('event')->where('users_email', $emailBuyer)->get();
+
+        // dd($tickets_user);
 
         if ($tickets_user->isEmpty()) {
             return view('landing.pages.ticket.index')->with('message', 'Oops kamu tidak memiliki tiket');
         }
 
-        return view('landing.pages.ticket.index', compact('tickets_user'));
+        return view('landing.pages.ticket.index', compact('tickets_user', 'orders'));
     }
 
     /**

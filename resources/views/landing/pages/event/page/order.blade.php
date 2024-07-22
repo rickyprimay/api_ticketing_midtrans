@@ -35,8 +35,12 @@
                         <p>Rp. {{ number_format($ticket->price, 0, ',', '.') }}</p>
                     </div>
                     <div class="relative z-0 w-full mb-5 group">
+                        <h2>Internet Fee</h2>
+                        <p>Rp. 4.500</p>
+                    </div>
+                    <div class="relative z-0 w-full mb-5 group">
                         <h2>Total Harga</h2>
-                        <p id="total-price">Rp. {{ number_format($ticket->price, 0, ',', '.') }} + Rp. 4.500 (Internet Fee)</p>
+                        <p id="total-price">Rp. {{ number_format($ticket->price, 0, ',', '.') }}</p>
                     </div>
                     <button type="button" id="lanjut-btn" class="bg-[#454545] text-white px-4 py-2 rounded">Lanjut</button>
             </div>
@@ -44,10 +48,12 @@
         <div id="form_personal" class="grid mt-4" style="display: none;">
             <div class="bg-white p-6 rounded-lg border-2 border-black">
                 <h2 class="text-2xl font-bold mb-4">Informasi Personal</h2>
-                <div class="mb-4">
-                    <input type="checkbox" id="use_auth_data" name="use_auth_data">
-                    <label for="use_auth_data">Apakah Anda ingin mengisi data sesuai dengan data yang login?</label>
-                </div>
+                @if(Auth::check())
+                    <div class="mb-4">
+                        <input type="checkbox" id="use_auth_data" name="use_auth_data">
+                        <label for="use_auth_data">Apakah Anda ingin mengisi data sesuai dengan data yang login?</label>
+                    </div>
+                @endif
                 <div class="relative z-0 w-full mt-5 mb-5 group">
                     <input type="text" name="name" id="name"
                         class="block py-2.5 px-0 w-[1000px] text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -71,6 +77,9 @@
                     <label for="floating_last_name"
                         class="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Last
                         Name</label>
+                </div>
+                <div class="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 " role="alert">
+                    <span class="font-medium">Warning!</span> Pastikan Email anda benar
                 </div>
                 <div class="relative z-0 w-full mt-5 mb-5 group">
                     <input type="email" name="email" id="email"
@@ -241,24 +250,27 @@
     </div>
     <!-- end lineup -->
     <script>
-        document.getElementById('qty').addEventListener('input', function() {
-            let qty = parseInt(this.value) || 0;
-            let price = {{ $ticket->price }};
-            let totalPrice = qty * price;
-
-            if (qty === 0) {
-                totalPrice = 0;
-            }
-
-            document.getElementById('total-price').innerText = 'Rp. ' + totalPrice.toLocaleString();
+        document.addEventListener('DOMContentLoaded', function() {
+            calculateTotalPrice();
         });
-
+    
+        document.getElementById('qty').addEventListener('input', calculateTotalPrice);
+    
+        function calculateTotalPrice() {
+            let qty = parseInt(document.getElementById('qty').value) || 0;
+            let price = {{ $ticket->price }};
+            let internetFee = 4500;
+            let totalPrice = qty * price + internetFee;
+    
+            document.getElementById('total-price').innerText = 'Rp. ' + totalPrice.toLocaleString();
+        }
+    
         document.getElementById('lanjut-btn').addEventListener('click', function() {
             let formPersonal = document.getElementById('form_personal');
             formPersonal.style.display = 'block';
             formPersonal.classList.add('show-with-animation');
         });
-
+    
         document.getElementById('use_auth_data').addEventListener('change', function() {
             if (this.checked) {
                 let user = @json(auth()->user());
@@ -279,5 +291,5 @@
                 document.querySelectorAll('input[name="gender"]').forEach(input => input.checked = false);
             }
         });
-    </script>
+    </script>    
 @endsection

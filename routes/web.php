@@ -38,17 +38,17 @@ Route::post('/notification', [OrdersController::class, 'notificationCallback'])-
 
 Route::get('/tickets/buy/{id}', [TicketController::class, 'buy'])->name('tickets.buy');
 Route::get('/events/search', [LandingController::class, 'search'])->name('events.search');
+Route::get('/event/{event_id}', [EventsController::class, 'show'])->name('event_details');
+Route::get('/order/{event_id}/{ticket_id}', [OrdersController::class, 'order'])->name('order');
+Route::post('/create-invoice', [OrdersController::class, 'createInvoice'])->name('create-invoice');
 
 Route::group(['middleware' => 'role:0'], function () {
     Route::get('/tickets', [TicketUsersController::class, 'index'])->name('tickets.index');
     Route::get('/edit-profile', [UserEditorController::class, 'index'])->name('edit.index');
     Route::put('/profile/update', [UserEditorController::class, 'update'])->name('profile.update');
+    Route::get('/transactions', [OrdersController::class, 'index'])->name('history');
     // Route::get('/event/{event_id}', [EventsController::class, 'show'])->name('event_details');
     // Route::get('/order/{event_id}/{price}', [OrdersController::class, 'order'])->name('order');
-    Route::get('/event/{event_id}', [EventsController::class, 'show'])->name('event_details');
-    Route::get('/order/{event_id}/{ticket_id}', [OrdersController::class, 'order'])->name('order');
-    Route::post('/create-invoice', [OrdersController::class, 'createInvoice'])->name('create-invoice');
-    Route::get('/transactions', [OrdersController::class, 'index'])->name('history');
 });
 
 Route::group(['middleware' => 'role:1'], function () {

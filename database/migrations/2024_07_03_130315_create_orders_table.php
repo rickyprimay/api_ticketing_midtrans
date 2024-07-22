@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('external_id');
             $table->string('name_buyer');
             $table->string('email_buyer');
+            $table->string('email_auth')->nullable();
             $table->string('no_transaction');
             $table->string('item_name')->default('ticket');
             $table->integer('qty');
