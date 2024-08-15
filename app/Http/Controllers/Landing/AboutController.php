@@ -10,4 +10,7 @@ class AboutController extends Controller
     public function index() {
         return view('landing.pages.about');
     }
+    public function refund() {
+        return view('landing.pages.refund');
+    }
 }
