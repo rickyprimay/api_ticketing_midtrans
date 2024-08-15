@@ -52,7 +52,7 @@
                     <div class="max-w-xs bg-white rounded-xl shadow-xl overflow-hidden p-2 pt-2">
                         <!-- Image and Date Badge -->
                         <div class="relative pt-2">
-                            <img src="https://via.placeholder.com/300x150" alt="{{ $event->event_name }}" class="w-full h-40 object-cover rounded-t-lg" />
+                            <img src="https://via.placeholder.com/300x150" alt="{{ $event->event_name }}" class="w-full h-full object-cover rounded-t-lg" />
                             <div class="absolute top-2 right-2 bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-lg">
                                 <div class="text-center">
                                     <span class="text-sm">{{ \Carbon\Carbon::parse($event->event_date)->format('M') }}</span><br>
