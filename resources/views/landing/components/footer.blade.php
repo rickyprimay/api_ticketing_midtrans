@@ -13,7 +13,7 @@
             <h2 class="mb-2 text-xl font-semibold text-gray-900 uppercase dark:text-white">Tentang Ticketify</h2>
             <ul class="text-white font-medium">
               <li class="">
-                <a href="#" class="hover:underline font-extralight">About Us</a>
+                <a href="{{ route('about') }}" class="hover:underline font-extralight">About Us</a>
               </li>
               <li>
                 <a href="#" class="hover:underline font-extralight">Syarat dan Ketentuan</a>

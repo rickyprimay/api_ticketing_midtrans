@@ -8,6 +8,7 @@ use App\Http\Controllers\UserEditorController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\EventsController;
+use App\Http\Controllers\Landing\AboutController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\TicketController;
@@ -33,6 +34,7 @@ Route::get('/test-email', function () {
 });
 
 Route::get('/', [LandingController::class, 'index'])->name('index');
+Route::get('/about', [AboutController::class, 'index'])->name('about');
 Route::get('/events/load-more', [LandingController::class, 'loadMore'])->name('events.load.more');
 Route::post('/notification', [OrdersController::class, 'notificationCallback'])->name('notification');
 
