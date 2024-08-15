@@ -4,16 +4,23 @@
     <!-- hero -->
     <div class="container mx-auto px-4 py-8">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="flex justify-center pt-3">
-                <img src="{{ asset('storage/' . $event->event_picture) }}"
-                    class="w-[800px] h-[400px] object-cover" alt="Event Image" />
-            </div>
-            <div class="bg-white p-6 rounded-lg border-2 border-black">
-                <h2 class="text-2xl font-bold mb-4">{{ $event->event_name }}</h2>
-                <div class="text-gray-700 mb-4">
-                    <p>{{ \Carbon\Carbon::parse($event->event_date)->translatedFormat('j F Y') }} {{ $event->event_time }}</p>
-                    <p>{{ $event->event_location }}</p>
+            <div class="flex flex-col items-center">
+                <div class="relative flex justify-center">
+                    <img src="{{ asset('storage/' . $event->event_picture) }}"
+                        class="w-full h-full object-cover rounded-t-2xl" alt="Event Image" />
                 </div>
+                <div class="bg-[#535355] rounded-b-2xl p-4 text-gray-700 flex justify-between items-center w-full ">
+                    <div class="text-white">
+                        <i class="fas fa-calendar-alt mr-2"></i>
+                        {{ \Carbon\Carbon::parse($event->event_start)->translatedFormat('j F Y') }}
+                    </div>
+                    <div class="text-white">
+                        <i class="fas fa-map-marker-alt mr-2"></i>{{ $event->event_location }}
+                    </div>
+                </div> 
+            </div> 
+            <div class="bg-white p-6 rounded-xl border-2 border-black">
+                <h2 class="text-2xl font-semibold mb-4">Ticket Detail</h2>
                 <h3 class="text-xl font-semibold mt-8 mb-2">Mau beli berapa tiket?</h3>
                 <form class="max-w-md" method="POST" action="{{ route('create-invoice') }}">
                     @csrf
@@ -42,7 +49,9 @@
                         <h2>Total Harga</h2>
                         <p id="total-price">Rp. {{ number_format($ticket->price, 0, ',', '.') }}</p>
                     </div>
-                    <button type="button" id="lanjut-btn" class="bg-[#454545] text-white px-4 py-2 rounded">Lanjut</button>
+                    <div class="flex items-center jus">
+                        <button type="button" id="lanjut-btn" class="bg-[#454545] text-white px-4 py-2 rounded-xl">Next</button>
+                    </div>
             </div>
         </div>
         <div id="form_personal" class="grid mt-4" style="display: none;">
