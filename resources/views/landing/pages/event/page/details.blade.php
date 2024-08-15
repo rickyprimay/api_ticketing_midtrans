@@ -6,7 +6,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div class="flex justify-center pt-3">
                 <img src="{{ asset('storage/' . $event->event_picture) }}"
-                    class="w-[800px] h-[400px] object-cover" alt="Event Image" />
+                    class="w-full h-full object-cover rounded-lg" alt="Event Image" />
             </div>
             <div class="bg-white p-6 rounded-lg border-2 border-black">
                 <h2 class="text-2xl font-bold mb-4">{{ $event->event_name }}</h2>

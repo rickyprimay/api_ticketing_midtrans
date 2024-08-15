@@ -31,40 +31,52 @@
                 <button type="submit" class="bg-black text-white p-2 ml-2 rounded">Search</button>
             </form>
         </div>
-        
         <!-- Card Grid -->
         @if ($events->isEmpty())
             <h1 class="text-3xl text-center font-bold text-gray-900">Oops! Event yang Anda cari tidak ditemukan.</h1>
         @else
-            <div id="to_ticket" class="grid grid-cols-1 md:grid-cols-2 gap-2 place-items-center">
-                @foreach ($events as $event)
-                    <a href="{{ route('event_details', ['event_id' => $event->event_id]) }}">
-                        <div class="card bg-white">
-                            <div class="imgDisplay">
-                                <div class="relative pb-[56.25%] bg-gray-200">
-                                    <img src="{{ asset('storage/' . $event->event_picture) }}" alt="Event"
-                                        class="absolute h-full w-full object-contain" />
+        <div id="to_ticket" class="grid grid-cols-1 md:grid-cols-3 gap-4 place-items-center">
+            @foreach ($events as $event)
+                @php
+                    $aosAnimation = '';
+                    if ($loop->index % 3 == 0) {
+                        $aosAnimation = 'fade-right';
+                    } elseif ($loop->index % 3 == 1) {
+                        $aosAnimation = 'fade-up';
+                    } elseif ($loop->index % 3 == 2) {
+                        $aosAnimation = 'fade-left';
+                    }
+                @endphp
+        
+                <a data-aos="{{ $aosAnimation }}" href="{{ route('event_details', ['event_id' => $event->event_id]) }}" class="w-full max-w-xs mb-6 shadow-xl rounded-lg transform transition-transform duration-300 hover:-translate-y-2">
+                    <div class="max-w-xs bg-white rounded-xl shadow-xl overflow-hidden p-2 pt-2">
+                        <!-- Image and Date Badge -->
+                        <div class="relative pt-2">
+                            <img src="https://via.placeholder.com/300x150" alt="{{ $event->event_name }}" class="w-full h-40 object-cover rounded-t-lg" />
+                            <div class="absolute top-2 right-2 bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-lg">
+                                <div class="text-center">
+                                    <span class="text-sm">{{ \Carbon\Carbon::parse($event->event_date)->format('M') }}</span><br>
+                                    <span class="text-lg">{{ \Carbon\Carbon::parse($event->event_date)->format('d') }}</span>
                                 </div>
-                                <div class="y-date-boxInfo bg-orange-500">
-                                    <div class="y-date-month text-white">
-                                        {{ \Carbon\Carbon::parse($event->event_date)->format('M') }}
-                                    </div>
-                                    <div class="y-date-day text-orange-500">
-                                        {{ \Carbon\Carbon::parse($event->event_date)->format('d') }}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="y-card-title">
-                                <p class="boxTitle">{{ $event->event_name }}</p>
-                                <p class="boxAddress">{{ $event->event_location }}</p>
-                                <hr class="y-separator" />
-                                <p class="boxInfo">Start From <span
-                                        class="boxPrice">Rp&nbsp;{{ number_format($event->price, 0, ',', '.') }}</span></p>
                             </div>
                         </div>
-                    </a>
-                @endforeach
-            </div>
+        
+                        <!-- Price Section -->
+                        <div class="px-4 py-2 bg-[#EA784C] flex justify-between items-center rounded-b-xl">
+                            <span class="text-white text-sm font-semibold">Start From</span>
+                            <span class="text-[#FFD768] text-xl font-bold">Rp {{ number_format($event->price, 0, ',', '.') }}</span>
+                        </div>
+        
+                        <!-- Title and Location -->
+                        <div class="p-4">
+                            <div class="text-lg font-semibold text-gray-900 text-center">{{ $event->event_name }}</div>
+                            <div class="text-sm text-gray-600 text-center">{{ $event->event_location }}</div>
+                        </div>
+                    </div>
+                </a>
+            @endforeach
+        </div>
+        
             @if ($events->hasMorePages())
                 <div class="text-center">
                     <button id="load-more" class="bg-orange-500 text-white py-2 px-4 rounded-full hover:bg-orange-600 transition duration-300" data-page="{{ $events->currentPage() + 1 }}">Load More</button>

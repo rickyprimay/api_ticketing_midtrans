@@ -9,10 +9,15 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
     <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
         @media (min-width: 640px) {
             .card-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -115,10 +120,10 @@
 
     @include('sweetalert::alert')
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const smoothScrollLinks = document.querySelectorAll('a[href^="#"]');
             smoothScrollLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
+                link.addEventListener('click', function (e) {
                     e.preventDefault();
 
                     const targetId = this.getAttribute('href').substring(1);
