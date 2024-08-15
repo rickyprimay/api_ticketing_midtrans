@@ -24,7 +24,7 @@
                             <button onclick="window.location.href='{{ route('order', ['event_id' => $event->event_id, 'ticket_id' => $ticket->ticket_id]) }}'"
                                 class="ml-4 bg-[#454545] text-white px-4 py-2 rounded">Pesan</button>                            
                         </div>
-                    @endforeach
+                    @endforeach 
                 </div>
                 
             </div>
