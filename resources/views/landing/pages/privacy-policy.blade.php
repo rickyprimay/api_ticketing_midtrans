@@ -6,7 +6,7 @@
             <h1 class="font-semibold text-2xl mb-8 mt-4">Kebijakan Privasi</h1>
         </div>
         <div class="lg:mx-20">
-            <p>Selamat datang di Ticketify! Kami sangat menghargai privasi Anda dan berkomitmen untuk melindungi data pribadi Anda sesuai dengan Undang-Undang No. 27 Tahun 2022 tentang Perlindungan Data Pribadi (UU PDP) di Indonesia. Kebijakan Privasi ini menjelaskan bagaimana kami mengumpulkan, menggunakan, mengungkapkan, dan melindungi informasi pribadi yang Anda berikan saat menggunakan layanan kami.</p>
+            <p>Selamat datang di <span class="font-bold italic">Ticketify!</span> Kami sangat menghargai privasi Anda dan berkomitmen untuk melindungi data pribadi Anda sesuai dengan Undang-Undang No. 27 Tahun 2022 tentang Perlindungan Data Pribadi (UU PDP) di Indonesia. Kebijakan Privasi ini menjelaskan bagaimana kami mengumpulkan, menggunakan, mengungkapkan, dan melindungi informasi pribadi yang Anda berikan saat menggunakan layanan kami.</p>
 
             <h2 class="mt-4 font-bold">1. Informasi yang Kami Kumpulkan</h2>
 
