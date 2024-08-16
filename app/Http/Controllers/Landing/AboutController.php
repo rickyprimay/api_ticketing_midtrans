@@ -13,4 +13,7 @@ class AboutController extends Controller
     public function refund() {
         return view('landing.pages.refund');
     }
+    public function tos() {
+        return view('landing.pages.tos');
+    }
 }

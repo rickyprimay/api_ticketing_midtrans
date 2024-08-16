@@ -35,6 +35,7 @@ Route::get('/test-email', function () {
 
 Route::get('/', [LandingController::class, 'index'])->name('index');
 Route::get('/about', [AboutController::class, 'index'])->name('about');
+Route::get('/refund', [AboutController::class, 'refund'])->name('refund');
 Route::get('/events/load-more', [LandingController::class, 'loadMore'])->name('events.load.more');
 Route::post('/notification', [OrdersController::class, 'notificationCallback'])->name('notification');
 
