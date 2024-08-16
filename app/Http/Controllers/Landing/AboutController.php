@@ -16,4 +16,7 @@ class AboutController extends Controller
     public function tos() {
         return view('landing.pages.tos');
     }
+    public function privacyPolicy() {
+        return view('landing.pages.privacy-policy');
+    }
 }
