@@ -16,13 +16,13 @@
                 <a href="{{ route('about') }}" class="hover:underline font-extralight">About Us</a>
               </li>
               <li>
-                <a href="#" class="hover:underline font-extralight">Syarat dan Ketentuan</a>
+                <a href="{{ route('tos') }}" class="hover:underline font-extralight">Syarat dan Ketentuan</a>
               </li>
               <li>
-                <a href="#" class="hover:underline font-extralight">Kebijakan Privasi</a>
+                <a href="{{ route('privacyPolicy') }}" class="hover:underline font-extralight">Kebijakan Privasi</a>
               </li>
               <li>
-                <a href="#" class="hover:underline font-extralight">Pengembalian Dana</a>
+                <a href="{{ route('refund') }}" class="hover:underline font-extralight">Pengembalian Dana</a>
               </li>
             </ul>
           </div>
