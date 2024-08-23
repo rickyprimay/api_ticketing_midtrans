@@ -21,7 +21,7 @@
             </div> 
             <div class="bg-white p-6 rounded-xl border-2 border-black">
                 <h2 class="text-2xl font-semibold mb-4">Ticket Detail</h2>
-                <h3 class="text-xl font-semibold mt-8 mb-2">Mau beli berapa tiket?</h3>
+                <h3 class="text-xl font-semibold mt-8 mb-2">Mau @if($ticket->price != 0)beli @else ambil @endif berapa tiket?</h3>
                 <form class="max-w-md" method="POST" action="{{ route('create-invoice') }}">
                     @csrf
                     <div class="relative z-0 w-full mt-5 mb-5 group">
@@ -37,6 +37,7 @@
                         <label for="floating_qty"
                             class="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Qty</label>
                     </div>
+                    @if($ticket->price != 0)
                     <div class="relative z-0 w-full mb-5 group">
                         <h2>Harga</h2>
                         <p>Rp. {{ number_format($ticket->price, 0, ',', '.') }}</p>
@@ -49,6 +50,7 @@
                         <h2>Total Harga</h2>
                         <p id="total-price">Rp. {{ number_format($ticket->price, 0, ',', '.') }}</p>
                     </div>
+                    @endif
                     <div class="flex items-center jus">
                         <button type="button" id="lanjut-btn" class="bg-[#454545] text-white px-4 py-2 rounded-xl">Next</button>
                     </div>
