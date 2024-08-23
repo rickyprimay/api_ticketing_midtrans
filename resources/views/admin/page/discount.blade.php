@@ -39,7 +39,7 @@
                         <td class="px-6 py-4 whitespace-nowrap">{{ $discount->used }}</td>
                         <td class="px-6 py-4">
                             <button data-modal-target="edit-modal-{{ $discount->id }}" data-modal-toggle="edit-modal-{{ $discount->id }}" type="button" class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">Edit</button>
-                            <button data-modal-target="delete-modal-{{ $discount->event_id }}" data-modal-toggle="delete-modal-{{ $discount->event_id }}" type="button" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">Delete</button>
+                            <button data-modal-target="delete-modal-{{ $discount->id }}" data-modal-toggle="delete-modal-{{ $discount->id }}" type="button" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">Delete</button>
                         </td>
                     </tr>
                 @endforeach
@@ -113,6 +113,111 @@
                     </div>
                 </div>
             </div>
+            @foreach ($discounts as $discount)
+    <div id="edit-modal-{{ $discount->id }}" tabindex="-1" aria-hidden="true"
+        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative p-4 w-full max-w-md max-h-full">
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                        Edit Diskon
+                    </h3>
+                    <button type="button"
+                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                        data-modal-toggle="edit-modal-{{ $discount->id }}">
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+                <form action="{{ route('admin.discount.edit', $discount->id) }}" method="POST" class="p-4 md:p-5">
+                    @csrf
+                    @method('PUT')
+                    <div class="grid gap-4 mb-4 grid-cols-2">
+                        <div class="col-span-2">
+                            <label for="event_id_{{ $discount->id }}"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Event</label>
+                            <select name="event_id" id="event_id_{{ $discount->id }}"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
+                                <option value="">Pilih Event</option>
+                                @foreach($events as $event)
+                                    <option value="{{ $event->event_id }}" 
+                                        {{ $event->event_id == $discount->event_id ? 'selected' : '' }}>
+                                        {{ $event->event_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            
+                            <label for="ticket_id_{{ $discount->id }}" class="block my-2 text-sm font-medium text-gray-900 dark:text-white">Ticket</label>
+                            <select name="ticket_id" id="ticket_id_{{ $discount->id }}"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
+                                <option value="">Pilih Event terlebih dahulu</option>
+                                @foreach($discount->event->tickets as $ticket)
+                                    <option value="{{ $ticket->ticket_id }}"
+                                        {{ $ticket->ticket_id == $discount->ticket_id ? 'selected' : '' }}>
+                                        {{ $ticket->ticket_type }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            
+                            <label for="discount_{{ $discount->id }}"
+                                class="block my-2 text-sm font-medium text-gray-900 dark:text-white">Diskon</label>
+                            <input type="number" name="total_discount" id="discount_{{ $discount->id }}"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                value="{{ $discount->total_discount }}" placeholder="Diskon" required>
+                            
+                            <label for="code_{{ $discount->id }}"
+                                class="block my-2 text-sm font-medium text-gray-900 dark:text-white">Code</label>
+                            <input type="text" name="code" id="code_{{ $discount->id }}"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                value="{{ $discount->code }}" placeholder="Code" required>
+                            
+                            <label for="used_{{ $discount->id }}"
+                                class="block my-2 text-sm font-medium text-gray-900 dark:text-white">Stock</label>
+                            <input type="number" name="used" id="used_{{ $discount->id }}"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                value="{{ $discount->used }}" placeholder="Stock" required>
+                        </div>
+                    </div>
+                    <button type="submit"
+                        class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        Update Diskon
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="delete-modal-{{ $discount->id }}" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative p-4 w-full max-w-md max-h-full">
+            <div class="relative bg-white rounded-lg shadow">
+                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+                    <h3 class="text-lg font-semibold text-gray-900">
+                        Delete Event
+                    </h3>
+                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-toggle="delete-modal-{{ $discount->id }}">
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+                <form id="" action="" method="POST" class="p-4 md:p-5">
+                    @csrf
+                    @method('DELETE')
+                    <p>Apakah anda yakin untuk menghapus Diskon dengan kode {{ $discount->code }} ?</p>
+                    <div class="flex justify-end space-x-2">
+                        <button type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10" data-modal-toggle="delete-modal-{{ $discount->id }}">Cancel</button>
+                        <button type="submit" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+@endforeach
+
 </div>
 
 <script>

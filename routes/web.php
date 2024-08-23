@@ -81,6 +81,7 @@ Route::group(['middleware' => 'role:2'], function () {
     Route::put('/admin/talent/update/{id}', [AdminController::class, 'updateTalent'])->name('admin.talent.update');
     Route::get('/admin/discount', [DiscountController::class, 'index'])->name('admin.discount');
     Route::post('/admin/discounts', [DiscountController::class, 'store'])->name('admin.discount.store');
+    Route::put('/admin/discounts/{id}/edit', [DiscountController::class, 'edit'])->name('admin.discount.edit');
     Route::get('/admin/tickets/{event}', [DiscountController::class, 'getTicketsByEvent'])->name('admin.tickets.event');
 });
 
