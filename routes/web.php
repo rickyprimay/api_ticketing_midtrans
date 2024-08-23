@@ -80,6 +80,8 @@ Route::group(['middleware' => 'role:2'], function () {
     Route::delete('/admin/talent/{id}', [AdminController::class, 'destroyTalent'])->name('admin.talent.destroy');
     Route::put('/admin/talent/update/{id}', [AdminController::class, 'updateTalent'])->name('admin.talent.update');
     Route::get('/admin/discount', [DiscountController::class, 'index'])->name('admin.discount');
+    Route::post('/admin/discounts', [DiscountController::class, 'store'])->name('admin.discount.store');
+    Route::get('/admin/tickets/{event}', [DiscountController::class, 'getTicketsByEvent'])->name('admin.tickets.event');
 });
 
 Route::group(['middleware' => 'role:3'], function () {

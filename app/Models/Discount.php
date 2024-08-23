@@ -12,6 +12,14 @@ class Discount extends Model
 
     use HasFactory;
     protected $quarded = [];
+    
+    protected $fillable = [
+        'event_id',
+        'ticket_id',
+        'total_discount',
+        'code',
+        'used',
+    ];
 
     public function event()
     {
