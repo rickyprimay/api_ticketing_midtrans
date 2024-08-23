@@ -82,6 +82,7 @@ Route::group(['middleware' => 'role:2'], function () {
     Route::get('/admin/discount', [DiscountController::class, 'index'])->name('admin.discount');
     Route::post('/admin/discounts', [DiscountController::class, 'store'])->name('admin.discount.store');
     Route::put('/admin/discounts/{id}/edit', [DiscountController::class, 'edit'])->name('admin.discount.edit');
+    Route::delete('/admin/discounts/{id}', [DiscountController::class, 'destroy'])->name('admin.discount.destroy');
     Route::get('/admin/tickets/{event}', [DiscountController::class, 'getTicketsByEvent'])->name('admin.tickets.event');
 });
 
