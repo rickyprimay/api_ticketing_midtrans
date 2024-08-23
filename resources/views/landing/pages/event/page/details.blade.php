@@ -30,7 +30,7 @@
                         <div class="flex items-center p-2 border bg-[#535355] rounded-xl">
                             <div class="flex-1">
                                 <div class="text-white pl-2">{{ $ticket->ticket_type }}</div>
-                                <div class="text-white pl-2">Rp {{ number_format($ticket->price, 0, ',', '.') }}</div>
+                                <div class="text-white pl-2">@if($ticket->price != 0)Rp {{ number_format($ticket->price, 0, ',', '.') }} @else Free @endif</div>
                             </div>
                             <button onclick="window.location.href='{{ route('order', ['event_id' => $event->event_id, 'ticket_id' => $ticket->ticket_id]) }}'"
                                 class="ml-4 bg-white text-black px-8 py-2 rounded-xl">Add</button>                            
