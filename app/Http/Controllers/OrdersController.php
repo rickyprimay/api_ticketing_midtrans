@@ -95,11 +95,19 @@ class OrdersController extends Controller
 
             $qty = $request->input('qty');
             $price = $request->input('price');
-            $totalAmount = $qty * $price;
+            if ($price != 0) {
+                $totalAmount = $qty * $price;
+            } else {
+                $totalAmount = $qty * $price;
+            }
 
-            $internetFee = 4500;
-            $totalAmount += $internetFee;
-
+            if ($price != 0) {
+                $internetFee = 4500;
+                $totalAmount += $internetFee;
+            } else {
+                $totalAmount = 0;
+            }
+            
             $no_transaction = 'Inv-' . (string) Str::uuid();
             $order = new Order();
             $order->no_transaction = $no_transaction;
@@ -130,26 +138,33 @@ class OrdersController extends Controller
             $order->number_urgen_contact = $number_urgen_contact;
             $order->relation_urgen_contact = $relation_urgen_contact;
 
-            $items = new InvoiceItem([
-                'name' => $request->input('name'),
-                'price' => $price,
-                'quantity' => $request->input('qty'),
-            ]);
-
-            $createInvoice = new CreateInvoiceRequest([
-                'external_id' => $no_transaction,
-                'amount' => $totalAmount,
-                'invoice_duration' => 172800,
-                'items' => [$items],
-            ]);
-
-            $apiInstance = new InvoiceApi();
-            $generateInvoice = $apiInstance->createInvoice($createInvoice);
-            $order->invoice_url = $generateInvoice['invoice_url'];
-            $order->save();
+            if($price == 0) {
+                $this->generateTicketUsers($order, $order->name_buyer, $order->event_id, $order->email_buyer, $order->first_name, $order->last_name, $order->phone_number, $order->birth_date, $order->gender);
+            } else {
+                $items = new InvoiceItem([
+                    'name' => $request->input('name'),
+                    'price' => $price,
+                    'quantity' => $request->input('qty'),
+                ]);
+    
+                $createInvoice = new CreateInvoiceRequest([
+                    'external_id' => $no_transaction,
+                    'amount' => $totalAmount,
+                    'invoice_duration' => 172800,
+                    'items' => [$items],
+                ]);
+    
+                $apiInstance = new InvoiceApi();
+                $generateInvoice = $apiInstance->createInvoice($createInvoice);
+                $order->invoice_url = $generateInvoice['invoice_url'];
+                $order->save();
+            }
+            
 
             if (Auth::check()) {
                 return redirect(route('history'));
+            }  else if ($price == 0) {
+                return redirect(route('index'));
             } else {
                 return redirect($generateInvoice['invoice_url']);
             }
