@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -39,7 +38,7 @@
         <tr>
             <td style="padding: 20px;">
                 <footer>
-                    <p style="color: #888888; font-size: 12px; margin-top: 10px;">© {{ date('Y') }} Ticketify.id. All Rights Reserved.</p>
+                    <p style="color: #888888; font-size: 12px; margin-top: 10px;">©️ {{ date('Y') }} Ticketify.id. All Rights Reserved.</p>
                 </footer>
             </td>
         </tr>
