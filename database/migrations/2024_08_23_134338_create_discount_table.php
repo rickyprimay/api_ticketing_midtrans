@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('discount', function (Blueprint $table) {
             $table->id();
-            $table->foreign('event_id')->references('event_id')->on('events')->onDelete('cascade');
-            $table->foreign('ticket_id')->references('ticket_id')->on('tickets')->onDelete('cascade');
+            $table->unsignedBigInteger('event_id');
+            $table->unsignedBigInteger('ticket_id');
             $table->integer('total_discount');
             $table->string('code');
             $table->integer('used');
