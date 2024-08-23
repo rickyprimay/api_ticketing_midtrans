@@ -6,6 +6,7 @@ use App\Http\Controllers\CommiteController;
 use App\Http\Controllers\TicketUsersController;
 use App\Http\Controllers\UserEditorController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\EventsController;
 use App\Http\Controllers\Landing\AboutController;
@@ -78,6 +79,7 @@ Route::group(['middleware' => 'role:2'], function () {
     Route::post('/admin/talent/store', [AdminController::class, 'storeTalent'])->name('admin.talent.store');
     Route::delete('/admin/talent/{id}', [AdminController::class, 'destroyTalent'])->name('admin.talent.destroy');
     Route::put('/admin/talent/update/{id}', [AdminController::class, 'updateTalent'])->name('admin.talent.update');
+    Route::get('/admin/discount', [DiscountController::class, 'index'])->name('admin.discount');
 });
 
 Route::group(['middleware' => 'role:3'], function () {
