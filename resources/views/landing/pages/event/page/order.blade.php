@@ -45,9 +45,9 @@
                         <h2>Harga</h2>
                         <p>Rp. {{ number_format($ticket->price, 0, ',', '.') }}</p>
                     </div>
+                    <h2 id="headerFee">Admin Fee</h2>
                     <div id="internetFee" class="relative z-0 w-full mb-5 group ">
-                        <h2>Internet Fee</h2>
-                        <p>Rp. 4.500</p>
+                        <p id="internet-fee">Rp. 0</p>
                     </div>
                     <div id="totalPrice" class="relative z-0 w-full mb-5 group">
                         <h2>Total Harga</h2>
@@ -278,10 +278,13 @@
         function calculateTotalPrice() {
             let qty = parseInt(document.getElementById('qty').value) || 0;
             let price = {{ $ticket->price }};
-            let internetFee = 4500;
+            let totalAmount = qty * price;
+            let internetFee = 0.05 * totalAmount;;
             let totalPrice = qty * price + internetFee;
 
             document.getElementById('total-price').innerText = 'Rp. ' + totalPrice.toLocaleString();
+            document.getElementById('internetFee').innerText = 'Rp. ' + internetFee.toLocaleString();
+            // document.getElementById('internet_fee').value = internetFee;
         }
 
         document.getElementById('lanjut-btn').addEventListener('click', function() {
@@ -294,6 +297,7 @@
             document.getElementById('totalPrice').style.display = 'none';
             document.getElementById('headerTittle').style.display = 'none';
             document.getElementById('buttonNextToForm').style.display = 'none';
+            document.getElementById('headerFee').style.display = 'none';
             document.getElementById('price-d').style.display = 'none';
             document.getElementById('buttonBackToForm').style.display = 'block';
 
@@ -390,6 +394,7 @@
             document.getElementById('internetFee').style.display = 'block';
             document.getElementById('totalPrice').style.display = 'block';
             document.getElementById('headerTittle').style.display = 'block';
+            document.getElementById('headerFee').style.display = 'block';
             document.getElementById('buttonNextToForm').style.display = 'block';
             document.getElementById('price-d').style.display = 'block';
             
