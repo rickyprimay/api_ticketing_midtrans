@@ -46,7 +46,7 @@
                         <!-- Price Section -->
                         <div class="px-4 py-2 bg-[#EA784C] flex justify-between items-center rounded-b-xl">
                             <span class="text-white text-sm font-semibold">Start From</span>
-                            <span class="text-[#FFD768] text-xl font-bold">Rp {{ number_format($event->price, 0, ',', '.') }}</span>
+                            <span class="text-[#FFD768] text-xl font-bold">@if($event->price != 0) Rp {{ number_format($event->price, 0, ',', '.') }} @else Gratis @endif</span>
                         </div>
         
                         <!-- Title and Location -->
