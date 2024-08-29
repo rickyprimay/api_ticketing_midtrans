@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Discount;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Events;
+use Illuminate\Support\Facades\DB;
 use App\Models\Tickets;
 
 class DiscountController extends Controller
@@ -71,5 +72,31 @@ class DiscountController extends Controller
     {
         $tickets = Tickets::where('events_id', $eventId)->get();
         return response()->json($tickets);
+    }
+    public function applyDiscount(Request $request)
+    {
+        $request->validate([
+            'event_id' => 'required|integer',
+            'ticket_id' => 'required|integer',
+            'code' => 'required|string',
+        ]);
+
+        $discount = Discount::where('event_id', $request->event_id)
+            ->where('ticket_id', $request->ticket_id)
+            ->where('code', $request->code)
+            ->first();
+
+        if (!$discount || $discount->used <= 0) {
+            return response()->json(['message' => 'Invalid or expired discount code.'], 400);
+        }
+
+        $discount->used -= 1;
+        $discount->save();
+
+        // Return total diskon
+        return response()->json([
+            'total_discount' => $discount->total_discount,
+            'message' => 'Discount applied successfully.',
+        ], 200);
     }
 }

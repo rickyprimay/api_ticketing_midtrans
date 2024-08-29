@@ -303,24 +303,79 @@
                 </div>
                 <div class="relative z-0 w-full mb-5 group " data-aos="fade-right">
                     <h2>Total Harga</h2>
-                    <p>${document.getElementById('total-price').innerText}</p>
+                    <p id="initial-total-price">${document.getElementById('total-price').innerText}</p>
                 </div>
                 <div class="relative z-0 w-full mb-5 group " data-aos="fade-right">
                     <h2>Masukan Kode Voucher</h2>
                     <div class="flex items-center">
                         <input type="text" id="voucher-code" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " value="" />
-                        <button type="button" id="apply-voucher" class="ml-4 bg-[#535355] text-white px-4 py-2 rounded-xl">Apply</button>
+                        <button type="button" id="apply-voucher" class="ml-4 bg-[#535355] hover:bg-neutral-400 text-white px-4 py-2 rounded-xl">Apply</button>
                     </div>
                 </div>
                 <div class="relative z-0 w-full mb-5 group " data-aos="fade-right">
                     <h2>Potongan Harga didapat</h2>
-                    <p>Rp. </p>
+                    <p id="discount-amount">Rp. 0</p>
                 </div>
                 <div class="relative z-0 w-full mb-5 group " data-aos="fade-right">
                     <h2>Total Yang Harus Dibayar</h2>
-                    <p>${document.getElementById('total-price').innerText}</p>
+                    <p id="final-total-price">${document.getElementById('total-price').innerText}</p>
                 </div>
             `;
+
+            const applyVoucherButton = document.getElementById('apply-voucher');
+    if (applyVoucherButton) {
+        applyVoucherButton.addEventListener('click', function() {
+            let voucherCode = document.getElementById('voucher-code').value;
+            let eventId = {{ $event_id }};
+            let ticketId = {{ $ticket->ticket_id }};
+
+            if (voucherCode.trim() === '') {
+                console.error('Voucher code is required');
+                return;
+            }
+
+            // Fetch API request
+            fetch('/api/apply-discount', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    event_id: eventId,
+                    ticket_id: ticketId,
+                    code: voucherCode
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.total_discount) {
+                    console.log('Discount Applied:', data.total_discount);
+
+                    document.getElementById('discount-amount').innerText = 'Rp. ' + data.total_discount.toLocaleString();
+
+                    const initialTotalPriceElement = document.getElementById('initial-total-price');
+                    const finalTotalPriceElement = document.getElementById('final-total-price');
+
+                    if (initialTotalPriceElement && finalTotalPriceElement) {
+                        let initialTotalPrice = parseInt(initialTotalPriceElement.innerText.replace(/[Rp. ]/g, '').replace(',', ''));
+                        let finalTotalPrice = initialTotalPrice - data.total_discount;
+
+                        finalTotalPriceElement.innerText = 'Rp. ' + finalTotalPrice.toLocaleString();
+                    } else {
+                        console.error('Total price elements not found');
+                    }
+                } else {
+                    console.error('Failed to apply discount:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    } else {
+        console.error('Button apply-voucher not found');
+    }
         });
 
         document.getElementById('buttonBackToForm').addEventListener('click', function() {

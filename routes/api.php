@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\EventsController;
 use App\Http\Controllers\Api\TalentsController;
 use App\Http\Controllers\Api\TicketsController;
+use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\Api\CallbackController;
 use App\Http\Controllers\Api\UserEditorController;
 
@@ -71,4 +72,5 @@ Route::middleware(['CorsMiddleware'])->group(function () {
             Route::delete('/{id}', [UserController::class, 'destroy']);
         });
     });
+    Route::post('/apply-discount', [DiscountController::class, 'applyDiscount']);
 });
