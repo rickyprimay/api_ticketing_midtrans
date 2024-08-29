@@ -311,6 +311,7 @@
                         <input type="text" id="voucher-code" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " value="" />
                         <button type="button" id="apply-voucher" class="ml-4 bg-[#535355] hover:bg-neutral-400 text-white px-4 py-2 rounded-xl">Apply</button>
                     </div>
+                    <div id="voucher-error-message" class="text-red-500 mt-2"></div>
                 </div>
                 <div class="relative z-0 w-full mb-5 group " data-aos="fade-right">
                     <h2>Potongan Harga didapat</h2>
@@ -330,7 +331,7 @@
             let ticketId = {{ $ticket->ticket_id }};
 
             if (voucherCode.trim() === '') {
-                console.error('Voucher code is required');
+                document.getElementById('voucher-error-message').innerText = 'Kode voucher harus diisi';
                 return;
             }
 
@@ -349,28 +350,34 @@
             })
             .then(response => response.json())
             .then(data => {
+                const errorMessageElement = document.getElementById('voucher-error-message');
+                
                 if (data.total_discount) {
                     console.log('Discount Applied:', data.total_discount);
 
+                    // Update the discount amount in the HTML
                     document.getElementById('discount-amount').innerText = 'Rp. ' + data.total_discount.toLocaleString();
 
-                    const initialTotalPriceElement = document.getElementById('initial-total-price');
-                    const finalTotalPriceElement = document.getElementById('final-total-price');
+                    // Calculate the new total price after discount
+                    let initialTotalPrice = parseInt(document.getElementById('initial-total-price').innerText.replace(/[Rp. ]/g, '').replace(',', ''));
+                    let finalTotalPrice = initialTotalPrice - data.total_discount;
 
-                    if (initialTotalPriceElement && finalTotalPriceElement) {
-                        let initialTotalPrice = parseInt(initialTotalPriceElement.innerText.replace(/[Rp. ]/g, '').replace(',', ''));
-                        let finalTotalPrice = initialTotalPrice - data.total_discount;
+                    // Update the final total price in the HTML
+                    document.getElementById('final-total-price').innerText = 'Rp. ' + finalTotalPrice.toLocaleString();
 
-                        finalTotalPriceElement.innerText = 'Rp. ' + finalTotalPrice.toLocaleString();
-                    } else {
-                        console.error('Total price elements not found');
-                    }
+                    // Clear any previous error message
+                    errorMessageElement.innerText = '';
+                } else if (data.error === 'event_ticket_mismatch') {
+                    errorMessageElement.innerText = 'Discount bukan untuk event atau ticket ini';
+                } else if (data.error === 'invalid_code') {
+                    errorMessageElement.innerText = 'Kode salah';
                 } else {
-                    console.error('Failed to apply discount:', data.message);
+                    errorMessageElement.innerText = 'Terjadi kesalahan, silakan coba lagi.';
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
+                document.getElementById('voucher-error-message').innerText = 'Terjadi kesalahan, silakan coba lagi.';
             });
         });
     } else {

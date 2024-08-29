@@ -11,7 +11,8 @@ use App\Models\Tickets;
 
 class DiscountController extends Controller
 {
-    public function index () {
+    public function index()
+    {
         $discounts = Discount::with('event', 'ticket')->get();
         $events = Events::where('users_id', Auth::id())->get();
 
@@ -62,10 +63,10 @@ class DiscountController extends Controller
     public function destroy($id)
     {
         $discount = Discount::findOrFail($id);
-    
+
         // Hapus diskon
         $discount->delete();
-    
+
         return redirect()->route('admin.discount')->with('success', 'Diskon berhasil dihapus.');
     }
     public function getTicketsByEvent($eventId)
@@ -86,17 +87,27 @@ class DiscountController extends Controller
             ->where('code', $request->code)
             ->first();
 
-        if (!$discount || $discount->used <= 0) {
+        if (!$discount) {
+            $codeExists = Discount::where('code', $request->code)->exists();
+            if ($codeExists) {
+                return response()->json(['error' => 'event_ticket_mismatch'], 400);
+            } else {
+                return response()->json(['error' => 'invalid_code'], 400);
+            }
+        }
+
+        if ($discount->used <= 0) {
             return response()->json(['message' => 'Invalid or expired discount code.'], 400);
         }
 
-        $discount->used -= 1;
         $discount->save();
 
-        // Return total diskon
-        return response()->json([
-            'total_discount' => $discount->total_discount,
-            'message' => 'Discount applied successfully.',
-        ], 200);
+        return response()->json(
+            [
+                'total_discount' => $discount->total_discount,
+                'message' => 'Discount applied successfully.',
+            ],
+            200,
+        );
     }
 }
