@@ -60,7 +60,7 @@
                     <div class="flex items-center jus" id="buttonBackToForm" style="display: none;">
                         <button type="button" id="lanjut-btn" class="bg-[#454545] text-white px-4 py-2 rounded-xl">Back</button>
                     </div>
-                </form>
+                
             </div>
         </div>
         <div id="form_personal" class="grid mt-4" style="display: none;">
@@ -235,6 +235,7 @@
                 </div>
                 @endif
                 <button type="submit" class="bg-[#454545] text-white px-4 py-2 rounded">Checkout</button>
+            </form>
             </div>
         </div>
     </div>
@@ -312,6 +313,7 @@
                         <button type="button" id="apply-voucher" class="ml-4 bg-[#535355] hover:bg-neutral-400 text-white px-4 py-2 rounded-xl">Apply</button>
                     </div>
                     <div id="voucher-error-message" class="text-red-500 mt-2"></div>
+                    <input type="hidden" name="discount_amount" id="discount_amount" value="0">
                 </div>
                 <div class="relative z-0 w-full mb-5 group " data-aos="fade-right">
                     <h2>Potongan Harga didapat</h2>
@@ -353,7 +355,8 @@
                 const errorMessageElement = document.getElementById('voucher-error-message');
                 
                 if (data.total_discount) {
-                    console.log('Discount Applied:', data.total_discount);
+                    // console.log('Discount Applied:', data.total_discount);
+                    document.getElementById('discount_amount').value = data.total_discount;
 
                     document.getElementById('discount-amount').innerText = 'Rp. ' + data.total_discount.toLocaleString();
 

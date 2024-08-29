@@ -95,6 +95,10 @@ class OrdersController extends Controller
 
             $qty = $request->input('qty');
             $price = $request->input('price');
+            $discountAmount = $request->input('discount_amount', 0);
+
+            // $totalAmount = $qty * $price - $discountAmount;
+
             if ($price != 0) {
                 $totalAmount = $qty * $price;
             } else {
@@ -102,11 +106,12 @@ class OrdersController extends Controller
             }
 
             if ($price != 0) {
-                $internetFee = 4500;
+                $internetFee = (5 / 100) * $totalAmount;
                 $totalAmount += $internetFee;
             } else {
                 $totalAmount = 0;
             }
+
             
             $no_transaction = 'Inv-' . (string) Str::uuid();
             $order = new Order();
@@ -119,7 +124,7 @@ class OrdersController extends Controller
             $order->price = $price;
             $order->ticket_type = $request->input('ticket_type');
             $order->event_name = $request->input('event_name');
-            $order->total_amount = $totalAmount;
+            $order->total_amount = $totalAmount -= $discountAmount;
             $order->first_name = $first_name;
             $order->last_name = $last_name;
             if (Auth::check()) {
@@ -141,8 +146,18 @@ class OrdersController extends Controller
             if($price == 0) {
                 $this->generateTicketUsers($order, $order->name_buyer, $order->event_id, $order->email_buyer, $order->first_name, $order->last_name, $order->phone_number, $order->birth_date, $order->gender);
             } else {
+                $fees = [
+                    [
+                        'type' => 'Admin Fee',
+                        'value' => $internetFee
+                    ],
+                    [
+                        'type' => 'Discount',
+                        'value' => -$discountAmount
+                    ],
+                ];
                 $items = new InvoiceItem([
-                    'name' => $request->input('name'),
+                    'name' => $request->input('ticket_type') . ' ' . $request->input('event_name'),
                     'price' => $price,
                     'quantity' => $request->input('qty'),
                 ]);
@@ -152,6 +167,7 @@ class OrdersController extends Controller
                     'amount' => $totalAmount,
                     'invoice_duration' => 172800,
                     'items' => [$items],
+                    'fees' => $fees,
                 ]);
     
                 $apiInstance = new InvoiceApi();
