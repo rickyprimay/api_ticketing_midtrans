@@ -97,6 +97,15 @@ class OrdersController extends Controller
             $price = $request->input('price');
             $discountAmount = $request->input('discount_amount', 0);
 
+            if ($discountAmount != 0) {
+                $discountCode = $request->input('discount_code');
+                $discount = \App\Models\Discount::where('code', $discountCode)->first();
+                if ($discount && $discount->used > 0) {
+                    $discount->used -= 1;
+                    $discount->save();
+                }
+            }
+
             // $totalAmount = $qty * $price - $discountAmount;
 
             if ($price != 0) {

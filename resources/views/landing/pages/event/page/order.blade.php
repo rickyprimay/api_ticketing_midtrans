@@ -313,7 +313,7 @@
                 <div class="relative z-0 w-full mb-5 group " data-aos="fade-right">
                     <h2>Masukan Kode Voucher</h2>
                     <div class="flex items-center">
-                        <input type="text" id="voucher-code" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " value="" />
+                        <input type="text" id="voucher-code" name="discount_code" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " value="" />
                         <button type="button" id="apply-voucher" class="ml-4 bg-[#535355] hover:bg-neutral-400 text-white px-4 py-2 rounded-xl">Apply</button>
                     </div>
                     <div id="voucher-error-message" class="text-red-500 mt-2"></div>
