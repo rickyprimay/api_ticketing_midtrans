@@ -1,24 +1,6 @@
 @extends('landing.layouts.app')
 
 @section('content')
-    <section class="container mx-auto text-center bg-white px-4 md:px-0 pt-24 md:pt-32">
-        <div class="text-center">
-            <h1 class="text-4xl md:text-6xl font-bold mb-6">
-                Unlocking Unforgettable <br />
-                Experience
-            </h1>
-            <a href="#to_ticket">
-                <button
-                    class="bg-orange-500 text-white py-2 px-4 rounded-full hover:bg-orange-600 transition duration-300">Buy
-                    Ticket Now</button>
-            </a>
-            <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-4 pt-9">
-                <button class="bg-[#141414] text-white py-2 px-4 rounded-full">Online Ticketing</button>
-                <button class="bg-[#141414] text-white py-2 px-4 rounded-full">Concert</button>
-                <button class="bg-[#141414] text-white py-2 px-4 rounded-full">Event Management</button>
-            </div>
-        </div>
-    </section>
     
     @include('landing.components.carousel')
     <!-- card -->
