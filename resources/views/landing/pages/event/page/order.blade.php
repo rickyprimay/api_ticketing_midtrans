@@ -355,22 +355,18 @@
                 if (data.total_discount) {
                     console.log('Discount Applied:', data.total_discount);
 
-                    // Update the discount amount in the HTML
                     document.getElementById('discount-amount').innerText = 'Rp. ' + data.total_discount.toLocaleString();
 
-                    // Calculate the new total price after discount
                     let initialTotalPrice = parseInt(document.getElementById('initial-total-price').innerText.replace(/[Rp. ]/g, '').replace(',', ''));
                     let finalTotalPrice = initialTotalPrice - data.total_discount;
 
-                    // Update the final total price in the HTML
                     document.getElementById('final-total-price').innerText = 'Rp. ' + finalTotalPrice.toLocaleString();
 
-                    // Clear any previous error message
                     errorMessageElement.innerText = '';
                 } else if (data.error === 'event_ticket_mismatch') {
                     errorMessageElement.innerText = 'Discount bukan untuk event atau ticket ini';
                 } else if (data.error === 'invalid_code') {
-                    errorMessageElement.innerText = 'Kode salah';
+                    errorMessageElement.innerText = 'Kode salah, silahkan coba lagi';
                 } else {
                     errorMessageElement.innerText = 'Terjadi kesalahan, silakan coba lagi.';
                 }
