@@ -174,6 +174,19 @@ class OrdersController extends Controller
                 $generateInvoice = $apiInstance->createInvoice($createInvoice);
                 $order->invoice_url = $generateInvoice['invoice_url'];
                 $order->save();
+
+                $details = [
+                    'name' => $order->name_buyer,
+                    'uniqueCode' => $no_transaction,
+                    'tipe_ticket' => $order->ticket_type,
+                    'total_payment' => 'Rp. ' . number_format($totalAmount, 0, ',', '.'),
+                    'invoice_url' => $generateInvoice['invoice_url'],
+                    'event_name' => $order->event_name,
+                    'event_date' => Carbon::parse($order->event->event_start)->translatedFormat('j F Y'),
+                    'event_location' => $order->event->event_location,
+                    'total_ticket' => $order->qty,
+                ];
+                Mail::to($order->email_buyer)->send(new \App\Mail\ReminderPayments($details, null));
             }
             
 

@@ -8,7 +8,7 @@
     <table cellspacing="0" cellpadding="0" border="0" width="100%" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #dddddd;">
         <tr>
             <td style="padding: 20px;">
-                <h1 style="color: #333333; font-size: 24px;">Reminder Pembayaran Tiket [Acara].</h1>
+                <h1 style="color: #333333; font-size: 24px;">Reminder Pembayaran Tiket {{ $details['event_name'] }}.</h1>
                 <p style="color: #666666; font-size: 16px;">Berikut E-Ticket anda untuk melakukan daftar ulang di Hari H acara</p>
             </td>
         </tr>
@@ -26,15 +26,19 @@
             <td style="padding: 20px;">
                 <main>
                     <h2 style="color: #333333; font-size: 20px;">Hi , {{ $details['name'] }}</h2>
-                    <p style="color: #333333; font-size: 16px; margin-top: 10px;">Kami berharap Anda dalam keadaan sehat. Ini adalah pengingat untuk menyelesaikan pembayaran tiket Anda untuk [Acara] yang akan diselenggarakan pada [Tanggal Pelaksanaan] di [Tempat Pelaksanaan.</p>
+                    <p style="color: #333333; font-size: 16px; margin-top: 10px;">
+                        Kami berharap Anda dalam keadaan sehat. Ini adalah pengingat untuk menyelesaikan pembayaran tiket Anda untuk 
+                        {{ $details['event_name'] }} yang akan diselenggarakan pada {{ $details['event_date'] }} di {{ $details['event_location'] }}.
+                    </p>
                     <h3 style="color: #333333; font-size: 20px;">Kode : {{ $details['uniqueCode'] }}</h3>
                     <h3 style="color: #333333; font-size: 20px;">Ticket Type : {{ $details['tipe_ticket'] }}</h3>
-                    <h3 style="color: #333333; font-size: 20px;">Total Ticket : {{ $details['........'] }}</h3>
+                    <h3 style="color: #333333; font-size: 20px;">Total Ticket : {{ $details['total_ticket'] }}</h3>
                     <h3 style="color: #333333; font-size: 20px;">Total Payment : {{ $details['total_payment'] }}</h3>
-                    <h3 style="color: #333333; font-size: 20px;">Payment Link : {{ invoice_url}}</h3>
-                    <p style="color: #666666; font-size: 16px; margin-top: 10px;">Kami sangat antusias untuk melihat Anda di acara ini! Mohon segera lakukan pembayaran sebelum batas waktu yang telah ditentukan agar tiket Anda dapat terkonfirmasi. Terima kasih atas partisipasi Anda. Kami sangat menantikan kehadiran Anda di [Acara].
-</p>
-										<p style="color: #666666; font-size: 16px; margin-top: 10px;">(Jika Anda sudah melakukan pembayaran, harap abaikan pesan ini.)</p>
+                    <h3 style="color: #333333; font-size: 20px;">Payment Link : <a href="{{ $details['invoice_url'] }}">Bayar Sekarang</a></h3>
+                    <p style="color: #666666; font-size: 16px; margin-top: 10px;">
+                        Kami sangat antusias untuk melihat Anda di acara ini! Mohon segera lakukan pembayaran sebelum batas waktu yang telah ditentukan agar tiket Anda dapat terkonfirmasi. Terima kasih atas partisipasi Anda. Kami sangat menantikan kehadiran Anda di {{ $details['event_name'] }}.
+                    </p>
+                    <p style="color: #666666; font-size: 16px; margin-top: 10px;">(Jika Anda sudah melakukan pembayaran, harap abaikan pesan ini.)</p>
                     <p style="color: #666666; font-size: 16px; margin-top: 20px;">Thanks,<br>Ticketify Team</p>
                 </main>
             </td>
