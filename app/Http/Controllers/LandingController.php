@@ -16,7 +16,7 @@ class LandingController extends Controller
     public function loadMore(Request $request)
     {
         if ($request->ajax()) {
-            $events = Events::where('event_status', 1)->paginate(4, ['*'], 'page', $request->page);
+            $events = Events::where('event_status', 1)->paginate(3, ['*'], 'page', $request->page);
             return view('landing.components.events', ['events' => $events])->render();
         }
     }
@@ -27,10 +27,13 @@ class LandingController extends Controller
         return view('landing.pages.events', ['events' => $events]);
     }
     public function search(Request $request)
-    {
-        $search = $request->input('search');
-        $events = Events::where('event_name', 'like', '%' . $search . '%')->get();
+{
+    $search = $request->input('search');
+    $events = Events::where('event_name', 'like', '%' . $search . '%')
+                    ->orWhere('event_location', 'like', '%' . $search . '%')
+                    ->paginate(3); // Same pagination as in the index method
 
-        return view('landing.index', ['events' => $events]);
-    }
+    return view('landing.index', ['events' => $events]);
+}
+
 }
