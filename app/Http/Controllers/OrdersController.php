@@ -203,6 +203,7 @@ class OrdersController extends Controller
             if (Auth::check()) {
                 return redirect(route('history'));
             }  else if ($price == 0) {
+                Alert::success('Selamat!', 'Pendaftaran berhasil!, silahkan cek E-Mail anda');
                 return redirect(route('index'));
             } else {
                 return redirect($generateInvoice['invoice_url']);
