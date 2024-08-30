@@ -153,6 +153,7 @@ class OrdersController extends Controller
             $order->relation_urgen_contact = $relation_urgen_contact;
 
             if($price == 0) {
+                $order->save();
                 $this->generateTicketUsers($order, $order->name_buyer, $order->event_id, $order->email_buyer, $order->first_name, $order->last_name, $order->phone_number, $order->birth_date, $order->gender);
             } else {
                 $fees = [
