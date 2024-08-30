@@ -186,52 +186,53 @@ class AdminController extends Controller
         }
     }
     public function buyer(Request $request)
-{
-    $events = Events::where('users_id', Auth::id())->get();
+    {
+        $events = Events::where('users_id', Auth::id())->get();
 
-    return view('admin.page.buyer', compact('events'));
-}
-
-
-public function buyerDetail(Request $request, $event_id)
-{
-    $query = Order::query();
-
-    if ($request->has('start_date') && $request->start_date) {
-        $query->whereDate('created_at', '>=', $request->start_date);
+        return view('admin.page.buyer', compact('events'));
     }
 
-    if ($request->has('end_date') && $request->end_date) {
-        $query->whereDate('created_at', '<=', $request->end_date);
-    }
+    public function buyerDetail(Request $request, $event_id)
+    {
+        $query = Order::where('event_id', $event_id);
 
-    if ($request->has('status') && $request->status) {
-        $query->where('status', $request->status);
-    }
+        if ($request->has('start_date') && $request->start_date) {
+            $query->whereDate('created_at', '>=', $request->start_date);
+        }
 
-    if ($request->has('keyword') && $request->keyword) {
-        $keyword = $request->keyword;
-        $query->where(function($q) use ($keyword) {
-            $q->where('no_transaction', 'like', '%' . $keyword . '%')
-              ->orWhere('first_name', 'like', '%' . $keyword . '%')
-              ->orWhere('last_name', 'like', '%' . $keyword . '%')
-              ->orWhere('email_buyer', 'like', '%' . $keyword . '%');
+        if ($request->has('end_date') && $request->end_date) {
+            $query->whereDate('created_at', '<=', $request->end_date);
+        }
+
+        if ($request->has('status') && $request->status) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->has('keyword') && $request->keyword) {
+            $keyword = $request->keyword;
+            $query->where(function ($q) use ($keyword) {
+                $q->where('no_transaction', 'like', '%' . $keyword . '%')
+                    ->orWhere('first_name', 'like', '%' . $keyword . '%')
+                    ->orWhere('last_name', 'like', '%' . $keyword . '%')
+                    ->orWhere('email_buyer', 'like', '%' . $keyword . '%');
+            });
+        }
+
+        $orders = $query->get();
+
+        $totalRevenue = $orders->where('status', 'Success')->sum(function ($order) {
+            return $order->total_amount - 4500;
         });
+
+        return view('admin.page.buyerDetail', compact('orders', 'totalRevenue', 'event_id'));
     }
-    
-    $query->where('event_id', $event_id);
 
-    $orders = $query->get();
+    public function export($event_id)
+    {
+        $orders = Order::where('event_id', $event_id)->get();
 
-    $totalRevenue = $orders->where('status', 'Success')->sum(function ($order) {
-        return $order->total_amount - 4500; 
-    });
-
-    return view('admin.page.buyerDetail', compact('orders', 'totalRevenue'));
-}
-
-
-
+        return Excel::download(new OrdersExport($orders), 'orders.xlsx');
+    }
 
     public function exportExcel(Request $request)
     {
@@ -244,8 +245,6 @@ public function buyerDetail(Request $request, $event_id)
         if ($request->has('end_date') && $request->end_date) {
             $query->whereDate('created_at', '<=', $request->end_date);
         }
-
-        
 
         $events = Events::where('users_id', Auth::id())->pluck('event_id');
 
@@ -261,7 +260,6 @@ public function buyerDetail(Request $request, $event_id)
 
         $event = Events::all();
 
-
         $talents = Talents::whereIn('event_id', $events)->get();
         return view('admin.page.talent', compact('talents', 'event'));
     }
@@ -269,7 +267,7 @@ public function buyerDetail(Request $request, $event_id)
     {
         $request->validate([
             'name' => 'required|string',
-            'event_id' => 'required|integer'
+            'event_id' => 'required|integer',
         ]);
 
         Talents::create([
@@ -284,7 +282,7 @@ public function buyerDetail(Request $request, $event_id)
     {
         $request->validate([
             'name' => 'required|string',
-            'event_id' => 'required|integer'
+            'event_id' => 'required|integer',
         ]);
 
         $talent = Talents::findOrFail($id);

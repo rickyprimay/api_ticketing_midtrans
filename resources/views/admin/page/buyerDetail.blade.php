@@ -39,7 +39,7 @@
         <h1 class="text-center text-xl mt-8">Oops, tidak ada data pembeli untuk acara ini.</h1>
     @else
     <div class="mt-4 mb-8">
-        <a href="{{ route('admin.export') }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Export to Excel</a>
+        <a href="{{ route('admin.export', ['event_id' => $event_id]) }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Export to Excel</a>
         <h2 class="text-black font-bold pt-4 rounded">Total Pendapatan : Rp&nbsp;{{ number_format($totalRevenue, 0, ',', '.') }}</h2>
     </div>
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg border border-black">
