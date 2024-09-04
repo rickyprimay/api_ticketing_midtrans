@@ -12,6 +12,7 @@ class Tickets extends Model
         'ticket_type',
         'events_id',
         'price',
+        'stock'
     ];
 
 

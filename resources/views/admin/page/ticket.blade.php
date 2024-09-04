@@ -31,6 +31,7 @@
                         <th scope="col" class="px-6 py-3">Tipe Tiket</th>
                         <th scope="col" class="px-6 py-3">Event Asal Tiket</th>
                         <th scope="col" class="px-6 py-3">Harga Tiket</th>
+                        <th scope="col" class="px-6 py-3">Stock Tiket</th>
                         <th scope="col" class="px-6 py-3">Aksi</th>
                     </tr>
                 </thead>
@@ -51,7 +52,15 @@
                                 {{ $ticket->event->event_name }}
                             </td>
                             <td class="px-6 py-4">Rp&nbsp;{{ number_format($ticket->price, 0, ',', '.') }}</td>
-
+                            <td class="px-6 py-4">
+                                @if($ticket->stock === null)
+                                    Tidak terbatas
+                                @elseif($ticket->stock === 0)
+                                    Habis
+                                @else
+                                    {{ $ticket->stock }}
+                                @endif
+                            </td>                            
                             <td class="px-6 py-4">
                                 <button data-modal-target="edit-modal-{{ $ticket->ticket_id }}"
                                     data-modal-toggle="edit-modal-{{ $ticket->ticket_id }}" type="button"
@@ -89,7 +98,7 @@
                             </button>
                         </div>
                         <!-- Modal body -->
-                        <form action="{{route('admin.ticket.store')}}" method="POST" class="p-4 md:p-5">
+                        <form action="{{ route('admin.ticket.store') }}" method="POST" class="p-4 md:p-5">
                             @csrf
                             <div class="grid gap-4 mb-4 grid-cols-2">
                                 <div class="col-span-2">
@@ -104,13 +113,13 @@
                                     <label for="event_id"
                                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Event Asal
                                         Ticket</label>
-                                        <select name="event_id" id="event_id"
+                                    <select name="event_id" id="event_id"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                         required="">
                                         <option value="" selected>Pilih Event</option>
                                         @foreach ($event as $eventsa)
-        <option value="{{ $eventsa->event_id }}">{{ $eventsa->event_name }}</option>
-    @endforeach
+                                            <option value="{{ $eventsa->event_id }}">{{ $eventsa->event_name }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="col-span-2 sm:col-span-1">
@@ -121,7 +130,21 @@
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                         placeholder="" required="">
                                 </div>
-
+                                <div class="col-span-2 sm:col-span-1">
+                                    <label for="stock"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Stock
+                                        Ticket</label>
+                                    <input type="number" name="stock" id="stock"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                        placeholder="">
+                                </div>
+                                <div class="col-span-2">
+                                    <label for="unlimited_stock" class="flex items-center space-x-2">
+                                        <input type="checkbox" name="unlimited_stock" id="unlimited_stock"
+                                            class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800">
+                                        <span class="text-sm font-medium text-gray-900 dark:text-gray-300">Apakah ticket tidak terbatas?</span>
+                                    </label>
+                                </div>
                             </div>
                             <button type="submit"
                                 class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
@@ -137,7 +160,7 @@
                     </div>
                 </div>
             </div>
-            <!-- End of Main Modal -->
+        <!-- End of Main Modal -->
         </div>
     </div>
     <!-- Edit modal -->
@@ -168,8 +191,8 @@
                         <label for="event_id" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">Event Asal Tiket</label>
                         <select name="event_id" id="event_id" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-primary-600 dark:bg-gray-700 dark:text-white dark:border-gray-500 dark:focus:border-primary-500" required>
                             @foreach ($event as $eventsa)
-        <option value="{{ $eventsa->event_id }}">{{ $eventsa->event_name }}</option>
-    @endforeach
+                                <option value="{{ $eventsa->event_id }}">{{ $eventsa->event_name }}</option>
+                            @endforeach
                         </select>
                         
                     </div>

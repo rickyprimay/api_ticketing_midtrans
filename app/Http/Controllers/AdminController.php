@@ -52,12 +52,14 @@ class AdminController extends Controller
             'ticket_type' => 'required|string',
             'event_id' => 'required|integer',
             'price' => 'required|numeric',
+            'stock' => 'required|numeric'
         ]);
 
         Tickets::create([
             'ticket_type' => $request->ticket_type,
             'events_id' => $request->event_id,
             'price' => $request->price,
+            'stock' => $request->stock,
         ]);
 
         Alert::success('Sukses', 'Tiket berhasil dibuat.')->persistent(true);
