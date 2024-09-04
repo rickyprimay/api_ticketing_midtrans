@@ -72,6 +72,7 @@ class AdminController extends Controller
             'ticket_type' => 'required|string',
             'event_id' => 'required|integer',
             'price' => 'required|numeric',
+            'stock' => 'nullable|numeric'
         ]);
 
         $ticket = Tickets::findOrFail($id);
@@ -79,6 +80,7 @@ class AdminController extends Controller
             'ticket_type' => $request->ticket_type,
             'events_id' => $request->event_id,
             'price' => $request->price,
+            'stock' => $request->stock
         ]);
 
         Alert::success('Sukses', 'Tiket berhasil diperbarui.')->persistent(true);
