@@ -29,49 +29,48 @@ class OrdersController extends Controller
         Configuration::setXenditKey(env('XENDIT_SECRET_KEY'));
     }
     public function index()
-{
-    if (Auth::check()) {
-        $email = Auth::user()->email;
+    {
+        if (Auth::check()) {
+            $email = Auth::user()->email;
 
-        $orders = Order::with(['event', 'event.tickets'])
-            ->where(function ($query) use ($email) {
-                $query->whereNull('email_auth')
-                      ->where('email_buyer', $email)
-                      ->orWhere('email_auth', $email);
-            })
-            ->latest()
-            ->get();
+            $orders = Order::with(['event', 'event.tickets'])
+                ->where(function ($query) use ($email) {
+                    $query->whereNull('email_auth')->where('email_buyer', $email)->orWhere('email_auth', $email);
+                })
+                ->latest()
+                ->get();
 
-        // dd($orders);
+            // dd($orders);
 
-        return view('landing.pages.history.index', compact('orders'));
-    } else {
-        return redirect()->route('login')->with('error', 'Anda harus login untuk melihat riwayat pesanan.');
+            return view('landing.pages.history.index', compact('orders'));
+        } else {
+            return redirect()->route('login')->with('error', 'Anda harus login untuk melihat riwayat pesanan.');
+        }
     }
-}
-
 
     public function order($event_id, $ticket_id)
-{
-    $event = Events::find($event_id);
+    {
+        $event = Events::find($event_id);
 
-    if (!$event || $event->event_status != 1) {
-        Alert::error('Gagal', 'Event sudah selesai/tidak tersedia');
-        return redirect()->route('index')->with('error', 'Event not found or not available');
+        if (!$event || $event->event_status != 1) {
+            Alert::error('Gagal', 'Event sudah selesai/tidak tersedia');
+            return redirect()->route('index')->with('error', 'Event not found or not available');
+        }
+        $ticket = Tickets::find($ticket_id);
+        if (!$ticket) {
+            Alert::error('Gagal', 'Ticket tidak tersedia');
+            return redirect()
+                ->route('event_details', ['event_id' => $event_id])
+                ->with('error', 'Ticket not found');
+        }
+
+        $orders = Order::latest()->get();
+        $user = Auth::user();
+
+        $talents = Talents::where('event_id', $event_id)->get();
+
+        return view('landing.pages.event.page.order', compact('event', 'ticket', 'talents', 'event_id', 'orders'));
     }
-    $ticket = Tickets::find($ticket_id);
-    if (!$ticket) {
-        Alert::error('Gagal', 'Ticket tidak tersedia');
-        return redirect()->route('event_details', ['event_id' => $event_id])->with('error', 'Ticket not found');
-    }
-
-    $orders = Order::latest()->get();
-    $user = Auth::user();
-
-    $talents = Talents::where('event_id', $event_id)->get();
-
-    return view('landing.pages.event.page.order', compact('event', 'ticket', 'talents', 'event_id', 'orders'));
-}
 
     public function createInvoice(Request $request)
     {
@@ -126,7 +125,6 @@ class OrdersController extends Controller
                 $totalAmount = 0;
             }
 
-            
             $no_transaction = 'Inv-' . (string) Str::uuid();
             $order = new Order();
             $order->no_transaction = $no_transaction;
@@ -162,18 +160,18 @@ class OrdersController extends Controller
             $order->field4 = $field4;
             $order->field5 = $field5;
 
-            if($price == 0) {
+            if ($price == 0) {
                 $order->save();
                 $this->generateTicketUsers($order, $order->name_buyer, $order->event_id, $order->email_buyer, $order->first_name, $order->last_name, $order->phone_number, $order->birth_date, $order->gender);
             } else {
                 $fees = [
                     [
                         'type' => 'Admin Fee',
-                        'value' => $internetFee
+                        'value' => $internetFee,
                     ],
                     [
                         'type' => 'Discount',
-                        'value' => -$discountAmount
+                        'value' => -$discountAmount,
                     ],
                 ];
                 $items = new InvoiceItem([
@@ -181,7 +179,7 @@ class OrdersController extends Controller
                     'price' => $price,
                     'quantity' => $request->input('qty'),
                 ]);
-    
+
                 $createInvoice = new CreateInvoiceRequest([
                     'external_id' => $no_transaction,
                     'amount' => $totalAmount,
@@ -189,7 +187,7 @@ class OrdersController extends Controller
                     'items' => [$items],
                     'fees' => $fees,
                 ]);
-    
+
                 $apiInstance = new InvoiceApi();
                 $generateInvoice = $apiInstance->createInvoice($createInvoice);
                 $order->invoice_url = $generateInvoice['invoice_url'];
@@ -208,11 +206,10 @@ class OrdersController extends Controller
                 ];
                 Mail::to($order->email_buyer)->send(new \App\Mail\ReminderPayments($details, null));
             }
-            
 
             if (Auth::check()) {
                 return redirect(route('history'));
-            }  else if ($price == 0) {
+            } elseif ($price == 0) {
                 Alert::success('Selamat!', 'Pendaftaran berhasil!, silahkan cek E-Mail anda');
                 return redirect(route('index'));
             } else {
@@ -246,11 +243,9 @@ class OrdersController extends Controller
                     $order->status = 'Success';
                     $order->save();
                     $this->generateTicketUsers($order, $order->name_buyer, $order->event_id, $order->email_buyer, $order->first_name, $order->last_name, $order->phone_number, $order->birth_date, $order->gender);
-
                 } else {
                     $order->status = 'Failed';
                     $order->save();
-
                 }
             }
 
@@ -265,7 +260,6 @@ class OrdersController extends Controller
             throw $th;
         }
     }
-
 
     protected function generateTicketUsers(Order $order, $users_name, $event_id, $email_buyer, $first_name, $last_name, $phone_number, $birth_date, $gender)
     {
@@ -285,17 +279,17 @@ class OrdersController extends Controller
 
             $ticketUser->save();
 
-            $this->generateQrCode($ticketUser, $i, $email_buyer, $users_name, $order->ticket_type, $order->total_amount);
+            $this->generateQrCode($ticketUser, $i, $order);
         }
     }
 
-    protected function generateQrCode(TicketUsers $ticketUser, $index, $email_buyer, $users_name, $ticket_type, $total_amount)
+    protected function generateQrCode(TicketUsers $ticketUser, $index, Order $order)
     {
-        // Menentukan event berdasarkan ID
+        // Menemukan event terkait berdasarkan ID di order
         $event = Events::find($ticketUser->events_id);
         $eventName = $event ? $event->event_name : 'Unknown Event';
-    
-        // Menyusun data QR Code dalam bentuk array
+
+        // Siapkan data QR code dalam bentuk JSON
         $qrData = [
             'unique_code' => $ticketUser->unique_code,
             'users_name' => $ticketUser->users_name,
@@ -303,65 +297,82 @@ class OrdersController extends Controller
             'phone_number' => $ticketUser->phone_number,
             'event_yang_diikuti' => $eventName,
         ];
-    
-        // Mengubah array $qrData menjadi string JSON
+
         $jsonQrData = json_encode($qrData);
-    
-        // Menentukan path penyimpanan QR Code
+
+        // Tentukan path penyimpanan QR code
         $qrCodePath = 'ticket_qr/ticket_' . md5($ticketUser->id . '_' . $index) . '.png';
-    
-        // Menghasilkan QR Code dengan data JSON
-        $qrCode = QrCode::format('png')
-            ->size(312)
-            ->merge(public_path('assets/logo/border-black.png'), 0.47, true)
-            ->errorCorrection('Q')
-            ->generate($jsonQrData); // Memasukkan JSON data ke dalam QR code
-    
-        // Menyimpan QR Code ke disk publik
+
+        // Menghasilkan QR code dengan data JSON
+        $qrCode = QrCode::format('png')->size(312)->merge(public_path('assets/logo/border-black.png'), 0.47, true)->errorCorrection('Q')->generate($jsonQrData);
+
+        // Menyimpan QR code ke disk publik
         Storage::disk('public')->put($qrCodePath, $qrCode);
-    
-        // Menyimpan path QR Code ke database
+
+        // Simpan path QR code ke database
         $ticketUser->qr_code_ticket = $qrCodePath;
         $ticketUser->save();
-    
-        // Mengirim email dengan lampiran QR Code
-        $this->sendEmailWithAttachment($ticketUser, $email_buyer, $users_name, $ticket_type, $total_amount);
+
+        // Panggil metode untuk mengirim email dengan lampiran QR code
+        $this->sendEmailWithAttachment($ticketUser, $order);
     }
 
-    protected function sendEmailWithAttachment(TicketUsers $ticketUser, $email_buyer, $users_name, $ticket_type, $total_amount)
+    protected function sendEmailWithAttachment(TicketUsers $ticketUser, Order $order)
     {
-        $userEmail = $email_buyer;
+        // Path QR Code
         $qrCodePath = storage_path('app/public/' . $ticketUser->qr_code_ticket);
 
+        // Siapkan detail untuk email
         $details = [
             'title' => 'Mail from ticketify.id',
             'body' => 'Berikut Kode QR ticket anda',
             'qrCodePath' => $qrCodePath,
-            'name' => $users_name,
-            'tipe_ticket' => $ticket_type,
-            'total_payment' => $total_amount,
-            'uniqueCode' => $ticketUser->unique_code
+            'name' => $order->name_buyer,
+            'first_name' => $order->first_name,
+            'last_name' => $order->last_name,
+            'email_buyer' => $order->email_buyer,
+            'phone_number' => $order->phone_number,
+            'birth_date' => $order->birth_date,
+            'gender' => $order->gender,
+            'ticket_type' => $order->ticket_type,
+            'event_name' => $order->event_name,
+            'total_amount' => $order->total_amount,
+            'uniqueCode' => $ticketUser->unique_code,
+            'nik' => $order->nik,
+            'blood_type' => $order->blood_type,
+            'bib' => $order->bib,
+            'community' => $order->community,
+            'size_shirt' => $order->size_shirt,
+            'urgent_contact' => $order->urgent_contact,
+            'number_urgen_contact' => $order->number_urgen_contact,
+            'relation_urgen_contact' => $order->relation_urgen_contact,
+            'field1' => $order->field1,
+            'field2' => $order->field2,
+            'field3' => $order->field3,
+            'field4' => $order->field4,
+            'field5' => $order->field5,
         ];
 
-        Mail::to($email_buyer)->send(new \App\Mail\TicketQrMail($details, $qrCodePath));
+        // Kirim email dengan lampiran QR code
+        Mail::to($order->email_buyer)->send(new \App\Mail\TicketQrMail($details, $qrCodePath));
     }
+
     public function redeemQR(Request $request)
-{
-    $request->validate([
-        'qr_id' => 'required|string',
-        'ticket_status' => 'required|integer',
-    ]);
+    {
+        $request->validate([
+            'qr_id' => 'required|string',
+            'ticket_status' => 'required|integer',
+        ]);
 
-    $ticketUser = TicketUsers::where('unique_code', $request->qr_id)->first();
+        $ticketUser = TicketUsers::where('unique_code', $request->qr_id)->first();
 
-    if ($ticketUser->ticket_status == 1) {
-        return response()->json(['message' => 'Ticket has already been redeemed'], 400);
+        if ($ticketUser->ticket_status == 1) {
+            return response()->json(['message' => 'Ticket has already been redeemed'], 400);
+        }
+
+        $ticketUser->ticket_status = 1;
+        $ticketUser->save();
+
+        return response()->json(['message' => 'Ticket redeemed successfully'], 200);
     }
-
-    $ticketUser->ticket_status = 1;
-    $ticketUser->save();
-
-    return response()->json(['message' => 'Ticket redeemed successfully'], 200);
-}
-
 }
