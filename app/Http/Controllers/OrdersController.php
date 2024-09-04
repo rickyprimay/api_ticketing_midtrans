@@ -92,6 +92,11 @@ class OrdersController extends Controller
             $urgen_contact = $request->input('urgen_contact');
             $number_urgen_contact = $request->input('number_urgen_contact');
             $relation_urgen_contact = $request->input('relation_urgen_contact');
+            $field1 = $request->input('field1');
+            $field2 = $request->input('field2');
+            $field3 = $request->input('field3');
+            $field4 = $request->input('field4');
+            $field5 = $request->input('field5');
 
             $qty = $request->input('qty');
             $price = $request->input('price');
@@ -151,6 +156,11 @@ class OrdersController extends Controller
             $order->urgent_contact = $urgen_contact;
             $order->number_urgen_contact = $number_urgen_contact;
             $order->relation_urgen_contact = $relation_urgen_contact;
+            $order->field1 = $field1;
+            $order->field2 = $field2;
+            $order->field3 = $field3;
+            $order->field4 = $field4;
+            $order->field5 = $field5;
 
             if($price == 0) {
                 $order->save();
