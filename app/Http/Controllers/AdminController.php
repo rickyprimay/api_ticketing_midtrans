@@ -52,7 +52,7 @@ class AdminController extends Controller
             'ticket_type' => 'required|string',
             'event_id' => 'required|integer',
             'price' => 'required|numeric',
-            'stock' => 'required|numeric'
+            'stock' => 'nullable|numeric'
         ]);
 
         Tickets::create([
