@@ -32,8 +32,13 @@
                                 <div class="text-white pl-2">{{ $ticket->ticket_type }}</div>
                                 <div class="text-white pl-2">@if($ticket->price != 0)Rp {{ number_format($ticket->price, 0, ',', '.') }} @else Free @endif</div>
                             </div>
-                            <button onclick="window.location.href='{{ route('order', ['event_id' => $event->event_id, 'ticket_id' => $ticket->ticket_id]) }}'"
-                                class="ml-4 bg-white text-black px-8 py-2 rounded-xl">Add</button>                            
+                            @if ($ticket->stock === null || $ticket->stock > 0)
+                                <button onclick="window.location.href='{{ route('order', ['event_id' => $event->event_id, 'ticket_id' => $ticket->ticket_id]) }}'" class="ml-4 bg-white text-black px-8 py-2 rounded-xl">Add</button>
+                            @elseif($ticket->stock === 0)
+                            <span class="inline-flex items-center px-5 py-2 ml-4 text-sm font-medium text-white bg-red-500 rounded-xl">
+                                Sold Out
+                            </span>                            
+                            @endif                        
                         </div>
                     @endforeach 
                     @endif
