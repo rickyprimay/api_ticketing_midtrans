@@ -291,32 +291,40 @@ class OrdersController extends Controller
 
     protected function generateQrCode(TicketUsers $ticketUser, $index, $email_buyer, $users_name, $ticket_type, $total_amount)
     {
-
+        // Menentukan event berdasarkan ID
         $event = Events::find($ticketUser->events_id);
         $eventName = $event ? $event->event_name : 'Unknown Event';
-
-        // $qrData = [
-        //     'unique_code' => $ticketUser->unique_code,
-        //     'users_name' => $ticketUser->users_name,
-        //     'users_email' => $ticketUser->users_email,
-        //     'phone_number' => $ticketUser->phone_number,
-        //     'event_yang_diikuti' => $eventName,
-        // ];
-
-        $qrCodeContent = $ticketUser->unique_code;
-
-        // Generate QR code dengan konten JSON
+    
+        // Menyusun data QR Code dalam bentuk array
+        $qrData = [
+            'unique_code' => $ticketUser->unique_code,
+            'users_name' => $ticketUser->users_name,
+            'users_email' => $ticketUser->users_email,
+            'phone_number' => $ticketUser->phone_number,
+            'event_yang_diikuti' => $eventName,
+        ];
+    
+        // Mengubah array $qrData menjadi string JSON
+        $jsonQrData = json_encode($qrData);
+    
+        // Menentukan path penyimpanan QR Code
         $qrCodePath = 'ticket_qr/ticket_' . md5($ticketUser->id . '_' . $index) . '.png';
-        $qrCode = QrCode::format('png')->size(312)->merge(public_path('assets/logo/border-black.png'), 0.47, true)->errorCorrection('Q')->generate($qrCodeContent);
-
-        // Simpan QR code ke storage
+    
+        // Menghasilkan QR Code dengan data JSON
+        $qrCode = QrCode::format('png')
+            ->size(312)
+            ->merge(public_path('assets/logo/border-black.png'), 0.47, true)
+            ->errorCorrection('Q')
+            ->generate($jsonQrData); // Memasukkan JSON data ke dalam QR code
+    
+        // Menyimpan QR Code ke disk publik
         Storage::disk('public')->put($qrCodePath, $qrCode);
-
-        // Update path QR code di ticketUser
+    
+        // Menyimpan path QR Code ke database
         $ticketUser->qr_code_ticket = $qrCodePath;
         $ticketUser->save();
-
-        // Kirim email dengan lampiran QR code
+    
+        // Mengirim email dengan lampiran QR Code
         $this->sendEmailWithAttachment($ticketUser, $email_buyer, $users_name, $ticket_type, $total_amount);
     }
 
