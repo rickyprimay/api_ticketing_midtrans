@@ -15,7 +15,7 @@ return new class extends Migration
             $table->unsignedBigInteger('events_id');
             $table->string('ticket_type');
             $table->integer('price');
-            // $table->integer('stock');
+            $table->integer('stock');
             $table->timestamps();
         }); 
     }

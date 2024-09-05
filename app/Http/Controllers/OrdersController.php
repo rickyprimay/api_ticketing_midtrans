@@ -77,6 +77,25 @@ class OrdersController extends Controller
     try {
         $email_buyer = $request->input('email');
         $event_id = $request->input('event_id');
+        $ticket_id = $request->input('ticket_id');
+        $ticket_type = $request->input('ticket_type');
+        $qty = $request->input('qty');
+
+        
+        $ticket = Tickets::find($ticket_id); 
+
+        if (!$ticket) {
+            Alert::error('Pendaftaran Gagal', 'Tiket tidak ditemukan');
+            return redirect()->back()->with('error', 'Tiket tidak ditemukan untuk acara ini.');
+        }
+
+        if ($ticket->stock < $qty) {
+            Alert::error('Pendaftaran Gagal', 'Stok tiket tidak mencukupi');
+            return redirect()->back()->with('error', 'Stok tiket tidak mencukupi.');
+        }
+
+        $ticket->stock -= $qty;
+        $ticket->save();
 
         $existingOrder = Order::where('email_buyer', $email_buyer)
                                 ->where('event_id', $event_id)
@@ -106,7 +125,6 @@ class OrdersController extends Controller
         $field4 = $request->input('field4');
         $field5 = $request->input('field5');
 
-        $qty = $request->input('qty');
         $price = $request->input('price');
         $discountAmount = $request->input('discount_amount', 0);
 
@@ -119,18 +137,8 @@ class OrdersController extends Controller
             }
         }
 
-        if ($price != 0) {
-            $totalAmount = $qty * $price;
-        } else {
-            $totalAmount = $qty * $price;
-        }
-
-        if ($price != 0) {
-            $internetFee = (5 / 100) * $totalAmount;
-            $totalAmount += $internetFee;
-        } else {
-            $totalAmount = 0;
-        }
+        $totalAmount = ($price * $qty) + ((5 / 100) * $price * $qty);
+        $totalAmount -= $discountAmount;
 
         $no_transaction = 'Inv-' . (string) Str::uuid();
         $order = new Order();
@@ -141,9 +149,9 @@ class OrdersController extends Controller
         $order->email_buyer = $email_buyer;
         $order->qty = $qty;
         $order->price = $price;
-        $order->ticket_type = $request->input('ticket_type');
+        $order->ticket_type = $ticket_type;
         $order->event_name = $request->input('event_name');
-        $order->total_amount = $totalAmount -= $discountAmount;
+        $order->total_amount = $totalAmount;
         $order->first_name = $first_name;
         $order->last_name = $last_name;
         if (Auth::check()) {
@@ -174,7 +182,7 @@ class OrdersController extends Controller
             $fees = [
                 [
                     'type' => 'Admin Fee',
-                    'value' => $internetFee,
+                    'value' => (5 / 100) * $totalAmount,
                 ],
                 [
                     'type' => 'Discount',
@@ -184,7 +192,7 @@ class OrdersController extends Controller
             $items = new InvoiceItem([
                 'name' => $request->input('ticket_type') . ' ' . $request->input('event_name'),
                 'price' => $price,
-                'quantity' => $request->input('qty'),
+                'quantity' => $qty,
             ]);
 
             $createInvoice = new CreateInvoiceRequest([
@@ -227,6 +235,7 @@ class OrdersController extends Controller
         throw $th;
     }
 }
+
 
 
     public function notificationCallback(Request $request)
